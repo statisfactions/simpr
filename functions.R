@@ -80,10 +80,11 @@ gen = function(simpr, reps) {
   sim_results
 }
 
-fit = function(simpr_gen, FUN, ...) {
+fit = function(simpr_gen, formula) {
+  eval_fun = as_mapper(formula)
   simpr_mod = simpr_gen %>% 
     group_by_at(c(attr(simpr_gen, "meta"), "rep")) %>% 
-    do(mod = with(., FUN(...)))
+    do(mod = eval_fun(.))
   
   attr(simpr_mod, "meta") = attr(simpr_gen, "meta")
   attr(simpr_mod, "variables") = attr(simpr_gen, "variables")
