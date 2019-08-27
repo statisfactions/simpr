@@ -19,26 +19,6 @@ meta = function(x, ...) {
   x
 }
 
-sim_cell = function(reps, ...) {
-  args = list(...)
-  for(i in names(args)) assign(i, args[[i]])
-  
-  spc_mat = replicate(reps, {
-    df = imap_dfc(simpr$variables, function(x, y) {
-      gen = map(1, x) %>% unlist
-      
-      assign(y, gen, envir = .GlobalEnv)
-      gen
-    })
-    rm(envir = .GlobalEnv, list = names(simpr$variables))
-    as.matrix(df)
-  })
-  dimnames(spc_mat) = list(row = NULL,
-                           variables = names(simpr$variables),
-                           rep = 1:reps)
-  spc_mat %>% reshape2::melt()
-}
-
 gen = function(simpr, reps) {
   ## Create labeled list representing all possible values of meta parameters
   specs = expand.grid(simpr$meta) 
@@ -62,18 +42,17 @@ gen = function(simpr, reps) {
           gen
         })
         rm(envir = .GlobalEnv, list = names(simpr$variables))
-        as.matrix(df)
-      })
+        df
+      }, simplify = FALSE)
       detach(meta_cell)
-      dimnames(spc_mat) = list(row = NULL,
-                               variables = names(simpr$variables),
-                               rep = 1:reps)
-      spc_mat %>% reshape2::melt()
+      
+      bind_rows(spc_mat, .id = "rep") %>% 
+        mutate(rep = as.integer(rep))
+      
     })) %>% 
+    unnest  %>% 
     unnest %>% 
-    unnest %>% 
-    spread(variables, value) %>% 
-    arrange_at(c(names(simpr$meta), "rep", "row"))
+    arrange_at(c(names(simpr$meta), "rep"))
   attr(sim_results, "meta") = names(simpr$meta)
   attr(sim_results, "variables") = names(simpr$variables)
   
