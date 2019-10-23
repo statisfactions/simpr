@@ -13,13 +13,10 @@ simpr_spec = variables(x1 = ~ 2 + rnorm(n),
 
 
 simpr_gen = simpr_spec %>% 
-  gen(20)
+  gen(20) %>% 
+  fit(lm = ~lm(y ~ x1*x2, data = .))
   
-
-simpr_mod = simpr_gen %>% 
-  fit(~lm(y ~ x1*x2, data = .))
-  
-simpr_calc = simpr_mod %>% 
+simpr_calc = simpr_gen %>% 
   calc_tidy
 
 simpr_calc %>% 
@@ -35,38 +32,28 @@ simpr_calc %>%
 
 chisq_spec = variables(x1 = ~rnorm(n),
                        x2 = ~x1 + rnorm(n, 0, sd = 2),
-                       c1 = ~ cut(x1, breaks = b),
-                       c2 = ~ cut(x2, breaks = b)) %>% 
+                       c1 = ~ cut(x1, breaks = b) %>% as.numeric,
+                       c2 = ~ cut(x2, breaks = b) %>% as.numeric) %>% 
   meta(n = seq(50, 200, by = 50),
        b = 2:10)
 
 chisq_gen = chisq_spec %>% 
-  gen(50) 
-
-## This is a bit clumsy here; would be easy to do these in succession if I kept
-## everything in list-columns rather than going to long format, then each model
-## object would be in its own column and they could all be chained and named; or
-## called within a single fit() call. Then they could all be tidied at the same time.
-chisq_mod = chisq_gen %>% 
-  fit(~chisq.test(.$c1, .$c2))
-
-## Something weird happened in model fitting for cor and fisher; we only have
-## 50, somehow rep was grouped by
-
-cor_mod = chisq_gen %>% 
-  fit(~cor.test(.$x1, .$x2))
-
-fisher_mod = chisq_gen %>% 
-  fit(~fisher.test(.$c1, .$c2, simulate.p.value = TRUE))
-
-all_mods = list(chisq_mod = chisq_mod,
-                cor_mod = cor_mod,
-                fisher_mod = fisher_mod)
-
-all_tidy = map(all_mods, calc_tidy)
+  gen(20) %>% 
+  fit(ChiSq = ~chisq.test(.$c1, .$c2),
+      Unknown_Continuous_Correlation = ~cor.test(.$x1, .$x2),
+      Pearson_Correlation = ~cor.test(.$c1, .$c2))
 
 
+all_tidy = chisq_gen %>% 
+  calc_tidy
 
-pvalues = map(all_tidy, ~ select(., n, b, p.value))
+all_power = 
+all_tidy %>% 
+  group_by(n, b, Source) %>% 
+  summarize(power = mean(p.value < 0.05)) 
+
+  ggplot(aes(n, power, group = Source, linetype = Source, color = Source)) +
+  geom_line() +
+  facet_wrap(~b)
 
 save.image("troubleshooting.Rdata")

@@ -21,7 +21,7 @@ meta = function(x, ...) {
 
 gen = function(simpr, reps) {
   ## Create labeled list representing all possible values of meta parameters
-  specs = expand.grid(simpr$meta) 
+  specs = expand.grid(c(simpr$meta, list(rep = 1:reps))) 
   
   ## Generate all replications
   sim_results = specs %>% 
@@ -29,9 +29,8 @@ gen = function(simpr, reps) {
     do(sim_cell = pmap(., function(...) {
       meta_cell = list(...)
       attach(meta_cell)
-      
-      spc_mat = replicate(reps, {
-        df = imap_dfc(simpr$variables, function(x, y) {
+
+      df = imap_dfc(simpr$variables, function(x, y) {
           
           eval_fn = as_mapper(x)
           
@@ -41,32 +40,29 @@ gen = function(simpr, reps) {
           assign(y, gen, envir = .GlobalEnv)
           gen
         })
-        rm(envir = .GlobalEnv, list = names(simpr$variables))
-        df
-      }, simplify = FALSE)
+      
       detach(meta_cell)
+      df
       
-      bind_rows(spc_mat, .id = "rep") %>% 
-        mutate(rep = as.integer(rep))
-      
-    })) %>% 
-    unnest  %>% 
-    unnest %>% 
-    arrange_at(c(names(simpr$meta), "rep"))
+    })) %>% unnest
   attr(sim_results, "meta") = names(simpr$meta)
   attr(sim_results, "variables") = names(simpr$variables)
   
   sim_results
 }
 
-fit = function(simpr_gen, formula) {
-  eval_fun = as_mapper(formula)
-  simpr_mod = simpr_gen %>% 
-    group_by_at(c(attr(simpr_gen, "meta"), "rep")) %>% 
-    do(mod = eval_fun(.))
+fit = function(simpr_gen, ...) {
+  
+  fit_functions = list(...)
+  
+  simpr_mod = simpr_gen
+  
+  for(i in names(fit_functions))
+    simpr_mod[[i]] = map(simpr_mod$sim_cell, fit_functions[[1]])
   
   attr(simpr_mod, "meta") = attr(simpr_gen, "meta")
   attr(simpr_mod, "variables") = attr(simpr_gen, "variables")
+  attr(simpr_mod, "fits") = c(attr(simpr_gen, "fits"), names(fit_functions))
   
   simpr_mod
 }
@@ -84,12 +80,20 @@ fit = function(simpr_gen, formula) {
 # }
 
 calc_tidy = function(simpr_mod) {
-  simpr_meta = simpr_mod %>% select(-mod)
+  simpr_meta = simpr_mod %>% select(one_of(c(attr(simpr_mod, "meta"), "rep")))
+  simpr_mods = simpr_mod %>% 
+    select(one_of(c(attr(simpr_mod, "fits"))))
   
-  simpr_tidy = simpr_mod %>% 
-    do(tidy = tidy(.$mod)) %>% 
-    bind_cols(simpr_meta, .) %>% 
-    unnest
+  
+  
+  simpr_tidy = map_dfr(simpr_mods, ~ map_dfr(., tidy), .id = "Source")
+  
+  # THIS IS A HACK
+  rep_factor = nrow(simpr_tidy)/nrow(simpr_meta)
+  meta_rep = simpr_meta[rep(1:nrow(simpr_meta), rep_factor),]
+  
+    bind_cols(meta_rep, simpr_tidy)
+  
   
 }
 
