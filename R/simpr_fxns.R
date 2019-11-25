@@ -142,7 +142,7 @@ calc_tidy = function(simpr_mod) {
   ## Create reference meta df for merging
   simpr_meta = simpr_mod %>%
     dplyr::select(tidyselect::one_of(c(attr(simpr_mod, "meta"), "rep"))) %>%
-    dplyr::mutate(....id = as.character(1:n()))
+    dplyr::mutate(....id = as.character(1:(dplyr::n())))
 
   ## Extract all fit columns
   simpr_mods = simpr_mod %>%
