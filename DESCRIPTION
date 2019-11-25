@@ -1,0 +1,17 @@
+Package: simpr
+Type: Package
+Title: Flexible Interface for Power Analysis Simulations
+Version: 0.0.1
+Author: Ethan C. Brown & Jeffrey K. Bye
+Maintainer: The package maintainer <ecbrown@umn.edu>
+Description: Provides a flexible interface for easily customizing data simulations for power analyses of various designs.
+License: What license is it under?
+Encoding: UTF-8
+LazyData: true
+Imports:
+    magrittr
+RoxygenNote: 7.0.0
+Suggests: 
+    broom,
+    testthat,
+    tidyverse
