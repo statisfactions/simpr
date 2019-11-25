@@ -139,18 +139,22 @@ fit = function(simpr_gen, ...) {
 #'
 #' @export
 calc_tidy = function(simpr_mod) {
+  ## Create reference meta df for merging
   simpr_meta = simpr_mod %>%
-    dplyr::select(tidyselect::one_of(c(attr(simpr_mod, "meta"), "rep")))
+    dplyr::select(tidyselect::one_of(c(attr(simpr_mod, "meta"), "rep"))) %>%
+    dplyr::mutate(....id = as.character(1:n()))
+
+  ## Extract all fit columns
   simpr_mods = simpr_mod %>%
-    dplyr::select(tidyselect::one_of(c(attr(simpr_mod, "fits"))))
+    dplyr::select(tidyselect::one_of(c(attr(simpr_mod, "fits")))) %>%
+    purrr::map(purrr::set_names, nm = simpr_meta$....id)
 
-  simpr_tidy = purrr::map_dfr(simpr_mods, ~ purrr::map_dfr(., broom::tidy), .id = "Source")
+  ## For each fit column (identified as "source"), run tidy on each element of that column
+  simpr_tidy = purrr::map_dfr(simpr_mods, ~ purrr::map_dfr(., broom::tidy, .id = "....id"), .id = "Source")
 
-  # THIS IS A HACK
-  rep_factor = nrow(simpr_tidy)/nrow(simpr_meta)
-  meta_rep = simpr_meta[rep(1:nrow(simpr_meta), rep_factor),]
-
-  dplyr::bind_cols(meta_rep, simpr_tidy)
+  ## Re-merge metaparameter columns to tidy output
+  dplyr::right_join(simpr_meta, simpr_tidy, by = "....id") %>%
+    dplyr::select(-....id)
 
 }
 
