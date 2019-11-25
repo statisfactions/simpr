@@ -15,8 +15,7 @@ test_that("Calc tidy terms match terms from fit",
 
             lm_tidy_unique_terms = lm_tidy %>%
               count(n, rep, term, name = "count")
-            expect_equal(lm_tidy %>% select(n, rep, term) %>%
-                         anyDuplicated, 0)
+            expect_true(all(lm_tidy_unique_terms$count == 1))
 
             lm_fit_coef = map_df(lm_fit$lm, ~ coef(.) %>% t %>%
                   as.data.frame(check.names = F)) %>%
@@ -38,7 +37,7 @@ test_that("Each iteration of simulation has model terms listed correctly", {
   b1 = 1,
   b2 = 1,
   g1 = seq(-1, 1, by = 0.5),
-  reps = 5)
+  rep = 5)
 
   # create a dataframe of all possible combinations of parameters (to check)
   all_combos <- expand.grid(meta_list)
@@ -54,38 +53,16 @@ test_that("Each iteration of simulation has model terms listed correctly", {
          g1 = meta_list$g1)
 
   simpr_gen = simpr_spec %>%
-    gen(meta_list$reps) %>%
+    gen(meta_list$rep) %>%
     fit(lm = ~lm(y ~ x1*x2, data = .))
   simpr_calc = simpr_gen %>%
     calc_tidy
 
-  # organize by the metaparameters (not necessary anymore)
-  simpr_calc2 <- simpr_calc %>%
-    dplyr::arrange(n, b1, b2, g1, rep)
+  ## Count how many times a given combo of metaparameters and rep occur;
+  ## we expect ONLY ONE each time
+  tidy_unique_terms = simpr_calc %>%
+    group_by_at(.vars = c(names(meta_list), "term")) %>%
+    tally(name = "count")
+  expect_true(all(tidy_unique_terms$count == 1))
 
-  # loop through all combos and check
-  for (r in 1:nrow(all_combos)) { # for each row in metaparameter combo df
-    cur_params <- all_combos[r,]
-    cur_sub <- simpr_calc2 %>%
-      dplyr::filter(n==cur_params$n, b1==cur_params$b1, b2==cur_params$b2,
-                    g1==cur_params$g1, rep==cur_params$rep)
-
-    # we expect ALL TERMS in the model to have unique labels
-    expect_true(
-      cur_sub %>% # is the number of total term labels...
-        dplyr::select(term) %>%
-        nrow() == cur_sub %>% # equal to...
-          dplyr::select(term) %>%
-          unique() %>% # the number of UNIQUE term labels?
-          nrow()
-    )
-
-    # # we do NOT expect these terms to have equal values
-    # expect_false(expect_equal(
-    #   simpr_calc2 %>%
-    #     dplyr::filter(n==n[1], g1==g1[1], s==s[1], rep==1) %>%
-    #     dplyr::select(estimate)
-    # ))
-
-  }
 })
