@@ -105,7 +105,7 @@ fit = function(simpr_gen, ...) {
   simpr_mod = simpr_gen
 
   for(i in names(fit_functions))
-    simpr_mod[[i]] = purrr::map(simpr_mod$sim_cell, fit_functions[[1]])
+    simpr_mod[[i]] = purrr::map(simpr_mod$sim_cell, fit_functions[[i]])
 
   attr(simpr_mod, "meta") = attr(simpr_gen, "meta")
   attr(simpr_mod, "variables") = attr(simpr_gen, "variables")

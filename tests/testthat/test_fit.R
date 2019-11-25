@@ -17,6 +17,6 @@ test_that("Multiple fit functions give different results", {
         Unknown_Continuous_Correlation = ~cor.test(.$x1, .$x2))
 
   ## These should NOT be the same!
-  expect_false(identical(chisq_gen$ChiSq, chisq_gen$Unknown_Continuous_Correlation))
+  expect_false(identical(chisq_fit$ChiSq, chisq_fit$Unknown_Continuous_Correlation))
 
 })

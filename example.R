@@ -19,10 +19,6 @@ simpr_gen = simpr_spec %>%
 simpr_calc = simpr_gen %>%
   calc_tidy
 
-simpr_calc2 <- simpr_calc %>%
-  dplyr::arrange(n, g1, s, rep) # ADD THIS TO UNIT TEST
-# check if terms are different for a given combo
-
 simpr_calc %>%
   filter(term %in% "x1:x2",
          n == 100) %>%
