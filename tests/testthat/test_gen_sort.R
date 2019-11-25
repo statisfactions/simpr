@@ -1,4 +1,36 @@
 context("simpr::gen metaparameter tibble")
+library(tidyverse)
+
+test_that("Calc tidy terms match terms from fit",
+          {
+            set.seed(100)
+            lm_fit = variables(x1 = ~ 2 + rnorm(n),
+                               y = ~ 5 + 3*x1 + rnorm(n, 0, sd = 0.5)) %>%
+              meta(n = 100:101) %>%
+              gen(2) %>%
+              fit(lm = ~lm(y ~ x1, data = .))
+
+            lm_tidy = lm_fit %>%
+              calc_tidy
+
+            lm_tidy_unique_terms = lm_tidy %>%
+              count(n, rep, term, name = "count")
+            expect_equal(lm_tidy %>% select(n, rep, term) %>%
+                         anyDuplicated, 0)
+
+            lm_fit_coef = map_df(lm_fit$lm, ~ coef(.) %>% t %>%
+                  as.data.frame(check.names = F)) %>%
+              bind_cols(lm_fit %>% select(n, rep), .) %>%
+              arrange(n, rep)
+
+            lm_tidy_coef = lm_tidy %>%
+              select(n, rep, term, estimate) %>%
+              spread(term, estimate) %>%
+              arrange(n, rep)
+
+            expect_equal(lm_fit_coef, lm_tidy_coef)
+          })
+
 
 test_that("Each iteration of simulation has model terms listed correctly", {
   # define metaparamters (to use in meta() and test)
