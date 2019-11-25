@@ -34,40 +34,41 @@ test_that("Calc tidy terms match terms from fit",
 
 test_that("Each iteration of simulation has model terms listed correctly", {
   # define metaparamters (to use in meta() and test)
-  n = seq(100, 300, by = 20)
-  b1 = 1
-  b2 = 1
-  g1 = seq(-1, 1, by = 0.5)
-  s = seq(0.2, 50, length.out = 6)
-  reps = 20
+  meta_list = list(n = seq(100, 300, by = 20),
+  b1 = 1,
+  b2 = 1,
+  g1 = seq(-1, 1, by = 0.5),
+  reps = 5)
+
   # create a dataframe of all possible combinations of parameters (to check)
-  all_combos <- expand.grid(n=n, b1=b1, b2=b2, g1=g1, s=s, rep=1:reps)
+  all_combos <- expand.grid(meta_list)
 
   # run the simulation
+  set.seed(100)
   simpr_spec = variables(x1 = ~ 2 + rnorm(n),
                          x2 = ~ 3 + 2*x1 + rnorm(n, 0, sd = 0.5),
-                         y = ~ 5 + b1*x1 + b2*x2 + g1*x1*x2 + rnorm(n, 0, sd = s)) %>%
-    meta(n = n,
-         b1 = b1,
-         b2 = b2,
-         g1 = g1,
-         s = s)
+                         y = ~ 5 + b1*x1 + b2*x2 + g1*x1*x2 + rnorm(n, 0, sd = 3)) %>%
+    meta(n = meta_list$n,
+         b1 = meta_list$b1,
+         b2 = meta_list$b2,
+         g1 = meta_list$g1)
+
   simpr_gen = simpr_spec %>%
-    gen(reps) %>%
+    gen(meta_list$reps) %>%
     fit(lm = ~lm(y ~ x1*x2, data = .))
   simpr_calc = simpr_gen %>%
     calc_tidy
 
   # organize by the metaparameters (not necessary anymore)
   simpr_calc2 <- simpr_calc %>%
-    dplyr::arrange(n, b1, b2, g1, s, rep)
+    dplyr::arrange(n, b1, b2, g1, rep)
 
   # loop through all combos and check
   for (r in 1:nrow(all_combos)) { # for each row in metaparameter combo df
     cur_params <- all_combos[r,]
     cur_sub <- simpr_calc2 %>%
       dplyr::filter(n==cur_params$n, b1==cur_params$b1, b2==cur_params$b2,
-                    g1==cur_params$g1, s==cur_params$s, rep==cur_params$rep)
+                    g1==cur_params$g1, rep==cur_params$rep)
 
     # we expect ALL TERMS in the model to have unique labels
     expect_true(
