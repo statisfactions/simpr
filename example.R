@@ -47,13 +47,10 @@ chisq_gen = chisq_spec %>%
 all_tidy = chisq_gen %>%
   calc_tidy
 
-all_power =
-  all_tidy %>%
+all_tidy %>%
   group_by(n, b, Source) %>%
-  summarize(power = mean(p.value < 0.05))
-
-ggplot(aes(n, power, group = Source, linetype = Source, color = Source)) +
+  summarize(power = mean(p.value < 0.05)) %>%
+  ggplot(aes(n, power, group = Source, linetype = Source, color = Source)) +
   geom_line() +
   facet_wrap(~b)
 
-save.image("troubleshooting.Rdata")
