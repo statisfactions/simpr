@@ -61,7 +61,7 @@ gen = function(simpr, reps) {
   sim_results = specs %>%
     dplyr::group_by_all() %>%
     dplyr::do(sim_cell = purrr::pmap(., function(...) {
-      eval_environment = as_environment(list(...), parent = parent.frame())
+      eval_environment = rlang::as_environment(list(...), parent = parent.frame())
 
       df = purrr::imap_dfc(simpr$variables, function(x, y) {
 
