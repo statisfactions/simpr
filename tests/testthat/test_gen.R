@@ -3,7 +3,7 @@ library(tidyverse)
 
 ## Metaparameters and the global environment --------------
 
-test_that("Metaparameters are not blocked by global environment", {
+test_that("Metaparameters are not blocked by objects in calling environment", {
 
   n = "barf"
 
