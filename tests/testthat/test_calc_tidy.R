@@ -1,4 +1,4 @@
-context("simpr::gen metaparameter tibble")
+context("simpr::calc_tidy")
 library(tidyverse)
 
 test_that("Calc tidy terms match terms from fit",
@@ -31,7 +31,7 @@ test_that("Calc tidy terms match terms from fit",
           })
 
 
-test_that("Each iteration of simulation has model terms listed correctly", {
+test_that("Each iteration of simulation has model terms listed correctly in calc_tidy output", {
   # define metaparamters (to use in meta() and test)
   meta_list = list(n = seq(100, 300, by = 20),
   b1 = 1,
