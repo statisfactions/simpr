@@ -77,7 +77,7 @@ gen = function(simpr, reps) {
 
       df
 
-    })) %>% tidyr::unnest()
+    })) %>% tidyr::unnest(cols = c(sim_cell))
   attr(sim_results, "meta") = names(simpr$meta)
   attr(sim_results, "variables") = names(simpr$variables)
 
