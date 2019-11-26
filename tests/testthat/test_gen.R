@@ -14,6 +14,19 @@ test_that("Metaparameters are not blocked by objects in calling environment", {
 
 })
 
+test_that("gen() doesn't put objects in global environment", {
+
+  if(exists("xyz123"))
+    rm("xyz123")
+
+  out = variables(xyz123 = ~ 2 + rnorm(n)) %>%
+    meta(n = 10) %>%
+    gen(1)
+
+  expect_false(exists("xyz123", envir = .GlobalEnv))
+
+})
+
 test_that("Earlier variables have access to output of later variables", {
  out = variables(x1 = ~ 1,
                  x2 = ~ x1 + 1,
