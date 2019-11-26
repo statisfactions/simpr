@@ -16,8 +16,8 @@ test_that("Metaparameters are not blocked by objects in calling environment", {
 
 test_that("gen() doesn't put objects in global environment", {
 
-  if(exists("xyz123"))
-    rm("xyz123")
+  if(exists("xyz123", envir = .GlobalEnv))
+    rm("xyz123", envir = .GlobalEnv)
 
   out = variables(xyz123 = ~ 2 + rnorm(n)) %>%
     meta(n = 10) %>%

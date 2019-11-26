@@ -61,17 +61,17 @@ gen = function(simpr, reps) {
   sim_results = specs %>%
     dplyr::group_by_all() %>%
     dplyr::do(sim_cell = purrr::pmap(., function(...) {
-      meta_cell = as_environment(list(...), parent = parent.frame())
+      eval_environment = as_environment(list(...), parent = parent.frame())
 
       df = purrr::imap_dfc(simpr$variables, function(x, y) {
 
         eval_fun = purrr::as_mapper(x)
-        environment(eval_fun) <- meta_cell
+        environment(eval_fun) <- eval_environment
 
         gen = eval(eval_fun()) %>%
           unlist
 
-        assign(y, gen, envir = .GlobalEnv)
+        assign(y, gen, envir = eval_environment)
         gen
       })
 
