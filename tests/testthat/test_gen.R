@@ -50,6 +50,19 @@ test_that("Gen runs without warnings or messages", {
 
 })
 
+## meta can handle lists which can contain multiple matrices, etc.
+
+test_that("meta() can handle lists", {
+  meta_list_out = variables(x = ~ mvrnorm(n, rep(0, 2), Sigma = S)[, 2, drop = TRUE],
+            y = ~ x + rnorm(n)) %>%
+    meta(n = c(10, 20, 30),
+         S = list(diag(2), diag(2) + 2)) %>%
+    gen(1)
+
+})
+
+
+
 ## Generate multiple variables from a single command
 
 library(MASS)

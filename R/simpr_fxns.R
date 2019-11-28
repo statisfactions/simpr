@@ -21,7 +21,8 @@ variables = function(...) {
 #' Takes a simpr class object (e.g., from variables()) and defines the metaparameters for simulation.
 #'
 #' @param x simpr class object (e.g., output of variables())
-#'
+#' @param \dots metaparameters
+#' @param suffix name of suffix to append onto index for list metaparameters
 #' @return simpr class object
 #'
 #' @examples
@@ -35,8 +36,48 @@ variables = function(...) {
 #'              s = seq(0.2, 50, length.out = 6))
 #'
 #' @export
-meta = function(x, ...) {
-  x$meta = list(...)
+meta = function(x, ..., suffix = "_index") {
+  if(!(is.character(suffix)) || length(suffix) != 1 || nchar(suffix) <= 0)
+    stop("suffix must be a string with at least 1 character")
+
+  meta = list(...)
+
+  ## Create "index" element from names of list_elements
+  list_elements = meta %>% purrr::map_lgl(is.list)
+
+  ## Check list elements to see if dims work, assign index columns based on
+  ## names of list
+  if(any(list_elements)) {
+    index_lookup = purrr::imap(meta[list_elements], function(x, n) {
+      if(length(dim(x)) == 2) {
+        stop("list arguments must be uni-dimensional")
+      } else {
+        if(is.null(names(x))) {
+          index = 1:length(x)
+        } else {
+          index = names(x)
+        }
+      }
+
+      lookup = tibble(index = index, value = x)
+      names(lookup) = c(paste0(n, suffix), n)
+
+      list(index = index,
+           lookup = lookup)
+    })
+
+
+  names(index_lookup) = paste0(names(index_lookup), suffix)
+  indices = purrr::map(index_lookup, "index")
+
+  x$meta = list(indices = c(meta[!list_elements], purrr::map(index_lookup, "index")),
+                lookup =  purrr::map(index_lookup, "lookup"))
+
+  } else {
+    x$meta = list(indices = meta,
+                  lookup = NULL)
+  }
+
   x
 }
 
@@ -54,12 +95,22 @@ meta = function(x, ...) {
 #'
 #' @export
 gen = function(simpr, reps) {
-  # Create labeled list representing all possible values of meta parameters
-  specs = expand.grid(c(simpr$meta, list(rep = 1:reps)))
+  # Create labeled list representing all possible values of meta parameter indices
+  specs = expand.grid(c(list(rep = 1:reps), simpr$meta$indices))
+
+
+  if(!is.null(simpr$meta$lookup)) {
+    ## If there are list elements, join cells representing those list-columns
+    ## into spec
+   specs = purrr::reduce2(simpr$meta$lookup,
+                  inner_join,
+                  .init = specs,
+                  .y = names(simpr$meta$lookup)) # the "by" argument to the join
+  }
 
   ## Generate all replications
   sim_results = specs %>%
-    dplyr::group_by_all() %>%
+    dplyr::group_by_at(.vars = c("rep", names(simpr$meta$indices))) %>%
     dplyr::do(sim_cell = purrr::pmap(., function(...) {
       eval_environment = rlang::as_environment(list(...), parent = parent.frame())
 
@@ -78,7 +129,9 @@ gen = function(simpr, reps) {
       df
 
     })) %>% tidyr::unnest(cols = c(sim_cell))
-  attr(sim_results, "meta") = names(simpr$meta)
+
+  ## Add some attributes to the tibble to track meta and variables
+  attr(sim_results, "meta") = names(simpr$meta$indices)
   attr(sim_results, "variables") = names(simpr$variables)
 
   sim_results
