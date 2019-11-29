@@ -63,7 +63,7 @@ test_that("meta() can handle lists", {
 
 
 
-## Generate multiple variables from a single command
+## Generate multiple variables from a single command -------------------
 
 library(MASS)
 set.seed(100)
@@ -78,10 +78,24 @@ colnames(mat_2) = letters[1:10]
 test_that("Autonumber when generating multiple columns with named argument", {
   set.seed(100)
   auto_out = variables(x = ~ mvrnorm(30, rep(0, 10), Sigma = diag(10)), sep = "_") %>%
+    meta(n = 10) %>%
     gen(1)
 
-  expect_identical(out$sim_cell[[1]], as_tibble(mat_1))
+  expect_identical(auto_out$sim_cell[[1]], as_tibble(mat_1))
 
+})
+
+test_that("Can refer to autonumbered columns in variables()", {
+  comp_3 = as_tibble(mat_1) %>%
+    mutate (y = x_01 + x_02)
+
+  set.seed(100)
+  auto_refer = variables(x = ~ mvrnorm(30, rep(0, 10), Sigma = diag(10)), sep = "_",
+                         y = ~ x_01 + x_02) %>%
+    meta(n = 10) %>%
+    gen(1)
+
+  expect_identical(auto_refer$sim_cell[[1]], comp_3)
 })
 
 test_that("Multiple columns with two-sided formulas and unnamed arguments", {
@@ -89,7 +103,7 @@ test_that("Multiple columns with two-sided formulas and unnamed arguments", {
   cbind_out = variables(cbind(a, b, c, d, e, f, g, h, i, j) ~ mvrnorm(30, rep(0, 10), Sigma = diag(10))) %>%
     gen(1)
 
-  expect_identical(out$sim_cell[[1]], as_tibble(mat_2))
+  expect_identical(cbind_out$sim_cell[[1]], as_tibble(mat_2))
 })
 
 

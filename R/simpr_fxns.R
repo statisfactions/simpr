@@ -10,8 +10,12 @@
 #'     y = ~ 5 + b1*x1 + b2*x2 + g1*x1*x2 + rnorm(n, 0, sd = s))
 #'
 #' @export
-variables = function(...) {
+variables = function(..., sep = "_") {
+
   out = list(variables = list(...))
+
+  # set attribute of "sep" for auto-numbering variables with multiple outputs
+  attr(out$variables, "sep") = sep
   class(out) = "simpr"
   out
 }
@@ -122,9 +126,34 @@ gen = function(simpr, reps) {
         gen = eval_fun() %>%
           unlist
 
-        assign(y, gen, envir = eval_environment)
-        gen
+        # browser()
+
+        if(is.null(ncol(gen))) {
+          gen_df = as_tibble(gen, .name_repair = "minimal")
+          names(gen_df) = y
+          assign(y, gen, envir = eval_environment)
+
+        } else if(length(dim(gen)) > 3) {
+            stop("More than 2 dimensional output in variables() not supported")
+          } else if(ncol(gen) == 0) {
+            stop("variable function returns 0 columns")
+          } else if(ncol(gen) == 1) {
+           assign(y, gen[[1]], envir = eval_environment)
+          } else if(ncol(gen) > 1) {
+            gen_df = as_tibble(gen, .name_repair = "minimal")
+            # rename gen_df
+            names(gen_df) = sprintf(paste0("%s%s%0", nchar(trunc(ncol(gen))), ".0f"),
+                                y,
+                                attr(simpr$variables, "sep"),
+                                1:ncol(gen))
+            ## assign names to the eval_environmnent
+            iwalk(gen_df, ~ assign(.y, .x, envir = eval_environment))
+
+          }
+
+        gen_df
       })
+
 
       df
 
