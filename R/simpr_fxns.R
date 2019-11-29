@@ -12,10 +12,63 @@
 #' @export
 variables = function(..., sep = "_") {
 
-  out = list(variables = list(...))
+  vars = list(...)
+
+  if(length(vars) == 0)
+    stop("No variables defined")
+
+  ## Identify named arguments
+  if(is.null(names(vars))) {
+    named_vars = rep(FALSE, length(vars))
+    names(vars) = paste0(".unnamed_",1:length(vars))
+  } else {
+    named_vars =  names(vars) != "" # empty names become "" when there are both named and unnamed args
+    names(vars)[!named_vars] =  paste0(".unnamed_", names(vars)[!named_vars])
+  }
+
+  # Process formulas to extract and set varnames attribute
+  out = list(variables = purrr::pmap(list(vars, names(vars), named_vars),
+                                     function(x, n, named) {
+
+    if(!rlang::is_formula(x))
+     stop("Argument is not formula")
+    else {
+      ## Double-sided formula
+     if(length(x) == 3) {
+       if(named)
+         warning("Two-sided formula given as named argument but will be ignored")
+
+       ## Get names from left-hand side of formula
+       attr(x, "varnames") = x[[2]][-1] %>% purrr::map_chr(deparse)
+
+       ## delete left-hand side of formula and return right-handed formula
+       x_out = x
+       x_out[[2]] = NULL
+
+       x_out
+     } else {
+       ## Single-sided formula
+      if(length(x) == 2) {
+        if(!named)
+          stop("Right-hand formulas must be named.")
+
+       # Get name from name of argument
+        x_out = x
+        attr(x_out, "varnames") = n
+
+        x_out
+
+      }
+
+     }
+
+    }
+  }))
+
 
   # set attribute of "sep" for auto-numbering variables with multiple outputs
   attr(out$variables, "sep") = sep
+
   class(out) = "simpr"
   out
 }
@@ -118,7 +171,7 @@ gen = function(simpr, reps) {
     dplyr::do(sim_cell = purrr::pmap(., function(...) {
       eval_environment = rlang::as_environment(list(...), parent = parent.frame())
 
-      df = purrr::imap_dfc(simpr$variables, function(x, y) {
+      df = purrr::map_dfc(simpr$variables, function(x) {
 
         eval_fun = purrr::as_mapper(x)
         environment(eval_fun) <- eval_environment
@@ -126,28 +179,37 @@ gen = function(simpr, reps) {
         gen = eval_fun() %>%
           unlist
 
-        # browser()
+        varnames = attr(x, "varnames")
 
         if(is.null(ncol(gen))) {
-          gen_df = as_tibble(gen, .name_repair = "minimal")
-          names(gen_df) = y
-          assign(y, gen, envir = eval_environment)
+          gen_df = tibble::as_tibble(gen, .name_repair = "minimal")
+          names(gen_df) = varnames
+          assign(varnames, gen, envir = eval_environment)
 
         } else if(length(dim(gen)) > 3) {
             stop("More than 2 dimensional output in variables() not supported")
           } else if(ncol(gen) == 0) {
             stop("variable function returns 0 columns")
           } else if(ncol(gen) == 1) {
-           assign(y, gen[[1]], envir = eval_environment)
+            names(gen) = attr(x, "varnames")
+            assign(varnames, gen[[1]], envir = eval_environment)
           } else if(ncol(gen) > 1) {
-            gen_df = as_tibble(gen, .name_repair = "minimal")
+            gen_df = tibble::as_tibble(gen, .name_repair = "minimal")
+
             # rename gen_df
-            names(gen_df) = sprintf(paste0("%s%s%0", nchar(trunc(ncol(gen))), ".0f"),
-                                y,
-                                attr(simpr$variables, "sep"),
-                                1:ncol(gen))
+            ## if multiple varnames given via formula lhs, use those
+            if(length(varnames) > 1) {
+              names(gen_df) = varnames
+            } else {
+              # Otherwise, use auto-numbering
+              names(gen_df) = sprintf(paste0("%s%s%0", nchar(trunc(ncol(gen))), ".0f"),
+                                  varnames,
+                                  attr(simpr$variables, "sep"),
+                                  1:ncol(gen))
             ## assign names to the eval_environmnent
-            iwalk(gen_df, ~ assign(.y, .x, envir = eval_environment))
+            }
+            purrr::iwalk(gen_df, ~ assign(.y, .x, envir = eval_environment))
+
 
           }
 
@@ -161,7 +223,7 @@ gen = function(simpr, reps) {
 
   ## Add some attributes to the tibble to track meta and variables
   attr(sim_results, "meta") = names(simpr$meta$indices)
-  attr(sim_results, "variables") = names(simpr$variables)
+  attr(sim_results, "variables") = purrr::map(simpr$variables, ~ attr(., "varnames")) %>% unlist
 
   sim_results
 }
