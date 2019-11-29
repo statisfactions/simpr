@@ -106,5 +106,17 @@ test_that("Multiple columns with two-sided formulas and unnamed arguments", {
   expect_identical(cbind_out$sim_cell[[1]], as_tibble(mat_2))
 })
 
+test_that("Can refer to two-sided formula columns as arguments in variables()", {
+  comp_4 = as_tibble(mat_2) %>%
+    mutate (y = a + b)
+
+  set.seed(100)
+  cbind_refer = variables(cbind(a, b, c, d, e, f, g, h, i, j) ~ mvrnorm(30, rep(0, 10), Sigma = diag(10)),
+                          y = ~ a + b) %>%
+    gen(1)
+
+  expect_identical(cbind_refer$sim_cell[[1]], comp_4)
+})
+
 
 
