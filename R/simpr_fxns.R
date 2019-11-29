@@ -95,13 +95,13 @@ meta = function(x, ..., suffix = "_index") {
 #'
 #' @export
 gen = function(simpr, reps) {
-  # Create labeled list representing all possible values of meta parameter indices
+  # Create data frame representing all possible values of meta parameter indices
   specs = expand.grid(c(list(rep = 1:reps), simpr$meta$indices))
 
 
   if(!is.null(simpr$meta$lookup)) {
     ## If there are list elements, join cells representing those list-columns
-    ## into spec
+    ## into specs
    specs = purrr::reduce2(simpr$meta$lookup,
                   inner_join,
                   .init = specs,
