@@ -119,7 +119,7 @@ gen = function(simpr, reps) {
         eval_fun = purrr::as_mapper(x)
         environment(eval_fun) <- eval_environment
 
-        gen = eval(eval_fun()) %>%
+        gen = eval_fun() %>%
           unlist
 
         assign(y, gen, envir = eval_environment)
