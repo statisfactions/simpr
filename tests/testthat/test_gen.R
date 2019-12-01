@@ -1,5 +1,6 @@
 context("simpr::gen")
 library(tidyverse)
+library(MASS)
 
 ## Metaparameters and the global environment --------------
 
@@ -65,7 +66,6 @@ test_that("meta() can handle lists", {
 
 ## Generate multiple variables from a single command -------------------
 
-library(MASS)
 set.seed(100)
 
 mat_1 = mvrnorm(30, rep(0, 10), Sigma = diag(10))
