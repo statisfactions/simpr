@@ -10,7 +10,7 @@ Encoding: UTF-8
 LazyData: true
 Imports:
     magrittr
-RoxygenNote: 7.0.0
+RoxygenNote: 7.0.1
 Suggests: 
     broom,
     testthat,
