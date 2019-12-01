@@ -1,17 +1,24 @@
 Package: simpr
 Type: Package
-Title: Flexible Interface for Power Analysis Simulations
-Version: 0.0.1
+Title: Flexible Tidyverse-Friendly Simulation Interface
+Version: 0.0.1.9000
 Author: Ethan C. Brown & Jeffrey K. Bye
-Maintainer: The package maintainer <ecbrown@umn.edu>
-Description: Provides a flexible interface for easily customizing data simulations for power analyses of various designs.
-License: What license is it under?
+Maintainer: Ethan C. Brown <ecbrown@umn.edu>
+Description: Provides a flexible interface for easily customizing data simulations, especially for power analyses of various designs.
+License: GPL2+
 Encoding: UTF-8
 LazyData: true
+Depends: 
+    R (>= 3.6.0)
 Imports:
-    magrittr
+    broom,
+    dplyr,
+    purrr,
+    magrittr,
+    rlang,
+    tibble,
+    tidyr,
+    tidyselect,
 RoxygenNote: 7.0.1
 Suggests: 
-    broom,
-    testthat,
-    tidyverse
+    testthat
