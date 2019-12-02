@@ -10,7 +10,12 @@ output:
 
 `simpr` provides a simple and tidyverse-friendly syntax for specifying and generating simulations, especially for power analysis.  
 
+## Installation
 
+```{r eval = FALSE}
+remotes::install_github("statisfactions/simpr")
+
+```
 
 
 ## Introductory example: regression with three variables

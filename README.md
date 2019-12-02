@@ -5,6 +5,13 @@ simpr
 
 `simpr` provides a simple and tidyverse-friendly syntax for specifying and generating simulations, especially for power analysis.
 
+Installation
+------------
+
+``` r
+remotes::install_github("statisfactions/simpr")
+```
+
 Introductory example: regression with three variables
 -----------------------------------------------------
 
@@ -58,7 +65,7 @@ simpr_tidy %>%
   facet_grid(~g1)
 ```
 
-![](README_files/figure-markdown_github/unnamed-chunk-2-1.png)
+![](README_files/figure-markdown_github/unnamed-chunk-3-1.png)
 
 ### Breaking down the example
 
