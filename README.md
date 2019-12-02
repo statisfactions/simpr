@@ -83,7 +83,7 @@ simpr_gen = simpr_spec %>%
   gen(10)
 ```
 
-`gen` has one argument, the number of repetitions for each simulation. Here we generate 5 repetitions. This produces a `tibble` with one row for each combination of metaparameters and repetition, and a list-column with the generated data.
+`gen` has one argument, the number of repetitions for each simulation. Here we generate 10 repetitions. This produces a `tibble` with one row for each combination of metaparameters and repetition, and a list-column with the generated data.
 
 ``` r
 simpr_gen
