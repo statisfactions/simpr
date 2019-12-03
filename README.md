@@ -15,7 +15,7 @@ remotes::install_github("statisfactions/simpr")
 Introductory example: regression with three variables
 -----------------------------------------------------
 
-Let's say we want to see our power to detect an interaction in a linear model. We can completely run the simulation and calculate *p*-values with a just a few lines of code:
+Let's say we want to see our power to detect an interaction in a linear model. We can completely run the simulation and calculate *p* values with a just a few lines of code:
 
 ``` r
 library(simpr)
@@ -37,7 +37,7 @@ simpr_tidy = ## Specify the simulation
   calc_tidy
 ```
 
-This gives a tibble with terms and *p* values which we can use to plot the power curves:
+This gives a tibble with slope estimates and *p* values which we can use to plot the power curves:
 
 ``` r
 library(ggplot2)
@@ -111,7 +111,7 @@ simpr_gen
     ## 10     1   120     1     1   1   <tibble [120 x 3]>
     ## # ... with 540 more rows
 
-Note the first 5 rows have everything thes same with the column `n`, but `g1` varies, and each element of `sim_cell` is a tibble with 100 rows; then on the sixth row, we have the next value of `n`, 120, and a tibble with 120 rows, and so on. Each element of `sim_cell` contains the generated `x1`, `x2`, and `y`, e.g.
+Note the first 5 rows have everything the same with the column `n`, but `g1` varies, and each element of `sim_cell` is a tibble with 100 rows; then on the sixth row, we have the next value of `n`, 120, and a tibble with 120 rows, and so on. Each element of `sim_cell` contains the generated `x1`, `x2`, and `y`, e.g.
 
 ``` r
 simpr_gen$sim_cell[[1]]
