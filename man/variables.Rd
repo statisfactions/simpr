@@ -8,36 +8,16 @@ variables(..., sep = "_")
 }
 \arguments{
 \item{...}{\code{purrr}-style formula functions used for generating
-simulation variables. If a formula is given as a named argument, the name
-is used for the name(s) of the generated variables. If the formula is given
-as a two-sided formula, the left-hand side is used for the names(s) of the
-generated variables.  See \emph{Details}.}
+simulation variables.}
 
-\item{sep}{If any named formula function given in \code{\dots} generates
-multiple variables (e.g. it generates a matrix or data frame with multiple
-columns), specify the separator for auto-generating names.  For instance,
-if the argument \code{x} generates a two-column matrix and \code{sep =
-"_"}, the default, the variables will be named \code{x_1} and \code{x_2}.}
+\item{sep}{Specify the separator for auto-generating names.  See
+\emph{Details}.}
 }
 \value{
 A \code{simpr_spec} object which contains the functions needed to
   generate the simulation; to be passed to \code{\link{meta}} for defining
   metaparameters or directly to \code{\link{gen}} for generating the
   simulation.
-}
-\description{
-Specify functions for computing each variable in the simulation.  This is
-always the first command in the simulation process.
-}
-\details{
-The \code{\dots} arguments use an efficient syntax to specify custom
-  functions needed for generating a simulation, based on the \code{purrr}
-  package.  When producing one variable, one can simply provide an expression
-  such as \code{variables(x = ~ 3 + runif(10))} instead of defining a custom
-  function. Double-sided formulas, to specify names for multiple columns
-  produced by the function, can be specified using \code{\link{cbind}},
-  similar to multivariate specifications elsewhere in R, e.g. \code{cbind{x,
-  y} ~ MASS::mvrnorm(5, c(0, 0), Sigma = diag(2))}.
 
   Also useful is the fact that one can refer to variables in subsequent
   arguments.  So, one could define another variable \code{y} that depends on
@@ -47,6 +27,27 @@ The \code{\dots} arguments use an efficient syntax to specify custom
   Finally, one can also refer to metaparameters that are to be systematically
   varied in the simulation study.  See \code{\link{meta}} and the examples
   for more details.
+}
+\description{
+Specify functions for computing each variable in the simulation.
+}
+\details{
+This is always the first command in the simulation process, to specify the
+actual simulated variables.
+
+The \code{\dots} arguments use an efficient syntax to specify custom
+functions needed for generating a simulation, based on the \code{purrr}
+package.  When producing one variable, one can provide an expression such as
+\code{variables(x = ~ 3 + runif(10))} instead of defining a custom function.
+
+If a formula is given as a named argument, the name is used for the name(s)
+of the generated variables. For instance, if the argument \code{x} generates
+a two-column matrix and \code{sep = "_"} (the default) the variables will be
+named \code{x_1} and \code{x_2}. Double-sided formulas specify names for
+multiple columns produced by the function, and can be specified using
+\code{\link{cbind}(name1, name2, \emph{etc.})}, similar to multivariate
+specifications elsewhere in R, e.g. \code{cbind(x, y) ~ MASS::mvrnorm(5, c(0,
+0), Sigma = diag(2))}.
 }
 \examples{
 ## specify a variable and generate it in the simulation

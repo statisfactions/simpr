@@ -1,31 +1,32 @@
 #' Specify functions to generate variables
 #'
-#' Specify functions for computing each variable in the simulation.  This is
-#' always the first command in the simulation process.
+#' Specify functions for computing each variable in the simulation.
+#'
+#' This is always the first command in the simulation process, to specify the
+#' actual simulated variables.
+#'
+#' The \code{\dots} arguments use an efficient syntax to specify custom
+#' functions needed for generating a simulation, based on the \code{purrr}
+#' package.  When producing one variable, one can provide an expression such as
+#' \code{variables(x = ~ 3 + runif(10))} instead of defining a custom function.
+#'
+#' If a formula is given as a named argument, the name is used for the name(s)
+#' of the generated variables. For instance, if the argument \code{x} generates
+#' a two-column matrix and \code{sep = "_"} (the default) the variables will be
+#' named \code{x_1} and \code{x_2}. Double-sided formulas specify names for
+#' multiple columns produced by the function, and can be specified using
+#' \code{\link{cbind}(name1, name2, \emph{etc.})}, similar to multivariate
+#' specifications elsewhere in R, e.g. \code{cbind(x, y) ~ MASS::mvrnorm(5, c(0,
+#' 0), Sigma = diag(2))}.
 #'
 #' @param ... \code{purrr}-style formula functions used for generating
-#'   simulation variables. If a formula is given as a named argument, the name
-#'   is used for the name(s) of the generated variables. If the formula is given
-#'   as a two-sided formula, the left-hand side is used for the names(s) of the
-#'   generated variables.  See \emph{Details}.
-#' @param sep If any named formula function given in \code{\dots} generates
-#'   multiple variables (e.g. it generates a matrix or data frame with multiple
-#'   columns), specify the separator for auto-generating names.  For instance,
-#'   if the argument \code{x} generates a two-column matrix and \code{sep =
-#'   "_"}, the default, the variables will be named \code{x_1} and \code{x_2}.
+#'   simulation variables.
+#' @param sep Specify the separator for auto-generating names.  See
+#'   \emph{Details}.
 #' @return A \code{simpr_spec} object which contains the functions needed to
 #'   generate the simulation; to be passed to \code{\link{meta}} for defining
 #'   metaparameters or directly to \code{\link{gen}} for generating the
 #'   simulation.
-#'
-#' @details The \code{\dots} arguments use an efficient syntax to specify custom
-#'   functions needed for generating a simulation, based on the \code{purrr}
-#'   package.  When producing one variable, one can simply provide an expression
-#'   such as \code{variables(x = ~ 3 + runif(10))} instead of defining a custom
-#'   function. Double-sided formulas, to specify names for multiple columns
-#'   produced by the function, can be specified using \code{\link{cbind}},
-#'   similar to multivariate specifications elsewhere in R, e.g. \code{cbind{x,
-#'   y} ~ MASS::mvrnorm(5, c(0, 0), Sigma = diag(2))}.
 #'
 #'   Also useful is the fact that one can refer to variables in subsequent
 #'   arguments.  So, one could define another variable \code{y} that depends on
