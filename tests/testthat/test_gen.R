@@ -57,7 +57,7 @@ test_that("meta() can handle lists", {
   meta_list_out = variables(x = ~ mvrnorm(n, rep(0, 2), Sigma = S)[, 2, drop = TRUE],
             y = ~ x + rnorm(n)) %>%
     meta(n = c(10, 20, 30),
-         S = list(diag(2), diag(2) + 2)) %>%
+         S = list(independent = diag(2), correlated = diag(2) + 2)) %>%
     gen(1)
 
 })
