@@ -3,7 +3,13 @@
 simpr
 =====
 
-`simpr` provides a simple and tidyverse-friendly syntax for specifying and generating simulations, especially for power analysis.
+`simpr` provides a simple and tidyverse-friendly syntax for specifying and generating simulations, especially for power analysis. The primary workflow is:
+
+1.  Specify **variables** for your simulation data, with `variables()`
+2.  Specify **parameters** that you want to systematically vary between different cells of your simulation design (e.g. *n*, effect size, distribution type), with `meta()`
+3.  Generate the simulation data with `gen()`
+4.  Fit models with your data (e.g. `lm()`), with `fit()`
+5.  Tidy the model output for further processing, such as computing power or Type I Error rates, with `calc_tidy`
 
 Installation
 ------------
@@ -42,20 +48,7 @@ This gives a tibble with slope estimates and *p* values which we can use to plot
 ``` r
 library(ggplot2)
 library(dplyr)
-```
 
-    ## 
-    ## Attaching package: 'dplyr'
-
-    ## The following objects are masked from 'package:stats':
-    ## 
-    ##     filter, lag
-
-    ## The following objects are masked from 'package:base':
-    ## 
-    ##     intersect, setdiff, setequal, union
-
-``` r
 simpr_tidy %>%
   filter(term %in% "x1:x2") %>%
   group_by(n, g1) %>%
