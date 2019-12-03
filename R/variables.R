@@ -1,13 +1,72 @@
 #' Specify functions to generate variables
 #'
-#' Creates a simpr class object that specifies formulae for computing each variable in the model.
+#' Specify functions for computing each variable in the simulation.  This is
+#' always the first command in the simulation process.
 #'
-#' @return simpr class object
+#' @param ... \code{purrr}-style formula functions used for generating
+#'   simulation variables. If a formula is given as a named argument, the name
+#'   is used for the name(s) of the generated variables. If the formula is given
+#'   as a two-sided formula, the left-hand side is used for the names(s) of the
+#'   generated variables.  See \emph{Details}.
+#' @param sep If any named formula function given in \code{\dots} generates
+#'   multiple variables (e.g. it generates a matrix or data frame with multiple
+#'   columns), specify the separator for auto-generating names.  For instance,
+#'   if the argument \code{x} generates a two-column matrix and \code{sep =
+#'   "_"}, the default, the variables will be named \code{x_1} and \code{x_2}.
+#' @return A \code{simpr_spec} object which contains the functions needed to
+#'   generate the simulation; to be passed to \code{\link{meta}} for defining
+#'   metaparameters or directly to \code{\link{gen}} for generating the
+#'   simulation.
+#'
+#' @details The \code{\dots} arguments use an efficient syntax to specify custom
+#'   functions needed for generating a simulation, based on the \code{purrr}
+#'   package.  When producing one variable, one can simply provide an expression
+#'   such as \code{variables(x = ~ 3 + runif(10))} instead of defining a custom
+#'   function. Double-sided formulas, to specify names for multiple columns
+#'   produced by the function, can be specified using \code{\link{cbind}},
+#'   similar to multivariate specifications elsewhere in R, e.g. \code{cbind{x,
+#'   y} ~ MASS::mvrnorm(5, c(0, 0), Sigma = diag(2))}.
+#'
+#'   Also useful is the fact that one can refer to variables in subsequent
+#'   arguments.  So, one could define another variable \code{y} that depends on
+#'   \code{x} very simply, e.g. \code{variables(x = ~ 3 + runif(10), y = ~ 2 *
+#'   x)}.
+#'
+#'   Finally, one can also refer to metaparameters that are to be systematically
+#'   varied in the simulation study.  See \code{\link{meta}} and the examples
+#'   for more details.
 #'
 #' @examples
-#' variables(x1 = ~ 2 + rnorm(n),
-#'     x2 = ~ 3 + 2*x1 + rnorm(n, 0, sd = 0.5),
-#'     y = ~ 5 + b1*x1 + b2*x2 + g1*x1*x2 + rnorm(n, 0, sd = s))
+#' ## specify a variable and generate it in the simulation
+#' single_var = variables(x = ~ 1 + rnorm(5)) %>%
+#'   gen(1) # generate a single repetition of the simulation
+#' single_var$sim_cell[[1]] # peek at the simulation
+#'
+#' two_var = variables(x = ~ 1 + rnorm(5),
+#'                     y = ~ x + 2) %>%
+#'   gen(1)
+#' two_var$sim_cell[[1]]
+#'
+#' library(MASS)
+#' ## Generates x_01 through x_10
+#' autonumber_var = variables(x = ~ mvrnorm(5, rep(0, 10), Sigma = diag(10))) %>%
+#'   gen(1)
+#' autonumber_var$sim_cell[[1]]
+#'
+#' # alternatively, you could use a two-sided formula for names
+#' multi_name = variables(cbind(x, y, z) ~ mvrnorm(5, rep(0, 3), Sigma = diag(3))) %>%
+#'   gen(1)
+#' multi_name$sim_cell[[1]]
+#'
+#' # Simple example of setting a metaparameter
+#' simple_meta = variables(x = ~ 1 + rnorm(n)) %>%
+#'   meta(n = c(5, 10)) %>% # without this line you would get an error!
+#'   gen(1)
+#'
+#'
+#' simple_meta # has two rows now, one for each value of n
+#' simple_meta$sim_cell[[1]]
+#' simple_meta$sim_cell[[2]]
 #'
 #' @export
 variables = function(..., sep = "_") {
@@ -69,6 +128,6 @@ variables = function(..., sep = "_") {
   # set attribute of "sep" for auto-numbering variables with multiple outputs
   attr(out$variables, "sep") = sep
 
-  class(out) = "simpr"
+  class(out) = "simpr_spec"
   out
 }
