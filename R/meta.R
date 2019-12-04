@@ -3,22 +3,58 @@
 #' Takes the output of \code{\link{variables}} (a \code{simpr_spec} object) and
 #' defines the metaparameters for simulation.
 #'
-#' Metaparameters are named arguments that can be
+#' This is the second step in the simulation process, after specifying the
+#' simulated data using \code{\link{variables}}.  The output of
+#' \code{\link{meta}} is then passed to \code{\link{gen}} to actually generate
+#' the simulation.
 #'
-#' @param x simpr class object (e.g., output of variables())
-#' @param ... metaparameters
-#' @param suffix name of suffix to append onto index for list metaparameters
-#' @return simpr class object
+#' Metaparameters are named arguments that are used in the simulation.  Usually,
+#' a metaparameter is some kind of vector or list, representing something that
+#' is to be systematically varied as a part of the simulation design. Any
+#' metaparameter would also appear in the formulas of \code{\link{variables}},
+#' and thus the simulation changes depending on the value of the metaparameter.
+#'
+#' When creating the simulation, simulations for all possible combinations of
+#' metaparameters are generated, a fully crossed simulation design.
+#'
+#' When one of \code{\dots} is a list, a new column is generated in the output
+#' to \code{gen} to serve as the index of the list.  This new column will be the
+#' name of the list argument,  with the \code{suffix} argument appended onto the
+#' end.  So if \code{Y = list(a = 1:2, b = letters[2:3])}, and \code{suffix =
+#' "_index"}, the default, a column named \code{Y_index} would be added to the
+#' output of \code{gen} with values \code{"a"} and \code{"b"}.
+#'
+#' @param x a \code{simpr_spec} object (the output of \code{\link{variables}})
+#' @param ... metaparameters: named arguments containing vectors or
+#'   unidimensional lists of objects to be used in the simulation.
+#' @param suffix name of suffix to append onto index column for list
+#'   metaparameters, \code{"_index"} by default.  See \emph{Details}.
+#' @return a \code{simpr_spec} object to pass onto \code{\link{gen}} for the
+#'   simulation.
 #'
 #' @examples
-#' variables(x1 = ~ 2 + rnorm(n),
-#'     x2 = ~ 3 + 2*x1 + rnorm(n, 0, sd = 0.5),
-#'     y = ~ 5 + b1*x1 + b2*x2 + g1*x1*x2 + rnorm(n, 0, sd = s)) \%>\%
-#'         meta(n = seq(100, 300, by = 20),
-#'              b1 = 1,
-#'              b2 = 1,
-#'              g1 = seq(-1, 1, by = 0.5),
-#'              s = seq(0.2, 50, length.out = 6))
+#' # Simple example of setting a metaparameter
+#' simple_meta = variables(x = ~ 1 + rnorm(n)) %>%
+#'   meta(n = c(5, 10)) %>%
+#'   gen(1)
+#'
+#' simple_meta # $sim_cell has a 5-row tibble and a 10-row tibble
+#'
+#' multi_meta = variables(x = ~ mu + rnorm(n)) %>%
+#'   meta(n = c(5, 10),
+#'        mu = seq(-1, 1, length.out = 3)) %>%
+#'   gen(1)
+#'
+#' multi_meta # generates simulations for all combos of n and mu
+#'
+#'
+#' # meta can handle lists which can contain multiple matrices, etc.
+#' meta_list_out = variables(x = ~ MASS::mvrnorm(n, rep(0, 2), Sigma = S)) %>%
+#'   meta(n = c(10, 20, 30),
+#'        S = list(independent = diag(2), correlated = diag(2) + 2)) %>%
+#'   gen(1)
+#'
+#' meta_list_out # generates S_index column
 #'
 #' @export
 meta = function(x, ..., suffix = "_index") {
@@ -44,7 +80,7 @@ meta = function(x, ..., suffix = "_index") {
         }
       }
 
-      lookup = tibble(index = index, value = x)
+      lookup = tibble::tibble(index = index, value = x)
       names(lookup) = c(paste0(n, suffix), n)
 
       list(index = index,
