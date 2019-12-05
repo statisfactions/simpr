@@ -2,3 +2,5 @@
 ^\.Rproj\.user$
 ^.*travis.*$
 ^README.*
+^\..*$
+^example.R$
