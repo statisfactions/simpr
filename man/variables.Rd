@@ -60,14 +60,13 @@ two_var = variables(x = ~ 1 + rnorm(5),
   gen(1)
 two_var$sim_cell[[1]]
 
-library(MASS)
 ## Generates x_01 through x_10
-autonumber_var = variables(x = ~ mvrnorm(5, rep(0, 10), Sigma = diag(10))) \%>\%
+autonumber_var = variables(x = ~ MASS::mvrnorm(5, rep(0, 10), Sigma = diag(10))) \%>\%
   gen(1)
 autonumber_var$sim_cell[[1]]
 
 # alternatively, you could use a two-sided formula for names
-multi_name = variables(cbind(x, y, z) ~ mvrnorm(5, rep(0, 3), Sigma = diag(3))) \%>\%
+multi_name = variables(cbind(x, y, z) ~ MASS::mvrnorm(5, rep(0, 3), Sigma = diag(3))) \%>\%
   gen(1)
 multi_name$sim_cell[[1]]
 
