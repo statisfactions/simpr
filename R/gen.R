@@ -66,10 +66,13 @@ gen = function(x, reps) {
     ## If there are list elements, join cells representing those list-columns
     ## into specs
     specs = purrr::reduce2(x$meta$lookup,
-                           inner_join,
+                           dplyr::inner_join,
                            .init = specs,
                            .y = names(x$meta$lookup)) # the "by" argument to the join
   }
+
+  ## define variable "." to satisfy R CMD Check
+  . = "Defining ."
 
   ## Generate all replications
   sim_results = specs %>%
@@ -125,7 +128,7 @@ gen = function(x, reps) {
 
       df
 
-    })) %>% tidyr::unnest(cols = c(sim_cell))
+    })) %>% tidyr::unnest(cols = "sim_cell")
 
   ## Add some attributes to the tibble to track meta and variables
   attr(sim_results, "meta") = names(x$meta$indices)

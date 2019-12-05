@@ -19,7 +19,8 @@ run_on_fit = function(simpr_mod, FUN) {
   simpr_tidy = purrr::map_dfr(simpr_mods, ~ purrr::map_dfr(., FUN, .id = "....id"), .id = "Source")
 
   ## Re-merge metaparameter columns to tidy output
-  dplyr::right_join(simpr_meta, simpr_tidy, by = "....id") %>%
-    dplyr::select(-....id)
+  output = dplyr::right_join(simpr_meta, simpr_tidy, by = "....id")
+  output$....id = NULL
 
+  output
 }
