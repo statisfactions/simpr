@@ -15,7 +15,7 @@
 #' a two-column matrix and \code{sep = "_"} (the default) the variables will be
 #' named \code{x_1} and \code{x_2}. Double-sided formulas specify names for
 #' multiple columns produced by the function, and can be specified using
-#' \code{\link{cbind}(name1, name2, \emph{etc.})}, similar to multivariate
+#' \code{\link{cbind}(name1, name2, etc)}, similar to multivariate
 #' specifications elsewhere in R, e.g. \code{cbind(x, y) ~ MASS::mvrnorm(5, c(0,
 #' 0), Sigma = diag(2))}.
 #'
