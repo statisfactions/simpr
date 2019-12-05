@@ -16,8 +16,8 @@ simulation variables.}
 \value{
 A \code{simpr_spec} object which contains the functions needed to
   generate the simulation; to be passed to \code{\link{meta}} for defining
-  metaparameters or directly to \code{\link{gen}} for generating the
-  simulation.
+  metaparameters or, if there are no metaparameters, directly to
+  \code{\link{gen}} for generating the simulation.
 
   Also useful is the fact that one can refer to variables in subsequent
   arguments.  So, one could define another variable \code{y} that depends on
