@@ -1,7 +1,5 @@
 context("simpr::fit")
 
-library(tidyverse)
-
 test_that("Multiple fit functions give different results", {
   set.seed(100)
   chisq_spec = variables(x1 = ~rnorm(n),
@@ -13,7 +11,7 @@ test_that("Multiple fit functions give different results", {
 
   chisq_fit = chisq_spec %>%
     gen(5) %>%
-    fit(ChiSq = ~chisq.test(.$c1, .$c2),
+    fit(ChiSq = ~ suppressWarnings(chisq.test(.$c1, .$c2)),
         Unknown_Continuous_Correlation = ~cor.test(.$x1, .$x2))
 
   ## These should NOT be the same!

@@ -1,4 +1,5 @@
 context("calc_glance")
+library(dplyr)
 
 test_that("calc_glance correctly returns broom::glance output", {
   ## Reference

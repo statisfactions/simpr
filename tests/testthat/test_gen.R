@@ -1,6 +1,7 @@
 context("simpr::gen")
-library(tidyverse)
 library(MASS)
+library(dplyr)
+select = dplyr::select
 
 ## Metaparameters and the global environment --------------
 

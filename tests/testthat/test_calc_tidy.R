@@ -1,5 +1,5 @@
 context("simpr::calc_tidy")
-library(tidyverse)
+library(dplyr)
 
 test_that("Calc tidy terms match terms from fit",
           {
@@ -17,14 +17,14 @@ test_that("Calc tidy terms match terms from fit",
               count(n, rep, term, name = "count")
             expect_true(all(lm_tidy_unique_terms$count == 1))
 
-            lm_fit_coef = map_df(lm_fit$lm, ~ coef(.) %>% t %>%
+            lm_fit_coef = purrr::map_df(lm_fit$lm, ~ coef(.) %>% t %>%
                   as.data.frame(check.names = F)) %>%
               bind_cols(lm_fit %>% select(n, rep), .) %>%
               arrange(n, rep)
 
             lm_tidy_coef = lm_tidy %>%
               select(n, rep, term, estimate) %>%
-              spread(term, estimate) %>%
+              tidyr::spread(term, estimate) %>%
               arrange(n, rep)
 
             expect_equal(lm_fit_coef, lm_tidy_coef)
