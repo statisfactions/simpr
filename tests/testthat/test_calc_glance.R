@@ -13,9 +13,13 @@ test_that("calc_glance correctly returns broom::glance output", {
   lin_test = variables(y1 = ~ 2 + rnorm(10),
             y2 = ~ y1 + rnorm(10)) %>%
     gen(1) %>%
-    fit(linear = ~ lm(y2 ~ y1, data = .))
+    fit(linear = ~ lm(y2 ~ y1, data = .)) %>%
+    calc_glance
 
-  expect_identical(broom_target, lin_test$linear[[1]])
+  lin_test %>%
+    select(-rep, -Source) %>%
+    as_tibble %>%
+    expect_identical(broom_target)
 
 })
 

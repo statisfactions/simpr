@@ -51,6 +51,7 @@ cor_vs_lm = simple_linear_data \%>\%
 cor_vs_lm # has NA for non-matching terms
 
 ## Example power analysis to detect an interaction (g1)
+\donttest{
 set.seed(100)
 simpr_tidy = ## Specify the simulation
   variables(x1 = ~ 2 + rnorm(n),
@@ -75,7 +76,7 @@ simpr_tidy \%>\%
   ggplot(aes(n, power)) +
   geom_line() +
   facet_grid(~g1)
-
+}
 }
 \seealso{
 \code{\link{calc_glance}} to view overall model statistics (e.g.
