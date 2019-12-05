@@ -60,7 +60,7 @@ gen = function(x, reps) {
   }
 
   # Create data frame representing all possible values of meta parameter indices
-  specs = expand.grid(c(list(rep = 1:reps), x$meta$indices))
+  specs = expand.grid(c(list(rep = 1:reps), x$meta$indices), stringsAsFactors = FALSE)
 
   if(!is.null(x$meta$lookup)) {
     ## If there are list elements, join cells representing those list-columns
