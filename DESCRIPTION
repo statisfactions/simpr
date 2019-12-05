@@ -5,7 +5,7 @@ Version: 0.0.1.9000
 Author: Ethan C. Brown & Jeffrey K. Bye
 Maintainer: Ethan C. Brown <ecbrown@umn.edu>
 Description: Provides a flexible interface for easily customizing data simulations, especially for power analyses of various designs.
-License: GPL2+
+License: GPL-2
 Encoding: UTF-8
 LazyData: true
 Depends: 
