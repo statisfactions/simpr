@@ -13,13 +13,15 @@ Depends:
 Imports:
     broom,
     dplyr,
+    generics,
     purrr,
     magrittr,
     rlang,
     tibble,
     tidyr,
-    tidyselect,
+    tidyselect
 RoxygenNote: 7.0.1
 Suggests: 
     MASS,
-    testthat
+    testthat,
+    ggplot2
