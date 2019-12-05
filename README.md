@@ -1,15 +1,21 @@
-[![Build Status](https://travis-ci.com/jkbye/simpr.svg?branch=master)](https://travis-ci.com/statisfactions/simpr)
+[![Build
+Status](https://travis-ci.com/statisfactions/simpr.svg?branch=master)](https://travis-ci.com/statisfactions/simpr)
 
 simpr
 =====
 
-`simpr` provides a simple and tidyverse-friendly syntax for specifying and generating simulations, especially for power analysis. The primary workflow is:
+`simpr` provides a simple and tidyverse-friendly syntax for specifying
+and generating simulations, especially for power analysis. The primary
+workflow is:
 
 1.  Specify **variables** for your simulation data, with `variables()`
-2.  Specify **parameters** that you want to systematically vary between different cells of your simulation design (e.g. *n*, effect size, distribution type), with `meta()`
+2.  Specify **parameters** that you want to systematically vary between
+    different cells of your simulation design (e.g. *n*, effect size,
+    distribution type), with `meta()`
 3.  Generate the simulation data with `gen()`
-4.  Fit models with your data (e.g. `lm()`), with `fit()`
-5.  Tidy the model output for further processing, such as computing power or Type I Error rates, with `calc_tidy`
+4.  Fit models with your data (e.g. `lm()`), with `fit()`
+5.  Tidy the model output for further processing, such as computing
+    power or Type I Error rates, with `calc_tidy`
 
 Installation
 ------------
@@ -21,7 +27,9 @@ remotes::install_github("statisfactions/simpr")
 Introductory example: regression with three variables
 -----------------------------------------------------
 
-Let's say we want to see our power to detect an interaction in a linear model. We can completely run the simulation and calculate *p* values with a just a few lines of code:
+Let’s say we want to see our power to detect an interaction in a linear
+model. We can completely run the simulation and calculate *p* values
+with a just a few lines of code:
 
 ``` r
 library(simpr)
@@ -43,7 +51,8 @@ simpr_tidy = ## Specify the simulation
   calc_tidy
 ```
 
-This gives a tibble with slope estimates and *p* values which we can use to plot the power curves:
+This gives a tibble with slope estimates and *p* values which we can use
+to plot the power curves:
 
 ``` r
 library(ggplot2)
@@ -74,16 +83,30 @@ simpr_spec = variables(x1 = ~ 2 + rnorm(n),
        g1 = seq(-1, 1, by = 0.5))
 ```
 
-The call to `variables()` contains the basics of what we actually want simulated. Each argument is a named, one-sided formula that can include functions like `rnorm` or whatever else you want, specified similar to `purrr` formula functions. Note that these arguments include both references to previously defined variables (`x1` and `x2`), and to some other variables not yet defined (`n`, the sample size; `b1`, the slope of `x1`; `b2`, the slope of `x2`; `g1`, the interaction slope).
+The call to `variables()` contains the basics of what we actually want
+simulated. Each argument is a named, one-sided formula that can include
+functions like `rnorm` or whatever else you want, specified similar to
+`purrr` formula functions. Note that these arguments include both
+references to previously defined variables (`x1` and `x2`), and to some
+other variables not yet defined (`n`, the sample size; `b1`, the slope
+of `x1`; `b2`, the slope of `x2`; `g1`, the interaction slope).
 
-We can define these variables, which we call *metaparameters* of the simulation, in the `meta()` command. `meta()` also takes named arguments, and here we define what those metaparameters are. We can specify them either as constants, or as lists or vectors; `simpr` will generate all possible combinations of these metaparameters and run the simulation for each combination using `gen()`:
+We can define these variables, which we call *metaparameters* of the
+simulation, in the `meta()` command. `meta()` also takes named
+arguments, and here we define what those metaparameters are. We can
+specify them either as constants, or as lists or vectors; `simpr` will
+generate all possible combinations of these metaparameters and run the
+simulation for each combination using `gen()`:
 
 ``` r
 simpr_gen = simpr_spec %>% 
   gen(10)
 ```
 
-`gen` has one argument, the number of repetitions for each simulation. Here we generate 10 repetitions. This produces a `tibble` with one row for each combination of metaparameters and repetition, and a list-column with the generated data.
+`gen` has one argument, the number of repetitions for each simulation.
+Here we generate 10 repetitions. This produces a `tibble` with one row
+for each combination of metaparameters and repetition, and a list-column
+with the generated data.
 
 ``` r
 simpr_gen
@@ -104,7 +127,11 @@ simpr_gen
     ## 10     1   120     1     1   1   <tibble [120 x 3]>
     ## # ... with 540 more rows
 
-Note the first 5 rows have everything the same with the column `n`, but `g1` varies, and each element of `sim_cell` is a tibble with 100 rows; then on the sixth row, we have the next value of `n`, 120, and a tibble with 120 rows, and so on. Each element of `sim_cell` contains the generated `x1`, `x2`, and `y`, e.g.
+Note the first 5 rows have everything the same with the column `n`, but
+`g1` varies, and each element of `sim_cell` is a tibble with 100 rows;
+then on the sixth row, we have the next value of `n`, 120, and a tibble
+with 120 rows, and so on. Each element of `sim_cell` contains the
+generated `x1`, `x2`, and `y`, e.g.
 
 ``` r
 simpr_gen$sim_cell[[1]]
@@ -125,16 +152,19 @@ simpr_gen$sim_cell[[1]]
     ## 10  3.55   9.89  -36.5 
     ## # ... with 90 more rows
 
-Next, we can fit a model on this data using the `fit()` function; this uses similar formula syntax to `variables()`:
+Next, we can fit a model on this data using the `fit()` function; this
+uses similar formula syntax to `variables()`:
 
 ``` r
 simpr_fit = simpr_gen %>% 
   fit(lm = ~lm(y ~ x1*x2, data = .))
 ```
 
-Using `purrr` syntax, we refer to each simulated dataset that we want to fit the model to as `.`.
+Using `purrr` syntax, we refer to each simulated dataset that we want to
+fit the model to as `.`.
 
-This just adds a list-column onto `simpr_gen` with the model fit for each rep and metaparameter combination:
+This just adds a list-column onto `simpr_gen` with the model fit for
+each rep and metaparameter combination:
 
 ``` r
 simpr_fit
@@ -155,7 +185,9 @@ simpr_fit
     ## 10     1   120     1     1   1   <tibble [120 x 3]> <lm>  
     ## # ... with 540 more rows
 
-But we can simplify this a lot more for the purposes of power analysis by using `calc_tidy()`, which runs `broom::tidy()` on each of the `lm` objects and brings everything together into one data frame:
+But we can simplify this a lot more for the purposes of power analysis
+by using `calc_tidy()`, which runs `broom::tidy()` on each of the `lm`
+objects and brings everything together into one data frame:
 
 ``` r
 simpr_tidy = simpr_fit %>% 
@@ -179,4 +211,7 @@ simpr_tidy
     ## 10   100     1     1   0       1 lm     x1     -1.70       4.58    -0.372 
     ## # ... with 2,190 more rows, and 1 more variable: p.value <dbl>
 
-This gives a data frame with one row for each term for each combination of metaparameters. We can easily plot power to detect the interaction term using `dplyr` and `ggplot2`, as noted above, and these commands can be easily chained.
+This gives a data frame with one row for each term for each combination
+of metaparameters. We can easily plot power to detect the interaction
+term using `dplyr` and `ggplot2`, as noted above, and these commands can
+be easily chained.
