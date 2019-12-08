@@ -74,6 +74,7 @@ ind_t_tidy = ind_t_gen %>%
 # plot the power curves
 ind_t_tidy %>%
   dplyr::group_by(n, d) %>%
+  dplyr::filter(d > 0) %>% # only cases where null is false
   dplyr::summarize(power = mean(p.value < 0.05)) %>%
   ggplot2::ggplot(ggplot2::aes(x = n, y = power,
                                group = factor(d), color = factor(d))) +
@@ -85,6 +86,7 @@ ind_t_tidy %>%
 # plot the power curves another way
 ind_t_tidy %>%
   dplyr::group_by(n, d) %>%
+  dplyr::filter(d > 0) %>% # only cases where null is false
   dplyr::summarize(power = mean(p.value < 0.05)) %>%
   ggplot2::ggplot(ggplot2::aes(x = d, y = power,
                                group = factor(n), color = factor(n))) +
@@ -92,6 +94,18 @@ ind_t_tidy %>%
   ggplot2::scale_color_discrete() +
   ggplot2::labs(x = "Cohen's d", group = "n per group", color = "n per group",
                 y = "Power", title = "Power curves for independent t-test")
+
+# plot p value distribution when null is fasle (i.e., d = 0)
+ind_t_tidy %>%
+  dplyr::group_by(n) %>%
+  dplyr::filter(d == 0) %>% # only cases where null is true
+  ggplot2::ggplot(ggplot2::aes(x = p.value)) +
+  ggplot2::geom_histogram(breaks = seq(0, 1, by = .05),
+                          color = "black", fill = "#1b9e77") +
+  ggplot2::geom_vline(xintercept = .05, color = "#d95f02") +
+  ggplot2::labs(x = "p value", y = "Frequency",
+                title = "Distribution of p-values under the null (d=0)")
+
 
 
 # Dependent t-test example ----------------------------------------------
@@ -112,6 +126,7 @@ dep_t_tidy = dep_t_gen %>%
 
 # plot the power curves
 dep_t_tidy %>%
+  dplyr::filter(d > 0) %>% # only cases where null is false
   dplyr::group_by(n, d) %>%
   dplyr::summarize(power = mean(p.value < 0.05)) %>%
   ggplot2::ggplot(ggplot2::aes(x = n, y = power,
@@ -124,6 +139,7 @@ dep_t_tidy %>%
 # plot the power curves another way
 dep_t_tidy %>%
   dplyr::group_by(n, d) %>%
+  dplyr::filter(d > 0) %>% # only cases where null is false
   dplyr::summarize(power = mean(p.value < 0.05)) %>%
   ggplot2::ggplot(ggplot2::aes(x = d, y = power,
                                group = factor(n), color = factor(n))) +
@@ -132,3 +148,13 @@ dep_t_tidy %>%
   ggplot2::labs(x = "Cohen's d", group = "n per group", color = "n per group",
                 y = "Power", title = "Power curves for Dependent t-test")
 
+# plot p value distribution when null is fasle (i.e., d = 0)
+dep_t_tidy %>%
+  dplyr::group_by(n) %>%
+  dplyr::filter(d == 0) %>% # only cases where null is true
+  ggplot2::ggplot(ggplot2::aes(x = p.value)) +
+  ggplot2::geom_histogram(breaks = seq(0, 1, by = .05),
+                          color = "black", fill = "#1b9e77") +
+  ggplot2::geom_vline(xintercept = .05, color = "#d95f02") +
+  ggplot2::labs(x = "p value", y = "Frequency",
+                title = "Distribution of p-values under the null (d=0)")
