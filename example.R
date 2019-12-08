@@ -71,6 +71,7 @@ ind_t_gen = ind_t_spec %>%
 ind_t_tidy = ind_t_gen %>%
   calc_tidy()
 
+# plot the power curves
 ind_t_tidy %>%
   dplyr::group_by(n, d) %>%
   dplyr::summarize(power = mean(p.value < 0.05)) %>%
@@ -79,4 +80,55 @@ ind_t_tidy %>%
   ggplot2::geom_line() +
   ggplot2::scale_color_discrete() +
   ggplot2::labs(x = "n per group", group = "Cohen's d", color = "Cohen's d",
-                title = "Power curves for independent t-test")
+                y = "Power", title = "Power curves for independent t-test")
+
+# plot the power curves another way
+ind_t_tidy %>%
+  dplyr::group_by(n, d) %>%
+  dplyr::summarize(power = mean(p.value < 0.05)) %>%
+  ggplot2::ggplot(ggplot2::aes(x = d, y = power,
+                               group = factor(n), color = factor(n))) +
+  ggplot2::geom_line() +
+  ggplot2::scale_color_discrete() +
+  ggplot2::labs(x = "Cohen's d", group = "n per group", color = "n per group",
+                y = "Power", title = "Power curves for independent t-test")
+
+
+# Dependent t-test example ----------------------------------------------
+
+dep_t_spec = variables(y1 = ~ rnorm(n, mean = m, sd = s),
+                       y2 = ~ y1 + rnorm(n, mean = d*s, sd = s)) %>%
+  meta(n = seq(20, 100, by = 10), # overall n (2n observations)
+       m = 70, # y1 mean
+       d = seq(0, 1, by = .2), # exp - ctrl / sd (cohen's d)
+       s = 10) # sd (both vars)
+
+dep_t_gen = dep_t_spec %>%
+  gen(100) %>%
+  fit(dep_t_test = ~t.test(.$y1, .$y2, paired = TRUE, alternative = "two.sided"))
+
+dep_t_tidy = dep_t_gen %>%
+  calc_tidy()
+
+# plot the power curves
+dep_t_tidy %>%
+  dplyr::group_by(n, d) %>%
+  dplyr::summarize(power = mean(p.value < 0.05)) %>%
+  ggplot2::ggplot(ggplot2::aes(x = n, y = power,
+                               group = factor(d), color = factor(d))) +
+  ggplot2::geom_line() +
+  ggplot2::scale_color_discrete() +
+  ggplot2::labs(x = "n per group", group = "Cohen's d", color = "Cohen's d",
+                y = "Power", title = "Power curves for Dependent t-test")
+
+# plot the power curves another way
+dep_t_tidy %>%
+  dplyr::group_by(n, d) %>%
+  dplyr::summarize(power = mean(p.value < 0.05)) %>%
+  ggplot2::ggplot(ggplot2::aes(x = d, y = power,
+                               group = factor(n), color = factor(n))) +
+  ggplot2::geom_line() +
+  ggplot2::scale_color_discrete() +
+  ggplot2::labs(x = "Cohen's d", group = "n per group", color = "n per group",
+                y = "Power", title = "Power curves for Dependent t-test")
+
