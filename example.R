@@ -54,3 +54,29 @@ all_tidy %>%
   geom_line() +
   facet_wrap(~b)
 
+
+# Independent t-test example ----------------------------------------------
+
+ind_t_spec = variables(y1 = ~ rnorm(n, mean = m + d*s, sd = s),
+                       y2 = ~ rnorm(n, mean = m, sd = s)) %>%
+  meta(n = seq(20, 100, by = 10), # n per grp
+       m = 70, # ctrl grp mean
+       d = seq(0, 1, by = .2), # exp - ctrl / sd (cohen's d)
+       s = 10) # sd (both grps)
+
+ind_t_gen = ind_t_spec %>%
+  gen(100) %>%
+  fit(ind_t_test = ~t.test(.$y1, .$y2, paired = FALSE, alternative = "two.sided"))
+
+ind_t_tidy = ind_t_gen %>%
+  calc_tidy()
+
+ind_t_tidy %>%
+  dplyr::group_by(n, d) %>%
+  dplyr::summarize(power = mean(p.value < 0.05)) %>%
+  ggplot2::ggplot(ggplot2::aes(x = n, y = power,
+                               group = factor(d), color = factor(d))) +
+  ggplot2::geom_line() +
+  ggplot2::scale_color_discrete() +
+  ggplot2::labs(x = "n per group", group = "Cohen's d", color = "Cohen's d",
+                title = "Power curves for independent t-test")
