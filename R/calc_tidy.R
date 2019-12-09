@@ -12,7 +12,7 @@
 #' The output of this function is quite useful for calculating things such as
 #' power for specific tests within an overall model; see \emph{Examples}. For
 #' looking at overall features of the model such as R-squared, use
-#' \code{\link{calc_glance}}.
+#' \code{\link{glance_all}}.
 #'
 #' @param simpr_mod tibble with repetition number, metaparameters, simulated
 #'   data, and fitted models, from \code{\link{fit}}
@@ -20,7 +20,7 @@
 #' @return a tibble with the output of the
 #'   \code{generics::\link[generics]{tidy}} method for the given object.
 #'
-#' @seealso \code{\link{calc_glance}} to view overall model statistics (e.g.
+#' @seealso \code{\link{glance_all}} to view overall model statistics (e.g.
 #'   R-squared)
 #' @examples
 #' simple_linear_data = variables(x1 = ~ 2 + rnorm(n),
@@ -32,13 +32,13 @@
 #' compare_degree = simple_linear_data %>%
 #'   fit(linear = ~lm(y ~ x1, data = .),
 #'       quadratic = ~lm(y ~ x1 + I(x1^2), data = .)) %>%
-#'   calc_tidy
+#'   tidy_all
 #'
 #' ## Models can be of different types -- anything supported by broom::tidy.
 #' cor_vs_lm = simple_linear_data %>%
 #'   fit(linear = ~lm(y ~ x1, data = .),
 #'       cor = ~ cor.test(.$y, .$x1)) %>%
-#'   calc_tidy
+#'   tidy_all
 #'
 #' cor_vs_lm # has NA for non-matching terms
 #'
@@ -56,7 +56,7 @@
 #'   ## Fit models
 #'   fit(lm = ~lm(y ~ x1*x2, data = .)) %>%
 #'   ## Calculate the output
-#'   calc_tidy
+#'   tidy_all
 #'
 #' ## Now we can easily calculate and plot power
 #' library(dplyr)
@@ -70,9 +70,9 @@
 #'   facet_grid(~g1)
 #' }
 #' @export
-calc_tidy = function(simpr_mod) {
+tidy_all = function(simpr_mod) {
   ## Run broom::tidy() on fit columns in simpr_mod
-  run_on_fit(simpr_mod, broom::tidy)
+  apply_all(simpr_mod, broom::tidy)
 }
 
 

@@ -11,7 +11,7 @@
 #'
 #' The output of this function is quite useful for calculating things overall
 #' model fit; see \emph{Examples}. For looking at specific features of the model
-#' such as tests for individual parameter estimates, use \code{\link{calc_tidy}}.
+#' such as tests for individual parameter estimates, use \code{\link{tidy_all}}.
 #'
 #' @param simpr_mod tibble with repetition number, metaparameters, simulated
 #'   data, and fitted models, from \code{\link{fit}}
@@ -19,7 +19,7 @@
 #' @return a tibble with the output of the
 #'   \code{generics::\link[generics]{glance}} method for the given object.
 #'
-#' @seealso \code{\link{calc_tidy}} to view model components (e.g.
+#' @seealso \code{\link{tidy_all}} to view model components (e.g.
 #'   parameter estimates)
 #' @examples
 #' simple_linear_data = variables(x1 = ~ 2 + rnorm(n),
@@ -31,13 +31,13 @@
 #' compare_degree = simple_linear_data %>%
 #'   fit(linear = ~lm(y ~ x1, data = .),
 #'       quadratic = ~lm(y ~ x1 + I(x1^2), data = .)) %>%
-#'   calc_glance
+#'   glance_all
 #'
 #' ## Models can be of different types -- anything supported by broom::glance.
 #' cor_vs_lm = simple_linear_data %>%
 #'   fit(linear = ~lm(y ~ x1, data = .),
 #'       cor = ~ cor.test(.$y, .$x1)) %>%
-#'   calc_glance
+#'   glance_all
 #'
 #' cor_vs_lm # has NA for non-matching terms
 #'
@@ -54,7 +54,7 @@
 #'   ## Fit models
 #'   fit(lm = ~lm(y ~ x1*x2, data = .)) %>%
 #'   ## Calculate the output
-#'   calc_glance
+#'   glance_all
 #'
 #' ## Now we can easily calculate and plot r.squared by model
 #' library(dplyr)
@@ -68,9 +68,9 @@
 #'   coord_cartesian(ylim = c(0,1))
 #' }
 #' @export
-calc_glance = function(simpr_mod) {
+glance_all = function(simpr_mod) {
   ## Run broom::glance() on fit columns in simpr_mod
-  run_on_fit(simpr_mod, broom::glance)
+  apply_all(simpr_mod, broom::glance)
 }
 
 

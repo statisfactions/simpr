@@ -19,7 +19,7 @@ simpr_gen = simpr_spec %>%
   fit(lm = ~lm(y ~ x1*x2, data = .))
 
 simpr_calc = simpr_gen %>%
-  calc_tidy
+  tidy_all
 
 simpr_calc %>%
   filter(term %in% "x1:x2",
@@ -47,7 +47,7 @@ chisq_gen = chisq_spec %>%
 
 
 all_tidy = chisq_gen %>%
-  calc_tidy
+  tidy_all
 
 all_tidy %>%
   group_by(n, b, Source) %>%
@@ -71,7 +71,7 @@ ind_t_gen = ind_t_spec %>%
   fit(ind_t_test = ~t.test(.$y1, .$y2, paired = FALSE, alternative = "two.sided"))
 
 ind_t_tidy = ind_t_gen %>%
-  calc_tidy()
+  tidy_all()
 
 # plot the power curves
 ind_t_tidy %>%
@@ -124,7 +124,7 @@ dep_t_gen = dep_t_spec %>%
   fit(dep_t_test = ~t.test(.$y1, .$y2, paired = TRUE, alternative = "two.sided"))
 
 dep_t_tidy = dep_t_gen %>%
-  calc_tidy()
+  tidy_all()
 
 # plot the power curves
 dep_t_tidy %>%
