@@ -15,7 +15,7 @@ workflow is:
 3.  Generate the simulation data with `gen()`
 4.  Fit models with your data (e.g. `lm()`), with `fit()`
 5.  Tidy the model output for further processing, such as computing
-    power or Type I Error rates, with `calc_tidy`
+    power or Type I Error rates, with `tidy_all`
 
 Installation
 ------------
@@ -48,7 +48,7 @@ simpr_tidy = ## Specify the simulation
   ## Fit models
   fit(lm = ~lm(y ~ x1*x2, data = .)) %>% 
   ## Calculate the output
-  calc_tidy
+  tidy_all
 ```
 
 This gives a tibble with slope estimates and *p* values which we can use
@@ -186,12 +186,12 @@ simpr_fit
     ## # ... with 540 more rows
 
 But we can simplify this a lot more for the purposes of power analysis
-by using `calc_tidy()`, which runs `broom::tidy()` on each of the `lm`
+by using `tidy_all()`, which runs `broom::tidy()` on each of the `lm`
 objects and brings everything together into one data frame:
 
 ``` r
 simpr_tidy = simpr_fit %>% 
-  calc_tidy
+  tidy_all
 
 simpr_tidy
 ```
