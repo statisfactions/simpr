@@ -181,21 +181,13 @@ t_comp_gen = t_comp_spec %>%
   gen(100)
 
 # fit generated data using an INDEPENDENT model (incorrectly specified model)
-ind_t_comp_fit = t_comp_gen %>%
-  fit(ind_t_test = ~t.test(.$y1, .$y2, paired = FALSE, alternative = "two.sided"))
+#   as well as a DEPENDENT model(correctly specified model)
+t_comp_fit = t_comp_gen %>%
+  fit(ind_t_test = ~t.test(.$y1, .$y2, paired = FALSE, alternative = "two.sided"),
+      dep_t_test = ~t.test(.$y1, .$y2, paired = TRUE, alternative = "two.sided"))
 # tidy
-ind_t_comp_tidy = ind_t_comp_fit %>%
+t_comp_tidy = t_comp_fit %>%
   tidy_all()
-
-# fit generated data using a DEPENDENT model (correctly specified model)
-dep_t_comp_fit = t_comp_gen %>%
-  fit(dep_t_test = ~t.test(.$y1, .$y2, paired = TRUE, alternative = "two.sided"))
-# tidy
-dep_t_comp_tidy = dep_t_comp_fit %>%
-  tidy_all()
-
-# merge the models together
-t_comp_tidy = bind_rows(ind_t_comp_tidy, dep_t_comp_tidy)
 
 # plot the power curves against each other (FACET by METHOD)
 t_comp_tidy %>%
@@ -203,9 +195,9 @@ t_comp_tidy %>%
   group_by(n, d, method) %>%
   summarize(power = mean(p.value < 0.05)) %>%
   ggplot(aes(x = n, y = power,
-             group = factor(d), color = factor(d))) +
+             group = method, color = method)) +
   geom_line() +
-  facet_wrap(vars(method)) +
+  facet_wrap(vars(d)) +
   scale_color_discrete() +
   labs(x = "n per group", group = "Cohen's d", color = "Cohen's d",
        y = "Power", title = "Power curves for independent vs. dependent t-test")
