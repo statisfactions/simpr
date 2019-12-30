@@ -1,51 +1,49 @@
-#' Tidy simpr_gen simulated model results output into tibble of components
+#' Tidy simpr_gen simulated model results output into tibble of model summaries
 #'
 #' Turn fitted model of simulated data (from \code{\link{fit}}) into a tidy
-#' tibble of model components (via \code{generics::\link[generics]{tidy}}).
+#' tibble of model summaries (via \code{generics::\link[generics]{glance}}).
 #'
 #' This is part of the fifth step of the simulation process: after fitting the
 #' model with \code{\link{fit}}, now tidy the model output for further analysis
 #' such as evaluating power.  All model objects should be supported by
-#' \code{generics::\link[generics]{tidy}}, primarily via the \code{broom}
+#' \code{generics::\link[generics]{glance}}, primarily via the \code{broom}
 #' package.
 #'
-#' The output of this function is quite useful for calculating things such as
-#' power for specific tests within an overall model; see \emph{Examples}. For
-#' looking at overall features of the model such as R-squared, use
-#' \code{\link{calc_glance}}.
+#' The output of this function is quite useful for calculating things overall
+#' model fit; see \emph{Examples}. For looking at specific features of the model
+#' such as tests for individual parameter estimates, use \code{\link{tidy_all}}.
 #'
 #' @param simpr_mod tibble with repetition number, metaparameters, simulated
 #'   data, and fitted models, from \code{\link{fit}}
 #'
 #' @return a tibble with the output of the
-#'   \code{generics::\link[generics]{tidy}} method for the given object.
+#'   \code{generics::\link[generics]{glance}} method for the given object.
 #'
-#' @seealso \code{\link{calc_glance}} to view overall model statistics (e.g.
-#'   R-squared)
+#' @seealso \code{\link{tidy_all}} to view model components (e.g.
+#'   parameter estimates)
 #' @examples
 #' simple_linear_data = variables(x1 = ~ 2 + rnorm(n),
 #'           y = ~ 5 + 3 * x1 + rnorm(n, 0, sd = 0.5)) %>%
 #'   meta(n = 100:101) %>%
 #'   gen(2)
 #'
-#' ## Can show tidy output for multiple competing models,
+#' ## Can show glance output for multiple competing models,
 #' compare_degree = simple_linear_data %>%
 #'   fit(linear = ~lm(y ~ x1, data = .),
 #'       quadratic = ~lm(y ~ x1 + I(x1^2), data = .)) %>%
-#'   calc_tidy
+#'   glance_all
 #'
-#' ## Models can be of different types -- anything supported by broom::tidy.
+#' ## Models can be of different types -- anything supported by broom::glance.
 #' cor_vs_lm = simple_linear_data %>%
 #'   fit(linear = ~lm(y ~ x1, data = .),
 #'       cor = ~ cor.test(.$y, .$x1)) %>%
-#'   calc_tidy
+#'   glance_all
 #'
 #' cor_vs_lm # has NA for non-matching terms
 #'
 #' ## Example power analysis to detect an interaction (g1)
-#' \donttest{
-#' set.seed(100)
-#' simpr_tidy = ## Specify the simulation
+#' \donttest{set.seed(100)
+#' simpr_glance = ## Specify the simulation
 #'   variables(x1 = ~ 2 + rnorm(n),
 #'             x2 = ~ 3 + 2*x1 + rnorm(n, 0, sd = 0.5),
 #'             y = ~ 5 + x1 + x2 + g1*x1*x2 + 10 * rnorm(n)) %>%
@@ -56,23 +54,23 @@
 #'   ## Fit models
 #'   fit(lm = ~lm(y ~ x1*x2, data = .)) %>%
 #'   ## Calculate the output
-#'   calc_tidy
+#'   glance_all
 #'
-#' ## Now we can easily calculate and plot power
+#' ## Now we can easily calculate and plot r.squared by model
 #' library(dplyr)
 #' library(ggplot2)
-#' simpr_tidy %>%
-#'   filter(term %in% "x1:x2") %>%
+#' simpr_glance %>%
 #'   group_by(n, g1) %>%
-#'   summarize(power = mean(p.value < 0.05)) %>%
-#'   ggplot(aes(n, power)) +
+#'   summarize(mean_r_squared = mean(r.squared)) %>%
+#'   ggplot(aes(n, mean_r_squared)) +
 #'   geom_line() +
-#'   facet_grid(~g1)
+#'   facet_grid(~g1) +
+#'   coord_cartesian(ylim = c(0,1))
 #' }
 #' @export
-calc_tidy = function(simpr_mod) {
-  ## Run broom::tidy() on fit columns in simpr_mod
-  run_on_fit(simpr_mod, broom::tidy)
+glance_all = function(simpr_mod) {
+  ## Run broom::glance() on fit columns in simpr_mod
+  apply_all(simpr_mod, broom::glance)
 }
 
 

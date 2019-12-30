@@ -5,8 +5,8 @@
 #'
 #' This is the fourth step in the simulation process: after generating the
 #' simulation data, apply functions such as fitting a statistical model to the
-#' data. The output is often then passed to \code{\link{calc_tidy}} or
-#' \code{\link{calc_glance}} to extract relevant parameters from the object,
+#' data. The output is often then passed to \code{\link{tidy_all}} or
+#' \code{\link{glance_all}} to extract relevant parameters from the object,
 #' based on \code{\link[broom]{tidy}} and \code{\link[broom]{glance}} from the
 #' \code{broom} package.
 #'
@@ -56,17 +56,17 @@
 #' ## Again, each element is a model object
 #' multi_fit$quadratic
 #'
-#' ## Can view terms more nicely with calc_tidy
+#' ## Can view terms more nicely with tidy_all
 #' multi_fit %>%
-#'   calc_tidy
+#'   tidy_all
 #'
-#' ## Can view model summaries with calc_glance
+#' ## Can view model summaries with glance_all
 #' multi_fit %>%
-#'   calc_glance
+#'   glance_all
 #'
 #' ## Fit functions do not actually need to be any particular kind of model, they
 #' ## can be any arbitrary function. However, not all functions will lead to useful
-#' ## output with calc_tidy and calc_glance.
+#' ## output with tidy_all and glance_all.
 #' add_five_data = simple_linear_data %>%
 #'   fit(add_five = ~ tibble::as_tibble(. + 5))
 #'
