@@ -56,23 +56,23 @@ set.seed(100)
 simpr_tidy = ## Specify the simulation
   variables(x1 = ~ 2 + rnorm(n),
             x2 = ~ 3 + 2*x1 + rnorm(n, 0, sd = 0.5),
-            y = ~ 5 + x1 + x2 + g1*x1*x2 + 10 * rnorm(n)) %>%
+            y = ~ 5 + x1 + x2 + g1*x1*x2 + 10 * rnorm(n)) \%>\%
   meta(n = seq(100, 300, by = 20),
-       g1 = seq(-1, 1, by = 0.5)) %>%
+       g1 = seq(-1, 1, by = 0.5)) \%>\%
   ## Generate the data
-  gen(10) %>%
+  gen(10) \%>\%
   ## Fit models
-  fit(lm = ~lm(y ~ x1*x2, data = .)) %>%
+  fit(lm = ~lm(y ~ x1*x2, data = .)) \%>\%
   ## Calculate the output
   tidy_all
 
 ## Now we can easily calculate and plot power
 library(dplyr)
 library(ggplot2)
-simpr_tidy %>%
-  filter(term %in% "x1:x2") %>%
-  group_by(n, g1) %>%
-  summarize(power = mean(p.value < 0.05)) %>%
+simpr_tidy \%>\%
+  filter(term \%in\% "x1:x2") \%>\%
+  group_by(n, g1) \%>\%
+  summarize(power = mean(p.value < 0.05)) \%>\%
   ggplot(aes(n, power)) +
   geom_line() +
   facet_grid(~g1)
