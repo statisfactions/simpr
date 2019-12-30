@@ -75,6 +75,10 @@ multi_fit \%>\%
 multi_fit \%>\%
   glance_all
 
+## We can also use .$colname syntax in fit(), e.g.,:
+linear_fit = simple_linear_data \%>\%
+  fit(linear = ~lm(.$y ~ .$x1)) # no need for "data=."
+
 ## Fit functions do not actually need to be any particular kind of model, they
 ## can be any arbitrary function. However, not all functions will lead to useful
 ## output with tidy_all and glance_all.

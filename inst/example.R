@@ -69,6 +69,7 @@ ind_t_spec = variables(y1 = ~ rnorm(n, mean = m + d*s, sd = s),
 ind_t_gen = ind_t_spec %>%
   gen(100) %>%
   fit(ind_t_test = ~t.test(.$y1, .$y2, paired = FALSE, alternative = "two.sided"))
+# note the above usage of .$colname notation is equivalent to providing data=.
 
 ind_t_tidy = ind_t_gen %>%
   tidy_all()
@@ -136,7 +137,7 @@ dep_t_tidy %>%
   geom_line() +
   scale_color_discrete() +
   labs(x = "n per group", group = "Cohen's d", color = "Cohen's d",
-                y = "Power", title = "Power curves for Dependent t-test")
+       y = "Power", title = "Power curves for Dependent t-test")
 
 # plot the power curves another way
 dep_t_tidy %>%
@@ -148,7 +149,7 @@ dep_t_tidy %>%
   geom_line() +
   scale_color_discrete() +
   labs(x = "Cohen's d", group = "n per group", color = "n per group",
-                y = "Power", title = "Power curves for Dependent t-test")
+       y = "Power", title = "Power curves for Dependent t-test")
 
 # plot p value distribution when null is fasle (i.e., d = 0)
 dep_t_tidy %>%
@@ -160,3 +161,44 @@ dep_t_tidy %>%
   geom_vline(xintercept = .05, color = "#d95f02") +
   labs(x = "p value", y = "Frequency",
                 title = "Distribution of p-values under the null (d=0)")
+
+
+
+# Power comparison: independent vs. dependent t-test ---------------------
+
+# Let's simulate data to be dependent,
+# and then compare dependent vs. independent t-tests on the same data,
+# to simulate power of dependent designs vs. independent (where applicable)
+t_comp_spec = variables(y1 = ~ rnorm(n, mean = m, sd = s),
+                   y2 = ~ y1 + rnorm(n, mean = d*s, sd = s)) %>%
+  meta(n = seq(20, 100, by = 10), # overall n (2n observations)
+       m = 70, # y1 mean
+       d = seq(0, 1, by = .2), # exp - ctrl / sd (cohen's d)
+       s = 10) # sd (both vars)
+
+# generate the data (100 replications)
+t_comp_gen = t_comp_spec %>%
+  gen(100)
+
+# fit generated data using an INDEPENDENT model (incorrectly specified model)
+#   as well as a DEPENDENT model(correctly specified model)
+t_comp_fit = t_comp_gen %>%
+  fit(ind_t_test = ~t.test(.$y1, .$y2, paired = FALSE, alternative = "two.sided"),
+      dep_t_test = ~t.test(.$y1, .$y2, paired = TRUE, alternative = "two.sided"))
+# tidy
+t_comp_tidy = t_comp_fit %>%
+  tidy_all()
+
+# plot the power curves against each other (FACET by METHOD)
+t_comp_tidy %>%
+  filter(d > 0) %>% # only cases where null is false
+  group_by(n, d, method) %>%
+  summarize(power = mean(p.value < 0.05)) %>%
+  ggplot(aes(x = n, y = power,
+             group = method, color = method)) +
+  geom_line() +
+  facet_wrap(vars(d)) +
+  scale_color_discrete() +
+  labs(x = "n per group", group = "Cohen's d", color = "Cohen's d",
+       y = "Power", title = "Power curves for independent vs. dependent t-test")
+
