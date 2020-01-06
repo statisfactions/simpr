@@ -202,3 +202,25 @@ t_comp_tidy %>%
   labs(x = "n per group", group = "Cohen's d", color = "Cohen's d",
        y = "Power", title = "Power curves for independent vs. dependent t-test")
 
+
+# Binomial example --------------------------------------------------------
+
+# specify a binomial data-generating process
+binom_spec = variables(s = ~ rbinom(1, size = n, prob = p), # successes
+                       f = ~ n - s) %>% # failures
+  meta(n = seq(5, 50, by = 5), # number of trials
+       p = seq(.5, 1, by = .05)) # probability of success (1)
+
+# generate the data (100 replications)
+binom_gen = binom_spec %>%
+  gen(100)
+
+# fit the data using the binomial test (null = .5)
+binom_fit = binom_gen %>%
+  fit(bin_test = ~ binom.test(c(.$s, .$f), # (vector of success and failures)
+                              p = 0.5, # null hypothesis
+                              alternative = "two.sided"))
+# tidy
+binom_tidy = binom_fit %>%
+  tidy_all()
+
