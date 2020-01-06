@@ -98,7 +98,7 @@ ind_t_tidy %>%
   labs(x = "Cohen's d", group = "n per group", color = "n per group",
                 y = "Power", title = "Power curves for independent t-test")
 
-# plot p value distribution when null is fasle (i.e., d = 0)
+# plot p value distribution when null is false (i.e., d = 0)
 ind_t_tidy %>%
   group_by(n) %>%
   filter(d == 0) %>% # only cases where null is true
@@ -151,7 +151,7 @@ dep_t_tidy %>%
   labs(x = "Cohen's d", group = "n per group", color = "n per group",
        y = "Power", title = "Power curves for Dependent t-test")
 
-# plot p value distribution when null is fasle (i.e., d = 0)
+# plot p value distribution when null is false (i.e., d = 0)
 dep_t_tidy %>%
   group_by(n) %>%
   filter(d == 0) %>% # only cases where null is true
@@ -208,8 +208,8 @@ t_comp_tidy %>%
 # specify a binomial data-generating process
 binom_spec = variables(s = ~ rbinom(1, size = n, prob = p), # successes
                        f = ~ n - s) %>% # failures
-  meta(n = seq(5, 50, by = 5), # number of trials
-       p = seq(.5, 1, by = .05)) # probability of success (1)
+  meta(n = seq(10, 100, by = 10), # number of trials
+       p = seq(.55, .75, by = .05)) # probability of success (1)
 
 # generate the data (100 replications)
 binom_gen = binom_spec %>%
@@ -217,10 +217,20 @@ binom_gen = binom_spec %>%
 
 # fit the data using the binomial test (null = .5)
 binom_fit = binom_gen %>%
-  fit(bin_test = ~ binom.test(c(.$s, .$f), # (vector of success and failures)
+  fit(bin_test = ~ binom.test(c(.$s, .$f), # (vector of #success and #failures)
                               p = 0.5, # null hypothesis
                               alternative = "two.sided"))
 # tidy
 binom_tidy = binom_fit %>%
   tidy_all()
+
+# plot the power curves
+binom_tidy %>%
+  group_by(n, p) %>%
+  summarize(power = mean(p.value < 0.05)) %>%
+  ggplot(aes(x = n, y = power,
+             group = p, color = p)) +
+  geom_line() +
+  labs(x = "Number of trials (n)", group = "Prob. of Success", color = "Prob. of Success",
+       y = "Power", title = "Power curves for Binomial test")
 
