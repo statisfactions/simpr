@@ -4,7 +4,7 @@ library(dplyr)
 test_that("Calc tidy terms match terms from fit",
           {
             set.seed(100)
-            lm_fit = variables(x1 = ~ 2 + rnorm(n),
+            lm_fit = blueprint(x1 = ~ 2 + rnorm(n),
                                y = ~ 5 + 3*x1 + rnorm(n, 0, sd = 0.5)) %>%
               meta(n = 100:101) %>%
               gen(2) %>%
@@ -44,7 +44,7 @@ test_that("Each iteration of simulation has model terms listed correctly in tidy
 
   # run the simulation
   set.seed(100)
-  simpr_spec = variables(x1 = ~ 2 + rnorm(n),
+  simpr_spec = blueprint(x1 = ~ 2 + rnorm(n),
                          x2 = ~ 3 + 2*x1 + rnorm(n, 0, sd = 0.5),
                          y = ~ 5 + b1*x1 + b2*x2 + g1*x1*x2 + rnorm(n, 0, sd = 3)) %>%
     meta(n = meta_list$n,

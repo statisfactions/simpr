@@ -10,7 +10,7 @@ output:
 
 `simpr` provides a simple and tidyverse-friendly syntax for specifying and generating simulations, especially for power analysis.  The primary workflow is:
 
-  1. Specify **variables** for your simulation data, with `variables()`
+  1. Specify **variables** for your simulation data, with `blueprint()`
   2. Specify **parameters** that you want to systematically vary between different cells of your simulation design (e.g. *n*, effect size, distribution type), with `meta()`
   3. Generate the simulation data with `gen()`
   4. Fit models with your data (e.g. `lm()`), with `fit()`
@@ -32,7 +32,7 @@ library(simpr)
 
 set.seed(100)
 simpr_tidy = ## Specify the simulation
-  variables(x1 = ~ 2 + rnorm(n),
+  blueprint(x1 = ~ 2 + rnorm(n),
                        x2 = ~ 3 + 2*x1 + rnorm(n, 0, sd = 0.5),
                        y = ~ 5 + b1*x1 + b2*x2 + g1*x1*x2 + 10 * rnorm(n)) %>%
   meta(n = seq(100, 300, by = 20),
@@ -69,7 +69,7 @@ First, we specify how we want the data to be generated:
 
 ```{r}
 
-simpr_spec = variables(x1 = ~ 2 + rnorm(n),
+simpr_spec = blueprint(x1 = ~ 2 + rnorm(n),
                        x2 = ~ 3 + 2*x1 + rnorm(n, 0, sd = 0.5),
                        y = ~ 5 + b1*x1 + b2*x2 + g1*x1*x2 + 10 * rnorm(n)) %>%
   meta(n = seq(100, 300, by = 20),
@@ -78,7 +78,7 @@ simpr_spec = variables(x1 = ~ 2 + rnorm(n),
        g1 = seq(-1, 1, by = 0.5))
 ```
 
-The call to `variables()` contains the basics of what we actually want simulated.  Each argument is a named, one-sided formula that can include functions like `rnorm` or whatever else you want, specified similar to `purrr` formula functions.  Note that these arguments include both references to previously defined variables (`x1` and `x2`), and to some other variables not yet defined (`n`, the sample size; `b1`, the slope of `x1`; `b2`, the slope of `x2`; `g1`, the interaction slope).
+The call to `blueprint()` contains the basics of what we actually want simulated.  Each argument is a named, one-sided formula that can include functions like `rnorm` or whatever else you want, specified similar to `purrr` formula functions.  Note that these arguments include both references to previously defined variables (`x1` and `x2`), and to some other variables not yet defined (`n`, the sample size; `b1`, the slope of `x1`; `b2`, the slope of `x2`; `g1`, the interaction slope).
 
 We can define these variables, which we call *metaparameters* of the simulation, in the `meta()` command.  `meta()` also takes named arguments, and here we define what those metaparameters are.  We can specify them either as constants, or as lists or vectors; `simpr` will generate all possible combinations of these metaparameters and run the simulation for each combination using `gen()`:
 
@@ -99,7 +99,7 @@ Note the first 5 rows have everything the same with the column `n`, but `g1` var
 simpr_gen$sim_cell[[1]]
 ```
 
-Next, we can fit a model on this data using the `fit()` function; this uses similar formula syntax to `variables()`:
+Next, we can fit a model on this data using the `fit()` function; this uses similar formula syntax to `blueprint()`:
 
 ```{r}
 simpr_fit = simpr_gen %>% 

@@ -1,17 +1,17 @@
 #' Specify metaparameters to vary in simulation
 #'
-#' Takes the output of \code{\link{variables}} (a \code{simpr_spec} object) and
+#' Takes the output of \code{\link{blueprint}} (a \code{simpr_spec} object) and
 #' defines the metaparameters for simulation.
 #'
 #' This is the second step in the simulation process, after specifying the
-#' simulated data using \code{\link{variables}}.  The output of
+#' simulated data using \code{\link{blueprint}}.  The output of
 #' \code{\link{meta}} is then passed to \code{\link{gen}} to actually generate
 #' the simulation.
 #'
 #' Metaparameters are named arguments that are used in the simulation.  Usually,
 #' a metaparameter is some kind of vector or list, representing something that
 #' is to be systematically varied as a part of the simulation design. Any
-#' metaparameter would also appear in the formulas of \code{\link{variables}},
+#' metaparameter would also appear in the formulas of \code{\link{blueprint}},
 #' and thus the simulation changes depending on the value of the metaparameter.
 #'
 #' When creating the simulation, simulations for all possible combinations of
@@ -24,7 +24,7 @@
 #' "_index"}, the default, a column named \code{Y_index} would be added to the
 #' output of \code{gen} with values \code{"a"} and \code{"b"}.
 #'
-#' @param x a \code{simpr_spec} object (the output of \code{\link{variables}})
+#' @param x a \code{simpr_spec} object (the output of \code{\link{blueprint}})
 #' @param ... metaparameters: named arguments containing vectors or
 #'   unidimensional lists of objects to be used in the simulation.
 #' @param suffix name of suffix to append onto index column for list
@@ -34,13 +34,13 @@
 #'
 #' @examples
 #' # Simple example of setting a metaparameter
-#' simple_meta = variables(x = ~ 1 + rnorm(n)) %>%
+#' simple_meta = blueprint(x = ~ 1 + rnorm(n)) %>%
 #'   meta(n = c(5, 10)) %>%
 #'   gen(1)
 #'
 #' simple_meta # $sim_cell has a 5-row tibble and a 10-row tibble
 #'
-#' multi_meta = variables(x = ~ mu + rnorm(n)) %>%
+#' multi_meta = blueprint(x = ~ mu + rnorm(n)) %>%
 #'   meta(n = c(5, 10),
 #'        mu = seq(-1, 1, length.out = 3)) %>%
 #'   gen(1)
@@ -49,7 +49,7 @@
 #'
 #'
 #' # meta can handle lists which can contain multiple matrices, etc.
-#' meta_list_out = variables(x = ~ MASS::mvrnorm(n, rep(0, 2), Sigma = S)) %>%
+#' meta_list_out = blueprint(x = ~ MASS::mvrnorm(n, rep(0, 2), Sigma = S)) %>%
 #'   meta(n = c(10, 20, 30),
 #'        S = list(independent = diag(2), correlated = diag(2) + 2)) %>%
 #'   gen(1)

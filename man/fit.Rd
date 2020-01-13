@@ -33,16 +33,16 @@ data. The output is often then passed to \code{\link{tidy_all}} or
 based on \code{\link[broom]{tidy}} and \code{\link[broom]{glance}} from the
 \code{broom} package.
 
-Similar to \code{\link{variables}}, the \code{\dots} arguments uses an
+Similar to \code{\link{blueprint}}, the \code{\dots} arguments uses an
 efficient syntax to specify custom functions for fitting models to the data.
 These functions will usually be on the simulated data -- which is indicated
 by \code{.} in the formula function, e.g. \code{linear_model = ~lm(y ~ x + z,
 data = .)} computes linear models on each simulation cell if there are
-variables x, y, and z specified in \code{variables}.
+variables x, y, and z specified in \code{blueprint}.
 }
 \examples{
 ## Generate data to fit models
-simple_linear_data = variables(x1 = ~ 2 + rnorm(n),
+simple_linear_data = blueprint(x1 = ~ 2 + rnorm(n),
                                y = ~ 5 + 3*x1 + rnorm(n, 0, sd = 0.5)) \%>\%
   meta(n = 100:101) \%>\%
   gen(2)

@@ -2,7 +2,7 @@ context("simpr::fit")
 
 test_that("Multiple fit functions give different results", {
   set.seed(100)
-  chisq_spec = variables(x1 = ~rnorm(n),
+  chisq_spec = blueprint(x1 = ~rnorm(n),
                          x2 = ~x1 + rnorm(n, 0, sd = 2),
                          c1 = ~ cut(x1, breaks = b) %>% as.numeric,
                          c2 = ~ cut(x2, breaks = b) %>% as.numeric) %>%

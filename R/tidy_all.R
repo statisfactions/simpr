@@ -23,7 +23,7 @@
 #' @seealso \code{\link{glance_all}} to view overall model statistics (e.g.
 #'   R-squared)
 #' @examples
-#' simple_linear_data = variables(x1 = ~ 2 + rnorm(n),
+#' simple_linear_data = blueprint(x1 = ~ 2 + rnorm(n),
 #'           y = ~ 5 + 3 * x1 + rnorm(n, 0, sd = 0.5)) %>%
 #'   meta(n = 100:101) %>%
 #'   gen(2)
@@ -46,7 +46,7 @@
 #' \donttest{
 #' set.seed(100)
 #' simpr_tidy = ## Specify the simulation
-#'   variables(x1 = ~ 2 + rnorm(n),
+#'   blueprint(x1 = ~ 2 + rnorm(n),
 #'             x2 = ~ 3 + 2*x1 + rnorm(n, 0, sd = 0.5),
 #'             y = ~ 5 + x1 + x2 + g1*x1*x2 + 10 * rnorm(n)) %>%
 #'   meta(n = seq(100, 300, by = 20),
