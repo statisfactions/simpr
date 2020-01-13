@@ -1,6 +1,7 @@
 library(simpr)
 library(dplyr)
 library(ggplot2)
+library(brms)
 
 ## Regression example --------------
 
@@ -254,4 +255,29 @@ binom_tidy %>%
   pull(p.value) %>%
   stem()
 
+
+
+# Reaction time power analysis --------------------------------------------
+
+# specify a shifted log-normal data-generating process for 2 conditions (within)
+rt_spec = variables(rt1 = ~ rshifted_lnorm(n, # sample size
+                                           meanlog = mu, # difficulty (mean)
+                                           sdlog = sigma, # scale (sd)
+                                           shift = sh), # earliest possible RT
+                    rt2 = ~ rshifted_lnorm(n, # sample size
+                                           meanlog = mu + mu_diff, # difficulty (mean)
+                                           sdlog = sigma + sig_diff, # scale (sd)
+                                           shift = sh) # earliest possible RT
+                       ) %>%
+  meta(n = seq(10, 100, by = 10), # number of trials
+       mu = c(-.5, 1, 1.5), # note: exp(mu) + shift is the median RT
+       sigma = seq(.4, .8, 1.2),
+       sh = .2, # earliest possible RT (200 ms), shifts log-normal rightward
+       mu_diff = c(.1, .3, .5),
+       sig_diff = c(.2, .4)
+       )
+
+# generate the data (100 replications)
+rt_gen = rt_spec %>%
+  gen(100)
 
