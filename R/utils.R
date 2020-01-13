@@ -4,7 +4,7 @@ magrittr::`%>%`
 
 
 # Run a given function on a simpr_mod object and tidy the output.
-apply_all = function(simpr_mod, FUN) {
+apply_fits = function(simpr_mod, FUN) {
   ## Create reference meta df for merging
   simpr_meta = simpr_mod %>%
     dplyr::select(tidyselect::one_of(c(attr(simpr_mod, "meta"), "rep"))) %>%
