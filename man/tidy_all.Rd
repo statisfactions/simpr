@@ -34,7 +34,7 @@ looking at overall features of the model such as R-squared, use
 simple_linear_data = blueprint(x1 = ~ 2 + rnorm(n),
           y = ~ 5 + 3 * x1 + rnorm(n, 0, sd = 0.5)) \%>\%
   meta(n = 100:101) \%>\%
-  gen(2)
+  produce(2)
 
 ## Can show tidy output for multiple competing models,
 compare_degree = simple_linear_data \%>\%
@@ -60,7 +60,7 @@ simpr_tidy = ## Specify the simulation
   meta(n = seq(100, 300, by = 20),
        g1 = seq(-1, 1, by = 0.5)) \%>\%
   ## Generate the data
-  gen(10) \%>\%
+  produce(10) \%>\%
   ## Fit models
   fit(lm = ~lm(y ~ x1*x2, data = .)) \%>\%
   ## Calculate the output

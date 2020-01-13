@@ -1,13 +1,13 @@
-#' Generate simulated data from specification
+#' Produce simulated data from specification
 #'
 #' Use specification from \code{\link{blueprint}} or \code{\link{meta}} to
-#' generate simulated data.
+#' produce simulated data.
 #'
 #' This is the third step in the simulation process: after specifying the
-#' variables and metaparameters, \code{gen} is the workhorse function that
+#' variables and metaparameters, \code{produce} is the workhorse function that
 #' actually generates the simulated datasets, one for each replication, for each
 #' combination of metaparameters. You likely want to use the output of
-#' \code{gen} to fit model(s) with \code{\link{fit}}.
+#' \code{produce} to fit model(s) with \code{\link{fit}}.
 #'
 #' Errors you get using this function usually have to do with how you specified
 #' the simulation in  \code{\link{blueprint}} and \code{\link{meta}}.
@@ -16,7 +16,7 @@
 #'   \code{\link{meta}}, containing the specifications of the simulation
 #' @param reps number of replications to run (a whole number greater than 0)
 #' @seealso \code{\link{blueprint}} and \code{\link{meta}} for examples of how
-#'   these functions affect the output of \code{gen}
+#'   these functions affect the output of \code{produce}
 #' @return a \code{simpr_gen} object, which is a tibble with a row for each
 #'   repetition (a total of \code{rep} repetitions) for each combination of
 #'   metaparameters and some extra metadata used by \code{\link{fit}}.  The
@@ -27,7 +27,7 @@
 #' meta_list_out = blueprint(x = ~ MASS::mvrnorm(n, rep(0, 2), Sigma = S)) %>%
 #'   meta(n = c(10, 20, 30),
 #'        S = list(independent = diag(2), correlated = diag(2) + 2)) %>%
-#'   gen(3)
+#'   produce(3)
 #'
 #'  ## View overall structure of the result
 #'  meta_list_out
@@ -40,12 +40,12 @@
 #'  meta_list_2 = blueprint(x = ~ MASS::mvrnorm(n, rep(0, 2), Sigma = S)) %>%
 #'   meta(n = c(10, 20, 30),
 #'        S = list(independent = diag(2), correlated = diag(2) + 2)) %>%
-#'   gen(4)
+#'   produce(4)
 #'
 #'  meta_list_2
 #'
 #' @export
-gen = function(x, reps) {
+produce = function(x, reps) {
   ## Check reps argument is a whole number > 0
   if(length(reps) > 1) {
     reps = reps[1]

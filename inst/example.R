@@ -15,7 +15,7 @@ simpr_spec = blueprint(x1 = ~ 2 + rnorm(n),
 
 
 simpr_gen = simpr_spec %>%
-  gen(20) %>%
+  produce(20) %>%
   fit(lm = ~lm(y ~ x1*x2, data = .))
 
 simpr_calc = simpr_gen %>%
@@ -40,7 +40,7 @@ chisq_spec = blueprint(x1 = ~rnorm(n),
        b = 2:10)
 
 chisq_gen = chisq_spec %>%
-  gen(20) %>%
+  produce(20) %>%
   fit(ChiSq = ~chisq.test(.$c1, .$c2),
       Unknown_Continuous_Correlation = ~cor.test(.$x1, .$x2),
       Pearson_Correlation = ~cor.test(.$c1, .$c2))
@@ -67,7 +67,7 @@ ind_t_spec = blueprint(y1 = ~ rnorm(n, mean = m + d*s, sd = s),
        s = 10) # sd (both grps)
 
 ind_t_gen = ind_t_spec %>%
-  gen(100) %>%
+  produce(100) %>%
   fit(ind_t_test = ~t.test(.$y1, .$y2, paired = FALSE, alternative = "two.sided"))
 # note the above usage of .$colname notation is equivalent to providing data=.
 
@@ -121,7 +121,7 @@ dep_t_spec = blueprint(y1 = ~ rnorm(n, mean = m, sd = s),
        s = 10) # sd (both vars)
 
 dep_t_gen = dep_t_spec %>%
-  gen(100) %>%
+  produce(100) %>%
   fit(dep_t_test = ~t.test(.$y1, .$y2, paired = TRUE, alternative = "two.sided"))
 
 dep_t_tidy = dep_t_gen %>%
@@ -178,7 +178,7 @@ t_comp_spec = blueprint(y1 = ~ rnorm(n, mean = m, sd = s),
 
 # generate the data (100 replications)
 t_comp_gen = t_comp_spec %>%
-  gen(100)
+  produce(100)
 
 # fit generated data using an INDEPENDENT model (incorrectly specified model)
 #   as well as a DEPENDENT model(correctly specified model)

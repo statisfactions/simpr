@@ -8,7 +8,7 @@ fit(simpr_gen, ...)
 }
 \arguments{
 \item{simpr_gen}{a \code{simpr_gen} object--the simulated data from
-\code{\link{gen}}}
+\code{\link{produce}}}
 
 \item{...}{\code{purrr}-style formula functions used for computing on the
 simulated data.  See \emph{Details} and \emph{Examples}.}
@@ -16,13 +16,13 @@ simulated data.  See \emph{Details} and \emph{Examples}.}
 \value{
 a \code{simpr_gen} object with additional list-columns for the output
   of the provided functions (e.g. model outputs).  Just like the output of
-  \code{\link{gen}}, there is one row per repetition per combination of
+  \code{\link{produce}}, there is one row per repetition per combination of
   metaparameters, and the columns are the repetition number \code{rep}, the
   metaparameter names, the simulated data \code{sim_cell}, with additional
   columns for the function outputs specified in \code{\dots}.
 }
 \description{
-Takes simulated data from \code{\link{gen}} and applies functions to it,
+Takes simulated data from \code{\link{produce}} and applies functions to it,
 usually model-fitting functions.
 }
 \details{
@@ -45,7 +45,7 @@ variables x, y, and z specified in \code{blueprint}.
 simple_linear_data = blueprint(x1 = ~ 2 + rnorm(n),
                                y = ~ 5 + 3*x1 + rnorm(n, 0, sd = 0.5)) \%>\%
   meta(n = 100:101) \%>\%
-  gen(2)
+  produce(2)
 
 ## Fit with a single linear term
 linear_fit = simple_linear_data \%>\%
