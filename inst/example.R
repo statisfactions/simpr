@@ -208,14 +208,14 @@ t_comp_tidy %>%
 # Binomial example --------------------------------------------------------
 
 # specify a binomial data-generating process
-binom_spec = variables(s = ~ rbinom(1, size = n, prob = p), # successes
+binom_spec = blueprint(s = ~ rbinom(1, size = n, prob = p), # successes
                        f = ~ n - s) %>% # failures
-  meta(n = seq(100, 200, by = 10), # number of trials
+  meta(n = seq(20, 200, by = 20), # number of trials
        p = seq(.5, .75, by = .05)) # probability of success (1)
 
 # generate the data (100 replications)
 binom_gen = binom_spec %>%
-  gen(100)
+  produce(100)
 
 # fit the data using the binomial test (null = .5)
 binom_fit = binom_gen %>%
@@ -224,7 +224,7 @@ binom_fit = binom_gen %>%
                               alternative = "two.sided"))
 # tidy
 binom_tidy = binom_fit %>%
-  tidy_all()
+  tidy_fits()
 
 # plot the power curves
 binom_tidy %>%
@@ -242,14 +242,12 @@ binom_tidy %>%
   group_by(n) %>%
   filter(p == 0.5) %>% # only cases where null is true
   ggplot(aes(x = p.value)) +
-  #geom_st() +
-  # geom_histogram(breaks = seq(0, 1, by = .05),
-  #                color = "black", fill = "#1b9e77") +
+  geom_histogram(breaks = seq(0, 1, by = .05),
+                 color = "black", fill = "#1b9e77") +
   geom_vline(xintercept = .05, color = "#d95f02") +
   labs(x = "p value", y = "Frequency",
        title = "Distribution of p-values under the null (p=0.5)")
-
-
+# note that the p-values are not uniform, see stem plot:
 binom_tidy %>%
   group_by(n) %>%
   filter(p == 0.5) %>%
@@ -261,7 +259,7 @@ binom_tidy %>%
 # Reaction time power analysis --------------------------------------------
 
 # specify a log-normal data-generating process for 2 conditions (between-ppt)
-rt_spec = variables(
+rt_spec = blueprint(
   # ID numbers for each participant
   id = ~ seq_len(n),
   # control condition RT
@@ -283,7 +281,7 @@ rt_spec = variables(
 
 # generate the data (100 replications)
 rt_gen = rt_spec %>%
-  gen(100)
+  produce(100)
 
 # wrangle sim data (inside sim_cell) from wide to long for modeling
 rt_gen <- rt_gen %>%
