@@ -1,17 +1,17 @@
-context("simpr::tidy_all")
+context("simpr::tidy_fits")
 library(dplyr)
 
 test_that("Calc tidy terms match terms from fit",
           {
             set.seed(100)
-            lm_fit = variables(x1 = ~ 2 + rnorm(n),
+            lm_fit = blueprint(x1 = ~ 2 + rnorm(n),
                                y = ~ 5 + 3*x1 + rnorm(n, 0, sd = 0.5)) %>%
               meta(n = 100:101) %>%
-              gen(2) %>%
+              produce(2) %>%
               fit(lm = ~lm(y ~ x1, data = .))
 
             lm_tidy = lm_fit %>%
-              tidy_all
+              tidy_fits
 
             lm_tidy_unique_terms = lm_tidy %>%
               count(n, rep, term, name = "count")
@@ -31,7 +31,7 @@ test_that("Calc tidy terms match terms from fit",
           })
 
 
-test_that("Each iteration of simulation has model terms listed correctly in tidy_all output", {
+test_that("Each iteration of simulation has model terms listed correctly in tidy_fits output", {
   # define metaparamters (to use in meta() and test)
   meta_list = list(n = seq(100, 300, by = 20),
   b1 = 1,
@@ -44,7 +44,7 @@ test_that("Each iteration of simulation has model terms listed correctly in tidy
 
   # run the simulation
   set.seed(100)
-  simpr_spec = variables(x1 = ~ 2 + rnorm(n),
+  simpr_spec = blueprint(x1 = ~ 2 + rnorm(n),
                          x2 = ~ 3 + 2*x1 + rnorm(n, 0, sd = 0.5),
                          y = ~ 5 + b1*x1 + b2*x2 + g1*x1*x2 + rnorm(n, 0, sd = 3)) %>%
     meta(n = meta_list$n,
@@ -53,10 +53,10 @@ test_that("Each iteration of simulation has model terms listed correctly in tidy
          g1 = meta_list$g1)
 
   simpr_gen = simpr_spec %>%
-    gen(meta_list$rep) %>%
+    produce(meta_list$rep) %>%
     fit(lm = ~lm(y ~ x1*x2, data = .))
   simpr_calc = simpr_gen %>%
-    tidy_all
+    tidy_fits
 
   ## Count how many times a given combo of metaparameters and rep occur;
   ## we expect ONLY ONE each time

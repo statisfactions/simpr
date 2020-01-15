@@ -6,7 +6,7 @@ library(purrr)
 
 ## Regression example --------------
 
-simpr_spec = variables(x1 = ~ 2 + rnorm(n),
+simpr_spec = blueprint(x1 = ~ 2 + rnorm(n),
                        x2 = ~ 3 + 2*x1 + rnorm(n, 0, sd = 0.5),
                        y = ~ 5 + b1*x1 + b2*x2 + g1*x1*x2 + rnorm(n, 0, sd = s)) %>%
   meta(n = seq(100, 300, by = 20),
@@ -17,11 +17,11 @@ simpr_spec = variables(x1 = ~ 2 + rnorm(n),
 
 
 simpr_gen = simpr_spec %>%
-  gen(20) %>%
+  produce(20) %>%
   fit(lm = ~lm(y ~ x1*x2, data = .))
 
 simpr_calc = simpr_gen %>%
-  tidy_all
+  tidy_fits
 
 simpr_calc %>%
   filter(term %in% "x1:x2",
@@ -34,7 +34,7 @@ simpr_calc %>%
 
 ## Chisq example: number of categories, compare fisher and chisq ------------
 
-chisq_spec = variables(x1 = ~rnorm(n),
+chisq_spec = blueprint(x1 = ~rnorm(n),
                        x2 = ~x1 + rnorm(n, 0, sd = 2),
                        c1 = ~ cut(x1, breaks = b) %>% as.numeric,
                        c2 = ~ cut(x2, breaks = b) %>% as.numeric) %>%
@@ -42,14 +42,14 @@ chisq_spec = variables(x1 = ~rnorm(n),
        b = 2:10)
 
 chisq_gen = chisq_spec %>%
-  gen(20) %>%
+  produce(20) %>%
   fit(ChiSq = ~chisq.test(.$c1, .$c2),
       Unknown_Continuous_Correlation = ~cor.test(.$x1, .$x2),
       Pearson_Correlation = ~cor.test(.$c1, .$c2))
 
 
 all_tidy = chisq_gen %>%
-  tidy_all
+  tidy_fits
 
 all_tidy %>%
   group_by(n, b, Source) %>%
@@ -61,7 +61,7 @@ all_tidy %>%
 
 # Independent t-test example ----------------------------------------------
 
-ind_t_spec = variables(y1 = ~ rnorm(n, mean = m + d*s, sd = s),
+ind_t_spec = blueprint(y1 = ~ rnorm(n, mean = m + d*s, sd = s),
                        y2 = ~ rnorm(n, mean = m, sd = s)) %>%
   meta(n = seq(20, 100, by = 10), # n per grp
        m = 70, # ctrl grp mean
@@ -69,12 +69,12 @@ ind_t_spec = variables(y1 = ~ rnorm(n, mean = m + d*s, sd = s),
        s = 10) # sd (both grps)
 
 ind_t_gen = ind_t_spec %>%
-  gen(100) %>%
+  produce(100) %>%
   fit(ind_t_test = ~t.test(.$y1, .$y2, paired = FALSE, alternative = "two.sided"))
 # note the above usage of .$colname notation is equivalent to providing data=.
 
 ind_t_tidy = ind_t_gen %>%
-  tidy_all()
+  tidy_fits()
 
 # plot the power curves
 ind_t_tidy %>%
@@ -115,7 +115,7 @@ ind_t_tidy %>%
 
 # Dependent t-test example ----------------------------------------------
 
-dep_t_spec = variables(y1 = ~ rnorm(n, mean = m, sd = s),
+dep_t_spec = blueprint(y1 = ~ rnorm(n, mean = m, sd = s),
                        y2 = ~ y1 + rnorm(n, mean = d*s, sd = s)) %>%
   meta(n = seq(20, 100, by = 10), # overall n (2n observations)
        m = 70, # y1 mean
@@ -123,11 +123,11 @@ dep_t_spec = variables(y1 = ~ rnorm(n, mean = m, sd = s),
        s = 10) # sd (both vars)
 
 dep_t_gen = dep_t_spec %>%
-  gen(100) %>%
+  produce(100) %>%
   fit(dep_t_test = ~t.test(.$y1, .$y2, paired = TRUE, alternative = "two.sided"))
 
 dep_t_tidy = dep_t_gen %>%
-  tidy_all()
+  tidy_fits()
 
 # plot the power curves
 dep_t_tidy %>%
@@ -171,7 +171,7 @@ dep_t_tidy %>%
 # Let's simulate data to be dependent,
 # and then compare dependent vs. independent t-tests on the same data,
 # to simulate power of dependent designs vs. independent (where applicable)
-t_comp_spec = variables(y1 = ~ rnorm(n, mean = m, sd = s),
+t_comp_spec = blueprint(y1 = ~ rnorm(n, mean = m, sd = s),
                    y2 = ~ y1 + rnorm(n, mean = d*s, sd = s)) %>%
   meta(n = seq(20, 100, by = 10), # overall n (2n observations)
        m = 70, # y1 mean
@@ -180,7 +180,7 @@ t_comp_spec = variables(y1 = ~ rnorm(n, mean = m, sd = s),
 
 # generate the data (100 replications)
 t_comp_gen = t_comp_spec %>%
-  gen(100)
+  produce(100)
 
 # fit generated data using an INDEPENDENT model (incorrectly specified model)
 #   as well as a DEPENDENT model(correctly specified model)
@@ -189,7 +189,7 @@ t_comp_fit = t_comp_gen %>%
       dep_t_test = ~t.test(.$y1, .$y2, paired = TRUE, alternative = "two.sided"))
 # tidy
 t_comp_tidy = t_comp_fit %>%
-  tidy_all()
+  tidy_fits()
 
 # plot the power curves against each other (FACET by METHOD)
 t_comp_tidy %>%

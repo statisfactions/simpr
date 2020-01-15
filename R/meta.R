@@ -1,58 +1,58 @@
 #' Specify metaparameters to vary in simulation
 #'
-#' Takes the output of \code{\link{variables}} (a \code{simpr_spec} object) and
+#' Takes the output of \code{\link{blueprint}} (a \code{simpr_spec} object) and
 #' defines the metaparameters for simulation.
 #'
 #' This is the second step in the simulation process, after specifying the
-#' simulated data using \code{\link{variables}}.  The output of
-#' \code{\link{meta}} is then passed to \code{\link{gen}} to actually generate
+#' simulated data using \code{\link{blueprint}}.  The output of
+#' \code{\link{meta}} is then passed to \code{\link{produce}} to actually generate
 #' the simulation.
 #'
 #' Metaparameters are named arguments that are used in the simulation.  Usually,
 #' a metaparameter is some kind of vector or list, representing something that
 #' is to be systematically varied as a part of the simulation design. Any
-#' metaparameter would also appear in the formulas of \code{\link{variables}},
+#' metaparameter would also appear in the formulas of \code{\link{blueprint}},
 #' and thus the simulation changes depending on the value of the metaparameter.
 #'
 #' When creating the simulation, simulations for all possible combinations of
 #' metaparameters are generated, a fully crossed simulation design.
 #'
 #' When one of \code{\dots} is a list, a new column is generated in the output
-#' to \code{gen} to serve as the index of the list.  This new column will be the
+#' to \code{produce} to serve as the index of the list.  This new column will be the
 #' name of the list argument,  with the \code{suffix} argument appended onto the
 #' end.  So if \code{Y = list(a = 1:2, b = letters[2:3])}, and \code{suffix =
 #' "_index"}, the default, a column named \code{Y_index} would be added to the
-#' output of \code{gen} with values \code{"a"} and \code{"b"}.
+#' output of \code{produce} with values \code{"a"} and \code{"b"}.
 #'
-#' @param x a \code{simpr_spec} object (the output of \code{\link{variables}})
+#' @param x a \code{simpr_spec} object (the output of \code{\link{blueprint}})
 #' @param ... metaparameters: named arguments containing vectors or
 #'   unidimensional lists of objects to be used in the simulation.
 #' @param suffix name of suffix to append onto index column for list
 #'   metaparameters, \code{"_index"} by default.  See \emph{Details}.
-#' @return a \code{simpr_spec} object to pass onto \code{\link{gen}} for the
+#' @return a \code{simpr_spec} object to pass onto \code{\link{produce}} for the
 #'   simulation.
 #'
 #' @examples
 #' # Simple example of setting a metaparameter
-#' simple_meta = variables(x = ~ 1 + rnorm(n)) %>%
+#' simple_meta = blueprint(x = ~ 1 + rnorm(n)) %>%
 #'   meta(n = c(5, 10)) %>%
-#'   gen(1)
+#'   produce(1)
 #'
 #' simple_meta # $sim_cell has a 5-row tibble and a 10-row tibble
 #'
-#' multi_meta = variables(x = ~ mu + rnorm(n)) %>%
+#' multi_meta = blueprint(x = ~ mu + rnorm(n)) %>%
 #'   meta(n = c(5, 10),
 #'        mu = seq(-1, 1, length.out = 3)) %>%
-#'   gen(1)
+#'   produce(1)
 #'
 #' multi_meta # generates simulations for all combos of n and mu
 #'
 #'
 #' # meta can handle lists which can contain multiple matrices, etc.
-#' meta_list_out = variables(x = ~ MASS::mvrnorm(n, rep(0, 2), Sigma = S)) %>%
+#' meta_list_out = blueprint(x = ~ MASS::mvrnorm(n, rep(0, 2), Sigma = S)) %>%
 #'   meta(n = c(10, 20, 30),
 #'        S = list(independent = diag(2), correlated = diag(2) + 2)) %>%
-#'   gen(1)
+#'   produce(1)
 #'
 #' meta_list_out # generates S_index column
 #'
