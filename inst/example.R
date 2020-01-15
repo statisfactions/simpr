@@ -1,7 +1,8 @@
 library(simpr)
 library(dplyr)
+library(tidyr)
 library(ggplot2)
-library(brms)
+library(purrr)
 
 ## Regression example --------------
 
@@ -259,25 +260,53 @@ binom_tidy %>%
 
 # Reaction time power analysis --------------------------------------------
 
-# specify a shifted log-normal data-generating process for 2 conditions (within)
-rt_spec = variables(rt1 = ~ rshifted_lnorm(n, # sample size
-                                           meanlog = mu, # difficulty (mean)
-                                           sdlog = sigma, # scale (sd)
-                                           shift = sh), # earliest possible RT
-                    rt2 = ~ rshifted_lnorm(n, # sample size
-                                           meanlog = mu + mu_diff, # difficulty (mean)
-                                           sdlog = sigma + sig_diff, # scale (sd)
-                                           shift = sh) # earliest possible RT
-                       ) %>%
-  meta(n = seq(10, 100, by = 10), # number of trials
-       mu = c(-.5, 1, 1.5), # note: exp(mu) + shift is the median RT
-       sigma = seq(.4, .8, 1.2),
-       sh = .2, # earliest possible RT (200 ms), shifts log-normal rightward
-       mu_diff = c(.1, .3, .5),
-       sig_diff = c(.2, .4)
-       )
+# specify a log-normal data-generating process for 2 conditions (between-ppt)
+rt_spec = variables(
+  # ID numbers for each participant
+  id = ~ seq_len(n),
+  # control condition RT
+  ctrl = ~ rlnorm(n, # sample size
+                          meanlog = mu, # difficulty (mean)
+                          sdlog = sigma), # scale (sd)
+  # experimental condition RT
+  expl = ~ rlnorm(n, # sample size
+                          meanlog = mu + mu_diff, # difficulty (mean)
+                          sdlog = sigma + sig_diff) # scale (sd)
+) %>%
+  # define the meta-parameters
+  meta(n = 100, # number of trials
+       mu = c(-.5, 0), # note: exp(mu) is the median RT, so these correspond to .6 and 1 sec, respectively
+       sigma = c(.2, .5), # standard deviation (scale) of the log-normal -- corresp. to 1.22 & 1.65 secs
+       mu_diff = c(0, .2, .4), # how much mu shifts from Ctrl to Exp -- .2 is a 22% increase, .4 is 49% incr
+       sig_diff = c(0, .2, .4) # how much sigma shifts from Ctrl to Exp (log % increase in SD)
+  )
 
 # generate the data (100 replications)
 rt_gen = rt_spec %>%
   gen(100)
+
+# wrangle sim data (inside sim_cell) from wide to long for modeling
+rt_gen <- rt_gen %>%
+  mutate(
+    sim_cell = sim_cell %>% map( # use purrr::map to vectorize
+      pivot_longer, # tidyr::pivot_longer for wrangling wide to long
+      -id, # pivot all cols except ID
+      names_to = "Condition", # column names go to a column called Condition
+      values_to = "RT" # values go to a column called RT
+    )
+  )
+
+# unnest the sim_cell data itself to be at the same 'level' as the metaparameters
+# (this makes the tibble much longer w/ a row for each sim data point)
+rt_gen_long <- rt_gen %>%
+  unnest(cols = sim_cell)
+
+# now plot each condition's distribution for each metaparameter combination
+rt_gen_long %>%
+  filter(RT < 4) %>% # arbitrary cutoff of 4 sec maximum (just to see plots more easily)
+  ggplot(mapping = aes(x = RT, color = Condition)) +
+  geom_density() +
+  facet_grid(rows = vars(mu, mu_diff),
+             cols = vars(sigma, sig_diff),
+             labeller = label_both)
 
