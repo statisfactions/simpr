@@ -1,6 +1,8 @@
 library(simpr)
 library(dplyr)
+library(tidyr)
 library(ggplot2)
+library(purrr)
 
 ## Regression example --------------
 
@@ -98,7 +100,7 @@ ind_t_tidy %>%
   labs(x = "Cohen's d", group = "n per group", color = "n per group",
                 y = "Power", title = "Power curves for independent t-test")
 
-# plot p value distribution when null is fasle (i.e., d = 0)
+# plot p value distribution when null is false (i.e., d = 0)
 ind_t_tidy %>%
   group_by(n) %>%
   filter(d == 0) %>% # only cases where null is true
@@ -151,7 +153,7 @@ dep_t_tidy %>%
   labs(x = "Cohen's d", group = "n per group", color = "n per group",
        y = "Power", title = "Power curves for Dependent t-test")
 
-# plot p value distribution when null is fasle (i.e., d = 0)
+# plot p value distribution when null is false (i.e., d = 0)
 dep_t_tidy %>%
   group_by(n) %>%
   filter(d == 0) %>% # only cases where null is true
@@ -201,4 +203,108 @@ t_comp_tidy %>%
   scale_color_discrete() +
   labs(x = "n per group", group = "Cohen's d", color = "Cohen's d",
        y = "Power", title = "Power curves for independent vs. dependent t-test")
+
+
+# Binomial example --------------------------------------------------------
+
+# specify a binomial data-generating process
+binom_spec = blueprint(s = ~ rbinom(1, size = n, prob = p), # successes
+                       f = ~ n - s) %>% # failures
+  meta(n = seq(20, 200, by = 20), # number of trials
+       p = seq(.5, .75, by = .05)) # probability of success (1)
+
+# generate the data (100 replications)
+binom_gen = binom_spec %>%
+  produce(100)
+
+# fit the data using the binomial test (null = .5)
+binom_fit = binom_gen %>%
+  fit(bin_test = ~ binom.test(c(.$s, .$f), # (vector of #success and #failures)
+                              p = 0.5, # null hypothesis
+                              alternative = "two.sided"))
+# tidy
+binom_tidy = binom_fit %>%
+  tidy_fits()
+
+# plot the power curves
+binom_tidy %>%
+  group_by(n, p) %>%
+  filter(p > 0.5) %>% #
+  summarize(power = mean(p.value < 0.05)) %>%
+  ggplot(aes(x = n, y = power,
+             group = p, color = p)) +
+  geom_line() +
+  labs(x = "Number of trials (n)", group = "Prob. of Success", color = "Prob. of Success",
+       y = "Power", title = "Power curves for Binomial test")
+
+# plot p value distribution when null is false (i.e., p = 0.5)
+binom_tidy %>%
+  group_by(n) %>%
+  filter(p == 0.5) %>% # only cases where null is true
+  ggplot(aes(x = p.value)) +
+  geom_histogram(breaks = seq(0, 1, by = .05),
+                 color = "black", fill = "#1b9e77") +
+  geom_vline(xintercept = .05, color = "#d95f02") +
+  labs(x = "p value", y = "Frequency",
+       title = "Distribution of p-values under the null (p=0.5)")
+# note that the p-values are not uniform, see stem plot:
+binom_tidy %>%
+  group_by(n) %>%
+  filter(p == 0.5) %>%
+  pull(p.value) %>%
+  stem()
+
+
+
+# Reaction time power analysis --------------------------------------------
+
+# specify a log-normal data-generating process for 2 conditions (between-ppt)
+rt_spec = blueprint(
+  # ID numbers for each participant
+  id = ~ seq_len(n),
+  # control condition RT
+  ctrl = ~ rlnorm(n, # sample size
+                          meanlog = mu, # difficulty (mean)
+                          sdlog = sigma), # scale (sd)
+  # experimental condition RT
+  expl = ~ rlnorm(n, # sample size
+                          meanlog = mu + mu_diff, # difficulty (mean)
+                          sdlog = sigma + sig_diff) # scale (sd)
+) %>%
+  # define the meta-parameters
+  meta(n = 100, # number of trials
+       mu = c(-.5, 0), # note: exp(mu) is the median RT, so these correspond to .6 and 1 sec, respectively
+       sigma = c(.2, .5), # standard deviation (scale) of the log-normal -- corresp. to 1.22 & 1.65 secs
+       mu_diff = c(0, .2, .4), # how much mu shifts from Ctrl to Exp -- .2 is a 22% increase, .4 is 49% incr
+       sig_diff = c(0, .2, .4) # how much sigma shifts from Ctrl to Exp (log % increase in SD)
+  )
+
+# generate the data (100 replications)
+rt_gen = rt_spec %>%
+  produce(100)
+
+# wrangle sim data (inside sim_cell) from wide to long for modeling
+rt_gen <- rt_gen %>%
+  mutate(
+    sim_cell = sim_cell %>% map( # use purrr::map to vectorize
+      pivot_longer, # tidyr::pivot_longer for wrangling wide to long
+      -id, # pivot all cols except ID
+      names_to = "Condition", # column names go to a column called Condition
+      values_to = "RT" # values go to a column called RT
+    )
+  )
+
+# unnest the sim_cell data itself to be at the same 'level' as the metaparameters
+# (this makes the tibble much longer w/ a row for each sim data point)
+rt_gen_long <- rt_gen %>%
+  unnest(cols = sim_cell)
+
+# now plot each condition's distribution for each metaparameter combination
+rt_gen_long %>%
+  filter(RT < 4) %>% # arbitrary cutoff of 4 sec maximum (just to see plots more easily)
+  ggplot(mapping = aes(x = RT, color = Condition)) +
+  geom_density() +
+  facet_grid(rows = vars(mu, mu_diff),
+             cols = vars(sigma, sig_diff),
+             labeller = label_both)
 
