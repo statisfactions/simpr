@@ -3,6 +3,8 @@
 export("%>%")
 export(blueprint)
 export(fit)
+export(future_fit)
+export(future_produce)
 export(glance_fits)
 export(meta)
 export(produce)

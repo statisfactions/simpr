@@ -47,6 +47,52 @@
 #'  meta_list_2
 #'
 #' @export
+future_produce = function(x, reps) {
+  ## Check reps argument is a whole number > 0
+  if(length(reps) > 1) {
+    reps = reps[1]
+    warning("reps has length > 1, using only first element")
+  }
+  if(reps != round(reps)) {
+    reps = round(reps)
+    warning("reps not a whole number, rounding to nearest whole number")
+  }
+  if(reps < 1) {
+    stop("reps should be at least 1")
+  }
+
+  # Create data frame representing all possible values of meta parameter indices
+  specs = expand.grid(c(list(rep = 1:reps), x$meta$indices), stringsAsFactors = FALSE)
+
+  if(!is.null(x$meta$lookup)) {
+    ## If there are list elements, join cells representing those list-columns
+    ## into specs
+    specs = purrr::reduce2(x$meta$lookup,
+                           dplyr::inner_join,
+                           .init = specs,
+                           .y = names(x$meta$lookup)) # the "by" argument to the join
+  }
+
+  ## define variable "." to satisfy R CMD Check
+  . = "Defining ."
+
+  sim_results = specs %>% tibble::as_tibble()
+
+  ## Generate all replications
+  sim_results$sim_cell = specs %>%
+    furrr::future_pmap(., genify)
+
+
+  ## Add some attributes to the tibble to track meta and variables
+  attr(sim_results, "meta") = names(x$meta$indices)
+  attr(sim_results, "variables") = purrr::map(x$variables, ~ attr(., "varnames")) %>% unlist
+
+  ## Add "simpr_gen" class
+  class(sim_results) = c("simpr_gen", class(sim_results))
+
+  sim_results
+}
+
 
 genify = function(...) {
   eval_environment = rlang::as_environment(list(...), parent = parent.frame())
@@ -100,51 +146,3 @@ genify = function(...) {
   df
 
 }
-
-future_produce = function(x, reps) {
-  ## Check reps argument is a whole number > 0
-  if(length(reps) > 1) {
-    reps = reps[1]
-    warning("reps has length > 1, using only first element")
-  }
-  if(reps != round(reps)) {
-    reps = round(reps)
-    warning("reps not a whole number, rounding to nearest whole number")
-  }
-  if(reps < 1) {
-    stop("reps should be at least 1")
-  }
-
-  # Create data frame representing all possible values of meta parameter indices
-  specs = expand.grid(c(list(rep = 1:reps), x$meta$indices), stringsAsFactors = FALSE)
-
-  if(!is.null(x$meta$lookup)) {
-    ## If there are list elements, join cells representing those list-columns
-    ## into specs
-    specs = purrr::reduce2(x$meta$lookup,
-                           dplyr::inner_join,
-                           .init = specs,
-                           .y = names(x$meta$lookup)) # the "by" argument to the join
-  }
-
-  ## define variable "." to satisfy R CMD Check
-  . = "Defining ."
-
-  sim_results = specs %>% tibble::as_tibble()
-
-  ## Generate all replications
-  sim_results$sim_cell = specs %>%
-    furrr::future_pmap(., genify)
-
-
-  ## Add some attributes to the tibble to track meta and variables
-  attr(sim_results, "meta") = names(x$meta$indices)
-  attr(sim_results, "variables") = purrr::map(x$variables, ~ attr(., "varnames")) %>% unlist
-
-  ## Add "simpr_gen" class
-  class(sim_results) = c("simpr_gen", class(sim_results))
-
-  sim_results
-}
-
-
