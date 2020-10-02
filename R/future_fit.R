@@ -84,7 +84,7 @@ future_fit = function(simpr_gen, ...) {
 
   fit_functions = list(...)
 
-  simpr_mod = simpr_gen %>% ungroup
+  simpr_mod = simpr_gen %>% dplyr::ungroup()
 
   for(i in names(fit_functions))
     simpr_mod[[i]] = furrr::future_map(simpr_mod$sim_cell, fit_functions[[i]])
