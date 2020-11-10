@@ -85,8 +85,7 @@ produce = function(x, reps) {
         eval_fun = purrr::as_mapper(y)
         environment(eval_fun) <- eval_environment
 
-        gen = eval_fun() %>%
-          unlist
+        gen = eval_fun()
 
         varnames = attr(y, "varnames")
 
