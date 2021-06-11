@@ -16,6 +16,8 @@ workflow is:
 4.  Fit models with your data (e.g. `lm()`), with `fit()`
 5.  Tidy the model output for further processing, such as computing
     power or Type I Error rates, with `tidy_fits`
+    
+Learn more at the [useR! 2020 presentation](https://www.youtube.com/watch?v=MkfMSe9re2U) on `simpr`.
 
 Installation
 ------------
