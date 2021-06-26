@@ -17,10 +17,11 @@ test_that("glance_fits correctly returns broom::glance output", {
     fit(linear = ~ lm(y2 ~ y1, data = .)) %>%
     glance_fits
 
-  lin_test %>%
+  broom_test =  lin_test %>%
     select(-rep, -Source) %>%
-    as_tibble %>%
-    expect_identical(broom_target)
+    as_tibble
+
+    expect_equivalent(broom_test, broom_target)
 
 })
 

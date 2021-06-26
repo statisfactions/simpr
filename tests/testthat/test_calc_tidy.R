@@ -27,7 +27,7 @@ test_that("Calc tidy terms match terms from fit",
               tidyr::spread(term, estimate) %>%
               arrange(n, rep)
 
-            expect_equal(lm_fit_coef, lm_tidy_coef)
+            expect_equivalent(lm_fit_coef, lm_tidy_coef)
           })
 
 
