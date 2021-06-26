@@ -10,9 +10,9 @@ test_that("Metaparameters are not blocked by objects in calling environment", {
   n = "barf"
 
   ## This code should run without being confused by the `n` in the global environment
-  out = blueprint(x1 = ~ 2 + rnorm(n)) %>%
+  expect_silent(out <- blueprint(x1 = ~ 2 + rnorm(n)) %>%
     meta(n = 10) %>%
-    produce(1)
+    produce(1))
 
 })
 
@@ -55,11 +55,11 @@ test_that("Gen runs without warnings or messages", {
 ## meta can handle lists which can contain multiple matrices, etc.
 
 test_that("meta() can handle lists", {
-  meta_list_out = blueprint(x = ~ mvrnorm(n, rep(0, 2), Sigma = S)[, 2, drop = TRUE],
+  expect_silent(meta_list_out <- blueprint(x = ~ mvrnorm(n, rep(0, 2), Sigma = S)[, 2, drop = TRUE],
             y = ~ x + rnorm(n)) %>%
     meta(n = c(10, 20, 30),
          S = list(independent = diag(2), correlated = diag(2) + 2)) %>%
-    produce(1)
+    produce(1))
 
 })
 

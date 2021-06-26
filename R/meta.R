@@ -1,36 +1,58 @@
 #' Specify metaparameters to vary in simulation
 #'
-#' Takes the output of \code{\link{blueprint}} (a \code{simpr_spec} object) and
-#' defines the metaparameters for simulation.
+#' Takes the output of \code{\link{blueprint}} (a
+#' \code{simpr_spec} object) and defines the
+#' metaparameters for simulation.
 #'
-#' This is the second step in the simulation process, after specifying the
-#' simulated data using \code{\link{blueprint}}.  The output of
-#' \code{\link{meta}} is then passed to \code{\link{produce}} to actually generate
-#' the simulation.
+#' This is the second step in the simulation
+#' process, after specifying the simulated data
+#' using \code{\link{blueprint}}.  The output of
+#' \code{\link{meta}} is then passed to
+#' \code{\link{produce}} to actually generate the
+#' simulation.
 #'
-#' Metaparameters are named arguments that are used in the simulation.  Usually,
-#' a metaparameter is some kind of vector or list, representing something that
-#' is to be systematically varied as a part of the simulation design. Any
-#' metaparameter would also appear in the formulas of \code{\link{blueprint}},
-#' and thus the simulation changes depending on the value of the metaparameter.
+#' Metaparameters are named arguments that are
+#' used in the simulation.  Usually, a
+#' metaparameter is some kind of vector or list,
+#' representing something that is to be
+#' systematically varied as a part of the
+#' simulation design. Any metaparameter would also
+#' appear in the formulas of
+#' \code{\link{blueprint}}, and thus the
+#' simulation changes depending on the value of
+#' the metaparameter.
 #'
-#' When creating the simulation, simulations for all possible combinations of
-#' metaparameters are generated, a fully crossed simulation design.
+#' When creating the simulation, simulations for
+#' all possible combinations of metaparameters are
+#' generated, a fully crossed simulation design.
 #'
-#' When one of \code{\dots} is a list, a new column is generated in the output
-#' to \code{produce} to serve as the index of the list.  This new column will be the
-#' name of the list argument,  with the \code{suffix} argument appended onto the
-#' end.  So if \code{Y = list(a = 1:2, b = letters[2:3])}, and \code{suffix =
-#' "_index"}, the default, a column named \code{Y_index} would be added to the
-#' output of \code{produce} with values \code{"a"} and \code{"b"}.
+#' When one of \code{\dots} is a list, a new
+#' column is generated in the output to
+#' \code{produce} to serve as the index of the
+#' list.  This new column will be the name of the
+#' list argument,  with the \code{suffix} argument
+#' appended onto the end.  So if \code{Y = list(a
+#' = 1:2, b = letters[2:3])}, and \code{suffix =
+#' "_index"}, the default, a column named
+#' \code{Y_index} would be added to the output of
+#' \code{produce} with values \code{"a"} and
+#' \code{"b"}.
 #'
-#' @param x a \code{simpr_spec} object (the output of \code{\link{blueprint}})
-#' @param ... metaparameters: named arguments containing vectors or
-#'   unidimensional lists of objects to be used in the simulation.
-#' @param suffix name of suffix to append onto index column for list
-#'   metaparameters, \code{"_index"} by default.  See \emph{Details}.
-#' @return a \code{simpr_spec} object to pass onto \code{\link{produce}} for the
-#'   simulation.
+#' @param x a \code{simpr_spec} object (the output
+#'   of \code{\link{blueprint}})
+#' @param ... metaparameters: named arguments
+#'   containing vectors or unidimensional lists of
+#'   objects to be used in the simulation.
+#' @param suffix name of suffix to append onto
+#'   index column for list metaparameters,
+#'   \code{"_index"} by default.  See
+#'   \emph{Details}.
+#' @return a \code{simpr_meta} object to pass onto
+#'   \code{\link{produce}} for the simulation.
+#'   This is also a tibble containing all
+#'   simulation conditions that can be examined or
+#'   altered directly (in case a fully crossed
+#'   design is not desired).
 #'
 #' @examples
 #' # Simple example of setting a metaparameter
@@ -99,6 +121,14 @@ meta = function(x, ..., suffix = "_index") {
                   lookup = NULL)
   }
 
-  x
+  specs = expand.grid(x$meta$indices, stringsAsFactors = FALSE) %>%
+    tibble::as_tibble()
+
+  class(specs) = c("simpr_meta", class(specs))
+
+  attr(specs, "meta") = x$meta
+  attr(specs, "variables") = x$variables
+
+  specs
 }
 
