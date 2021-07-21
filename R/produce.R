@@ -116,8 +116,8 @@ create_sim_results <- function(specs, x) {
   attr(sim_results, "meta") = names(x$meta$indices)
   attr(sim_results, "variables") = purrr::map(x$variables, ~ attr(., "varnames")) %>% unlist
 
-  ## Add "simpr_gen" class
-  class(sim_results) = c("simpr_gen", class(sim_results))
+  ## Add "simpr_produce" class
+  class(sim_results) = c("simpr_produce", class(sim_results))
 
   sim_results
 }
