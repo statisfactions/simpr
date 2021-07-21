@@ -163,7 +163,7 @@ produce.simpr_meta = function(obj, reps, ...) {
 
 #' @rdname produce
 #' @export
-produce.simpr_spec = function(obj, reps, ...) {
+produce.simpr_blueprint = function(obj, reps, ...) {
   validate_reps(reps)
 
   ## this is if meta() was never called
@@ -177,9 +177,6 @@ produce.simpr_spec = function(obj, reps, ...) {
                            .init = specs,
                            .y = names(obj$meta$lookup)) # the "by" argument to the join
   }
-
-  ## define variable "." to satisfy R CMD Check
-  . = "Defining ."
 
   create_sim_results(specs = specs, x = obj)
 }

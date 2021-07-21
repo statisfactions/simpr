@@ -14,7 +14,7 @@ simulation variables.}
 \emph{Details}.}
 }
 \value{
-A \code{simpr_spec} object which contains the functions needed to
+A \code{simpr_blueprint} object which contains the functions needed to
   generate the simulation; to be passed to \code{\link{meta}} for defining
   metaparameters or, if there are no metaparameters, directly to
   \code{\link{produce}} for generating the simulation.

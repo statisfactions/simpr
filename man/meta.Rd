@@ -7,7 +7,7 @@
 meta(x, ..., suffix = "_index")
 }
 \arguments{
-\item{x}{a \code{simpr_spec} object (the output
+\item{x}{a \code{simpr_blueprint} object (the output
 of \code{\link{blueprint}})}
 
 \item{...}{metaparameters: named arguments
@@ -29,7 +29,7 @@ a \code{simpr_meta} object to pass onto
 }
 \description{
 Takes the output of \code{\link{blueprint}} (a
-\code{simpr_spec} object) and defines the
+\code{simpr_blueprint} object) and defines the
 metaparameters for simulation.
 }
 \details{

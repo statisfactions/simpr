@@ -1,7 +1,7 @@
 #' Specify metaparameters to vary in simulation
 #'
 #' Takes the output of \code{\link{blueprint}} (a
-#' \code{simpr_spec} object) and defines the
+#' \code{simpr_blueprint} object) and defines the
 #' metaparameters for simulation.
 #'
 #' This is the second step in the simulation
@@ -38,7 +38,7 @@
 #' \code{produce} with values \code{"a"} and
 #' \code{"b"}.
 #'
-#' @param x a \code{simpr_spec} object (the output
+#' @param x a \code{simpr_blueprint} object (the output
 #'   of \code{\link{blueprint}})
 #' @param ... metaparameters: named arguments
 #'   containing vectors or unidimensional lists of

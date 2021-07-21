@@ -23,7 +23,7 @@
 #'   simulation variables.
 #' @param sep Specify the separator for auto-generating names.  See
 #'   \emph{Details}.
-#' @return A \code{simpr_spec} object which contains the functions needed to
+#' @return A \code{simpr_blueprint} object which contains the functions needed to
 #'   generate the simulation; to be passed to \code{\link{meta}} for defining
 #'   metaparameters or, if there are no metaparameters, directly to
 #'   \code{\link{produce}} for generating the simulation.
@@ -128,6 +128,6 @@ blueprint = function(..., sep = "_") {
   # set attribute of "sep" for auto-numbering variables with multiple outputs
   attr(out$variables, "sep") = sep
 
-  class(out) = "simpr_spec"
+  class(out) = "simpr_blueprint"
   out
 }
