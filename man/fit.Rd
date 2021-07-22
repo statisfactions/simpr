@@ -4,11 +4,11 @@
 \alias{fit}
 \title{Fit models to the simulated data}
 \usage{
-fit(simpr_gen, ...)
+fit(obj, ...)
 }
 \arguments{
-\item{simpr_gen}{a \code{simpr_gen} object--the simulated data from
-\code{\link{produce}}}
+\item{obj}{a \code{simpr_blueprint} object--the simulated data from
+\code{\link{produce}}--or an \code{\link{include}} object}
 
 \item{...}{\code{purrr}-style formula functions used for computing on the
 simulated data.  See \emph{Details} and \emph{Examples}.}
@@ -88,6 +88,5 @@ add_five_data = simple_linear_data \%>\%
 add_five_data
 
 add_five_data$add_five
-
 
 }

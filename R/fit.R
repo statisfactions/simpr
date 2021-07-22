@@ -17,8 +17,8 @@
 #' data = .)} computes linear models on each simulation cell if there are
 #' variables x, y, and z specified in \code{blueprint}.
 #'
-#' @param simpr_gen a \code{simpr_gen} object--the simulated data from
-#'   \code{\link{produce}}
+#' @param obj a \code{simpr_blueprint} object--the simulated data from
+#'   \code{\link{produce}}--or an \code{\link{include}} object
 #' @param ... \code{purrr}-style formula functions used for computing on the
 #'   simulated data.  See \emph{Details} and \emph{Examples}.
 #'
@@ -78,20 +78,30 @@
 #'
 #' add_five_data$add_five
 #'
-#'
 #' @export
-fit = function(simpr_gen, ...) {
+fit = function(obj, ...) {
+  UseMethod("fit")
+}
+
+#' @export
+fit.simpr_produce = function(obj, ...) {
 
   fit_functions = list(...)
 
-  simpr_mod = simpr_gen
+  simpr_mod = obj
 
   for(i in names(fit_functions))
     simpr_mod[[i]] = purrr::map(simpr_mod$sim_cell, fit_functions[[i]])
 
-  attr(simpr_mod, "meta") = attr(simpr_gen, "meta")
-  attr(simpr_mod, "variables") = attr(simpr_gen, "variables")
-  attr(simpr_mod, "fits") = c(attr(simpr_gen, "fits"), names(fit_functions))
+  attr(simpr_mod, "meta") = attr(obj, "meta")
+  attr(simpr_mod, "variables") = attr(obj, "variables")
+  attr(simpr_mod, "fits") = c(attr(obj, "fits"), names(fit_functions))
 
   simpr_mod
 }
+
+fit.simpr_include = function(obj, ...) {
+
+
+}
+
