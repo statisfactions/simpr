@@ -57,9 +57,9 @@ create_sim_results <- function(specs, x) {
   . = "Defining ."
 
   ## Generate all replications
-  sim_results = specs %>%
-    dplyr::group_by_at(.vars = c("rep", names(x$meta$indices))) %>%
-    dplyr::do(sim_cell = purrr::pmap(., function(...) {
+  sim_results = specs %>% tibble::as_tibble()
+
+  sim_results$sim_cell = purrr::pmap(sim_results, function(...) {
       eval_environment = rlang::as_environment(list(...), parent = parent.frame())
 
       df = purrr::map_dfc(x$variables, function(y) {
@@ -109,7 +109,7 @@ create_sim_results <- function(specs, x) {
 
       df
 
-    })) %>% tidyr::unnest(cols = "sim_cell")
+    })
 
   ## Add some attributes to the tibble to track meta and variables
   attr(sim_results, "meta") = names(x$meta$indices)
