@@ -40,8 +40,5 @@ these postprocessing steps; only the
 postprocessing steps included in the simpr
 package (\code{\link{fit}},
 \code{\link{tidy_fits}},
-\code{\link{glance_fits}}) and some basic
-\code{dplyr} verbs (\code{\link{mutate}},
-\code{\link{filter}}, \code{\link{summarize}},
-and \code{\link{select}}).
+\code{\link{glance_fits}}).
 }

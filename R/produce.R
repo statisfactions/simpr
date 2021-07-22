@@ -49,7 +49,58 @@ produce = function(obj, reps) {
   UseMethod("produce")
 }
 
-#' @internal
+generate_sim_cell = function(variables, ...) {
+  eval_environment = rlang::as_environment(list(...), parent = parent.frame())
+
+  df = purrr::map_dfc(variables, function(y) {
+
+    eval_fun = purrr::as_mapper(y)
+    environment(eval_fun) <- eval_environment
+
+    gen = eval_fun()
+
+    varnames = attr(y, "varnames")
+
+    if(is.null(ncol(gen))) {
+      gen_df = tibble::as_tibble(gen, .name_repair = "minimal")
+      names(gen_df) = varnames
+      assign(varnames, gen, envir = eval_environment)
+
+    } else if(length(dim(gen)) > 3) {
+      stop("More than 2 dimensional output in blueprint() not supported")
+    } else if(ncol(gen) == 0) {
+      stop("variable function returns 0 columns")
+    } else if(ncol(gen) == 1) {
+      names(gen) = attr(y, "varnames")
+      assign(varnames, gen[[1]], envir = eval_environment)
+    } else if(ncol(gen) > 1) {
+      gen_df = tibble::as_tibble(gen, .name_repair = "minimal")
+
+      # rename gen_df
+      ## if multiple varnames given via formula lhs, use those
+      if(length(varnames) > 1) {
+        names(gen_df) = varnames
+      } else {
+        # Otherwise, use auto-numbering
+        names(gen_df) = sprintf(paste0("%s%s%0", nchar(trunc(ncol(gen))), ".0f"),
+                                varnames,
+                                attr(variables, "sep"),
+                                1:ncol(gen))
+        ## assign names to the eval_environmnent
+      }
+      purrr::iwalk(gen_df, ~ assign(.y, .x, envir = eval_environment))
+
+
+    }
+
+    gen_df
+  })
+
+
+  df
+
+}
+
 create_sim_results <- function(specs, x) {
   ## Create simulation results from specification
 
@@ -59,57 +110,7 @@ create_sim_results <- function(specs, x) {
   ## Generate all replications
   sim_results = specs %>% tibble::as_tibble()
 
-  sim_results$sim_cell = purrr::pmap(sim_results, function(...) {
-      eval_environment = rlang::as_environment(list(...), parent = parent.frame())
-
-      df = purrr::map_dfc(x$variables, function(y) {
-
-        eval_fun = purrr::as_mapper(y)
-        environment(eval_fun) <- eval_environment
-
-        gen = eval_fun()
-
-        varnames = attr(y, "varnames")
-
-        if(is.null(ncol(gen))) {
-          gen_df = tibble::as_tibble(gen, .name_repair = "minimal")
-          names(gen_df) = varnames
-          assign(varnames, gen, envir = eval_environment)
-
-        } else if(length(dim(gen)) > 3) {
-          stop("More than 2 dimensional output in blueprint() not supported")
-        } else if(ncol(gen) == 0) {
-          stop("variable function returns 0 columns")
-        } else if(ncol(gen) == 1) {
-          names(gen) = attr(y, "varnames")
-          assign(varnames, gen[[1]], envir = eval_environment)
-        } else if(ncol(gen) > 1) {
-          gen_df = tibble::as_tibble(gen, .name_repair = "minimal")
-
-          # rename gen_df
-          ## if multiple varnames given via formula lhs, use those
-          if(length(varnames) > 1) {
-            names(gen_df) = varnames
-          } else {
-            # Otherwise, use auto-numbering
-            names(gen_df) = sprintf(paste0("%s%s%0", nchar(trunc(ncol(gen))), ".0f"),
-                                    varnames,
-                                    attr(x$variables, "sep"),
-                                    1:ncol(gen))
-            ## assign names to the eval_environmnent
-          }
-          purrr::iwalk(gen_df, ~ assign(.y, .x, envir = eval_environment))
-
-
-        }
-
-        gen_df
-      })
-
-
-      df
-
-    })
+  sim_results$sim_cell = purrr::pmap(sim_results, generate_sim_cell, variables = x$variables)
 
   ## Add some attributes to the tibble to track meta and variables
   attr(sim_results, "meta") = names(x$meta$indices)
@@ -121,7 +122,6 @@ create_sim_results <- function(specs, x) {
   sim_results
 }
 
-#' @internal
 validate_reps = function(reps) {
   ## Check reps argument is a whole number > 0
   if(length(reps) > 1) {
