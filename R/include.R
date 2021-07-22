@@ -43,14 +43,17 @@ create_include = function(obj) {
   obj
 }
 
+#' @export
 include.simpr_meta = function(obj) {
   create_include(obj)
 }
 
+#' @export
 include.simpr_blueprint = function(obj) {
   create_include(obj)
 }
 
+#' @export
 include.simpr_produce = function(obj) {
   stop("`produce()` has already been run on this object. The `include()` function is only run before running `produce()`.")
 }
