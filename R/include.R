@@ -30,6 +30,7 @@
 #'   can be treated like a \code{simpr_produce}
 #'   object for the purposes of the supported
 #'   functions (see Details).
+#' @export
 include = function(obj) {
   UseMethod("include")
 }
