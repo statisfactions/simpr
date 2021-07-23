@@ -1,7 +1,7 @@
 Package: simpr
 Type: Package
 Title: Flexible Tidyverse-Friendly Simulation Interface
-Version: 0.0.1.9000
+Version: 0.1.9.9000
 Author: Ethan C. Brown & Jeffrey K. Bye
 Maintainer: Ethan C. Brown <ecbrown@umn.edu>
 Description: Provides a flexible interface for easily customizing data simulations, especially for power analyses of various designs.
