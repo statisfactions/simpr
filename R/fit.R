@@ -100,8 +100,18 @@ fit.simpr_produce = function(obj, ...) {
   simpr_mod
 }
 
-fit.simpr_include = function(obj, ...) {
+add_call = function(obj, obj_call, call_name) {
+  obj_call[1] = call(call_name)
 
+  attr(obj, "include_calls") = c(attr(obj, "include_calls"), obj_call)
+
+  obj
+}
+
+fit.simpr_include = function(obj, ...) {
+  mc = match.call()
+
+  add_call(obj, mc, "fit")
 
 }
 

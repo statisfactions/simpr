@@ -36,7 +36,8 @@ include = function(obj) {
 
 create_include = function(obj) {
   attributes(obj) = c(attributes(obj), list(include_class = class(obj)))
-  class(obj) = "simpr_include"
+
+  class(obj) = c("simpr_include", class(obj))
   obj
 }
 
@@ -53,6 +54,16 @@ include.simpr_blueprint = function(obj) {
 #' @export
 include.simpr_produce = function(obj) {
   stop("`produce()` has already been run on this object. The `include()` function is only run before running `produce()`.")
+}
+
+# This adds a call (e.g. a simpr verb such as
+# fit()) to the include_calls attribute
+add_call = function(obj, obj_call, call_name) {
+  obj_call[1] = call(call_name)
+
+  attr(obj, "include_calls") = c(attr(obj, "include_calls"), obj_call)
+
+  obj
 }
 
 
