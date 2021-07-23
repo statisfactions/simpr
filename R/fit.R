@@ -101,7 +101,9 @@ fit.simpr_produce = function(obj, ...) {
 }
 
 fit.simpr_include = function(obj, ...) {
+  mc = match.call()
 
+  add_call(obj, mc, "fit")
 
 }
 

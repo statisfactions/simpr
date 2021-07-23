@@ -46,11 +46,30 @@
 #'
 #' @export
 produce = function(obj, reps) {
-  UseMethod("produce")
+  validate_reps(reps)
+
+  ## get meta info
+  x = get_produce_x(obj)
+
+  specs = get_produce_specs(obj, reps)
+
+  if(!is.null(x$meta$lookup)) {
+    ## If there are list elements, join cells representing those list-columns
+    ## into specs
+    specs = purrr::reduce2(x$meta$lookup,
+                           dplyr::inner_join,
+                           .init = specs,
+                           .y = names(x$meta$lookup)) # the "by" argument to the join
+  }
+
+  create_sim_results(specs = specs, x = x)
 }
 
-generate_sim_cell = function(variables, ...) {
-  eval_environment = rlang::as_environment(list(...), parent = parent.frame())
+
+
+generate_sim_cell = function(variables, ..., include_calls) {
+  meta_values = list(...)
+  eval_environment = rlang::as_environment(meta_values, parent = parent.frame())
 
   df = purrr::map_dfc(variables, function(y) {
 
@@ -96,9 +115,24 @@ generate_sim_cell = function(variables, ...) {
     gen_df
   })
 
+  df_full = data.frame(meta_values) %>% tibble::as_tibble() %>%
+    dplyr::mutate(sim_cell = list(df))
 
-  df
+  if(is.null(include_calls)) {
+    return(df_full)
+  } else {
 
+    ## Add "simpr_produce" class
+    class(df_full) = c("simpr_produce", class(df_full))
+
+    df_eval = purrr::reduce(.x = include_calls, .f = eval_pipe, .init = df_full)
+
+    return(df_eval)
+    }
+}
+
+eval_pipe = function(lhs, rhs) {
+  eval(call("%>%", lhs = lhs, rhs = rhs))
 }
 
 create_sim_results <- function(specs, x) {
@@ -108,9 +142,12 @@ create_sim_results <- function(specs, x) {
   . = "Defining ."
 
   ## Generate all replications
-  sim_results = specs %>% tibble::as_tibble()
-
-  sim_results$sim_cell = purrr::pmap(sim_results, generate_sim_cell, variables = x$variables)
+  sim_results = specs %>%
+    tibble::as_tibble() %>%
+    purrr::pmap(generate_sim_cell,
+                variables = x$variables,
+                include_calls = x$include_calls) %>%
+    dplyr::bind_rows()
 
   ## Add some attributes to the tibble to track meta and variables
   attr(sim_results, "meta") = names(x$meta$indices)
@@ -137,43 +174,39 @@ validate_reps = function(reps) {
   }
 }
 
-#' @export
-produce.simpr_meta = function(obj, reps) {
-  validate_reps(reps)
-
-  ## get meta info
-    x = list(meta = attr(obj, "meta"),
-           variables = attr(obj, "variables"))
-
-    specs = dplyr::inner_join(data.frame(rep = 1:reps), obj, by = character())
-
-  if(!is.null(x$meta$lookup)) {
-    ## If there are list elements, join cells representing those list-columns
-    ## into specs
-    specs = purrr::reduce2(x$meta$lookup,
-                           dplyr::inner_join,
-                           .init = specs,
-                           .y = names(x$meta$lookup)) # the "by" argument to the join
-  }
-
-  create_sim_results(specs = specs, x = x)
+get_produce_x = function(obj) {
+  UseMethod("get_produce_x")
 }
 
-#' @export
-produce.simpr_blueprint = function(obj, reps) {
-  validate_reps(reps)
 
-  ## this is if meta() was never called
-    specs = data.frame(rep = 1:reps)
-
-  if(!is.null(obj$meta$lookup)) {
-    ## If there are list elements, join cells representing those list-columns
-    ## into specs
-    specs = purrr::reduce2(obj$meta$lookup,
-                           dplyr::inner_join,
-                           .init = specs,
-                           .y = names(obj$meta$lookup)) # the "by" argument to the join
-  }
-
-  create_sim_results(specs = specs, x = obj)
+get_produce_x.simpr_meta = function(obj) {
+  list(meta = attr(obj, "meta"),
+       variables = attr(obj, "variables"),
+       include_calls = attr(obj, "include_calls")) ## only exists for simpr_include objects
 }
+
+get_produce_x.simpr_blueprint = function(obj) {
+  c(obj, include_calls = attr(obj, "include_calls")) ## only exists for simpr_include objects
+}
+
+get_produce_x.simpr_include = function(obj) {
+ NextMethod("get_produce_x")
+}
+
+
+get_produce_specs = function(obj, reps) {
+ UseMethod("get_produce_specs")
+}
+
+get_produce_specs.simpr_meta = function(obj, reps) {
+  dplyr::inner_join(data.frame(rep = 1:reps), obj, by = character())
+}
+
+get_produce_specs.simpr_blueprint = function(obj, reps) {
+  specs = data.frame(rep = 1:reps)
+}
+
+get_produce_specs.simpr_include = function(obj, reps) {
+  NextMethod("get_produce_specs")
+}
+

@@ -52,5 +52,25 @@ test_that("include accurately captures info from spec objects", {
 
 })
 
+test_that("delayed evaluation with include() give same results as produce()", {
+  set.seed(100)
+  lm_fit = blueprint(x1 = ~ 2 + rnorm(n),
+                     y = ~ 5 + 3*x1 + rnorm(n, 0, sd = 0.5)) %>%
+    meta(n = 100:101) %>%
+    produce(2) %>%
+    fit(lm = ~lm(y ~ x1, data = .))
+
+  set.seed(100)
+  lm_fit_include = blueprint(x1 = ~ 2 + rnorm(n),
+                     y = ~ 5 + 3*x1 + rnorm(n, 0, sd = 0.5)) %>%
+    meta(n = 100:101) %>%
+    include %>%
+    fit(lm = ~lm(y ~ x1, data = .)) %>%
+    produce(2)
+
+  expect_equivalent(lm_fit, lm_fit_include)
+
+})
+
 
 
