@@ -68,7 +68,16 @@ test_that("delayed evaluation with include() give same results as produce()", {
     fit(lm = ~lm(y ~ x1, data = .)) %>%
     produce(2)
 
+  set.seed(100)
+  lm_include_tricky = fit(lm =  ~lm(y ~ x1, data = .),
+                          obj = blueprint(x1 = ~ 2 + rnorm(n),
+                                y = ~ 5 + 3*x1 + rnorm(n, 0, sd = 0.5)) %>%
+    meta(n = 100:101) %>%
+    include) %>%
+    produce(2)
+
   expect_equivalent(lm_fit, lm_fit_include)
+  expect_equivalent(lm_include_tricky, lm_fit_include)
 
 })
 

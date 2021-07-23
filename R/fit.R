@@ -100,10 +100,11 @@ fit.simpr_produce = function(obj, ...) {
   simpr_mod
 }
 
+#' @export
 fit.simpr_include = function(obj, ...) {
   mc = match.call()
 
-  add_call(obj, mc, "fit")
+  add_call(obj, mc, "fit", replace_arg = "obj")
 
 }
 
