@@ -8,9 +8,10 @@
 #' variables, which is produced by
 #' \code{\link{produce}}.
 #'
-#' @param x a \code{\link{simpr_spec}} object
+#' @param x a \code{simpr_spec} object
 #' @param \dots ignored
 #'
+#' @rdname simpr_spec
 #' @export
 print.simpr_spec = function(x, ...) {
   print_cats = x[c("blueprint", "conditions", "meta_info", "include_calls")]

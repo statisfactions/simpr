@@ -37,19 +37,6 @@ test_that("include accurately captures info from spec objects", {
   expect_equivalent(blue_only, include_blue)
   expect_equivalent(spec, include_spec)
 
-  expect_identical(attributes(blue_only)[setdiff(names(attributes(blue_only)),
-                                                 "class")],
-                   attributes(include_blue)[setdiff(names(attributes(blue_only)),
-                                                          "class")])
-  expect_equal(class(blue_only), attr(include_blue, "include_class"))
-
-  expect_identical(attributes(include_spec)[setdiff(names(attributes(include_spec)),
-                                                 "class")],
-                   attributes(include_spec)[setdiff(names(attributes(include_spec)),
-                                                    "class")])
-
-  expect_equal(class(spec), attr(include_spec, "include_class"))
-
 })
 
 test_that("delayed evaluation with include() give same results as produce()", {

@@ -7,7 +7,7 @@
 \method{print}{simpr_spec}(x, ...)
 }
 \arguments{
-\item{x}{a \code{\link{simpr_spec}} object}
+\item{x}{a \code{simpr_spec} object}
 
 \item{\dots}{ignored}
 }

@@ -2,9 +2,8 @@
 
 S3method(fit,simpr_include)
 S3method(fit,simpr_produce)
-S3method(include,simpr_blueprint)
-S3method(include,simpr_meta)
 S3method(include,simpr_produce)
+S3method(include,simpr_spec)
 S3method(print,simpr_spec)
 export("%>%")
 export(blueprint)

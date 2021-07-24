@@ -36,19 +36,12 @@ include = function(obj) {
 }
 
 create_include = function(obj) {
-  attributes(obj) = c(attributes(obj), list(include_class = class(obj)))
-
   class(obj) = c("simpr_include", class(obj))
   obj
 }
 
 #' @export
-include.simpr_meta = function(obj) {
-  create_include(obj)
-}
-
-#' @export
-include.simpr_blueprint = function(obj) {
+include.simpr_spec = function(obj) {
   create_include(obj)
 }
 
@@ -58,7 +51,7 @@ include.simpr_produce = function(obj) {
 }
 
 # This adds a call (e.g. a simpr verb such as
-# fit()) to the include_calls attribute
+# fit()) to the include_calls element
 add_call = function(obj, obj_call, call_name, replace_arg = 2) {
   ## add the name of the function to be called
   obj_call[1] = call(call_name)
@@ -69,7 +62,7 @@ add_call = function(obj, obj_call, call_name, replace_arg = 2) {
   ## necessary in case the function was NOT piped.
   obj_call[replace_arg] = call(".")
 
-  attr(obj, "include_calls") = c(attr(obj, "include_calls"), obj_call)
+  obj$include_calls = c(obj$include_calls, obj_call)
 
   obj
 }
