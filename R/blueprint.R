@@ -19,7 +19,7 @@
 #' specifications elsewhere in R, e.g. \code{cbind(x, y) ~ MASS::mvrnorm(5, c(0,
 #' 0), Sigma = diag(2))}.
 #'
-#' @param x a \code{simpr_spec} object (the output
+#' @param .x a \code{simpr_spec} object (the output
 #'   of \code{\link{meta}}), or NULL to
 #'   create a new specification
 #' @param ... \code{purrr}-style formula functions used for generating
@@ -74,13 +74,22 @@
 #' @export
 blueprint = function(.x = NULL, ..., sep = "_") {
 
-  if(is.null(.x)) {
-  out = new_simpr_spec()
+  vars = list(...)
+
+  if(!is.null(.x) && is.simpr_spec(.x)) {
+    out = .x
   } else {
-  out = .x
+    out = new_simpr_spec()
+    if(!is.null(.x)) {
+      ## If not a simpr_spec, treat as an unnamed
+      ## argument for the two-sided formula
+      ## interface
+      vars = c(.x, vars)
+    }
+
   }
 
-  vars = list(...)
+
 
   if(length(vars) == 0)
     stop("No variables defined")
@@ -111,8 +120,8 @@ blueprint = function(.x = NULL, ..., sep = "_") {
 
                                            ## delete left-hand side of formula and return right-handed formula
                                            x_out = x
-                                           x_out[[2]] = NULL
 
+                                           x_out[[2]] = NULL
                                            x_out
                                          } else {
                                            ## Single-sided formula
@@ -121,6 +130,7 @@ blueprint = function(.x = NULL, ..., sep = "_") {
                                                stop("Right-hand formulas must be named.")
 
                                              x_out = x
+                                             attr(x_out, "varnames") = n
                                              x_out
 
                                            }

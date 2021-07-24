@@ -7,15 +7,15 @@
 blueprint(.x = NULL, ..., sep = "_")
 }
 \arguments{
+\item{.x}{a \code{simpr_spec} object (the output
+of \code{\link{meta}}), or NULL to
+create a new specification}
+
 \item{...}{\code{purrr}-style formula functions used for generating
 simulation variables.}
 
 \item{sep}{Specify the separator for auto-generating names.  See
 \emph{Details}.}
-
-\item{x}{a \code{simpr_spec} object (the output
-of \code{\link{meta}}), or NULL to
-create a new specification}
 }
 \value{
 A \code{simpr_blueprint} object which contains the functions needed to

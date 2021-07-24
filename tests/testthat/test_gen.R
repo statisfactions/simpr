@@ -69,7 +69,7 @@ test_that("meta() can handle lists", {
 
 set.seed(100)
 
-mat_1 = mvrnorm(30, rep(0, 10), Sigma = diag(10))
+mat_1 = MASS::mvrnorm(30, rep(0, 10), Sigma = diag(10))
 mat_2 = mat_1
 
 
@@ -78,7 +78,7 @@ colnames(mat_2) = letters[1:10]
 
 test_that("Autonumber when generating multiple columns with named argument", {
   set.seed(100)
-  auto_out = blueprint(x = ~ mvrnorm(30, rep(0, 10), Sigma = diag(10)), sep = "_") %>%
+  auto_out = blueprint(x = ~ MASS::mvrnorm(30, rep(0, 10), Sigma = diag(10)), sep = "_") %>%
     meta(n = 10) %>%
     produce(1)
 
@@ -101,7 +101,8 @@ test_that("Can refer to autonumbered columns in blueprint()", {
 
 test_that("Multiple columns with two-sided formulas and unnamed arguments", {
   set.seed(100)
-  cbind_out = blueprint(cbind(a, b, c, d, e, f, g, h, i, j) ~ mvrnorm(30, rep(0, 10), Sigma = diag(10))) %>%
+  cbind_out = blueprint(cbind(a, b, c, d, e, f, g, h, i, j) ~
+                          MASS::mvrnorm(30, rep(0, 10), Sigma = diag(10))) %>%
     produce(1)
 
   expect_identical(cbind_out$sim_cell[[1]], as_tibble(mat_2))

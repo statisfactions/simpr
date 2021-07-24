@@ -76,21 +76,24 @@ produce = function(obj, reps) {
 
   create_sim_results(specs = specs, x = obj[c("meta_info",
                                             "blueprint",
+                                            "variable_sep",
                                             "include_calls")])
 }
 
 
 
-generate_sim_cell = function(variables, ..., include_calls) {
+generate_sim_cell = function(variables, ..., variable_sep, include_calls) {
   meta_values = list(...)
   eval_environment = rlang::as_environment(meta_values, parent = parent.frame())
 
-  df = purrr::imap_dfc(variables, function(y, varnames) {
+  df = purrr::map_dfc(variables, function(y) {
 
     eval_fun = purrr::as_mapper(y)
     environment(eval_fun) <- eval_environment
 
     gen = eval_fun()
+
+    varnames = attr(y, "varnames")
 
     if(is.null(ncol(gen))) {
       gen_df = tibble::as_tibble(gen, .name_repair = "minimal")
@@ -115,7 +118,7 @@ generate_sim_cell = function(variables, ..., include_calls) {
         # Otherwise, use auto-numbering
         names(gen_df) = sprintf(paste0("%s%s%0", nchar(trunc(ncol(gen))), ".0f"),
                                 varnames,
-                                attr(variables, "sep"),
+                                variable_sep,
                                 1:ncol(gen))
         ## assign names to the eval_environmnent
       }
@@ -158,12 +161,13 @@ create_sim_results <- function(specs, x) {
     tibble::as_tibble() %>%
     purrr::pmap(generate_sim_cell,
                 variables = x$blueprint,
-                include_calls = x$include_calls) %>%
+                include_calls = x$include_calls,
+                variable_sep = x$variable_sep) %>%
     dplyr::bind_rows()
 
   ## Add some attributes to the tibble to track meta and variables
   attr(sim_results, "meta") = names(x$meta_info$indices)
-  attr(sim_results, "variables") = names(x$blueprint)
+  attr(sim_results, "variables") = purrr::map(x$variables, ~ attr(., "varnames")) %>% unlist
 
   ## Add "simpr_produce" class
   class(sim_results) = c("simpr_produce", class(sim_results))
