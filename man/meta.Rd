@@ -4,11 +4,12 @@
 \alias{meta}
 \title{Specify metaparameters to vary in simulation}
 \usage{
-meta(x, ..., suffix = "_index")
+meta(.x = NULL, ..., suffix = "_index")
 }
 \arguments{
-\item{x}{a \code{simpr_blueprint} object (the output
-of \code{\link{blueprint}})}
+\item{.x}{a \code{simpr_spec} object (the output
+of \code{\link{blueprint}}), or NULL to
+create a new specification}
 
 \item{...}{metaparameters: named arguments
 containing vectors or unidimensional lists of

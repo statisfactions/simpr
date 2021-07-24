@@ -19,6 +19,9 @@
 #' specifications elsewhere in R, e.g. \code{cbind(x, y) ~ MASS::mvrnorm(5, c(0,
 #' 0), Sigma = diag(2))}.
 #'
+#' @param x a \code{simpr_spec} object (the output
+#'   of \code{\link{meta}}), or NULL to
+#'   create a new specification
 #' @param ... \code{purrr}-style formula functions used for generating
 #'   simulation variables.
 #' @param sep Specify the separator for auto-generating names.  See
@@ -69,7 +72,13 @@
 #' simple_meta$sim_cell[[2]]
 #'
 #' @export
-blueprint = function(..., sep = "_") {
+blueprint = function(.x = NULL, ..., sep = "_") {
+
+  if(is.null(.x)) {
+  out = new_simpr_spec()
+  } else {
+  out = .x
+  }
 
   vars = list(...)
 
@@ -86,7 +95,7 @@ blueprint = function(..., sep = "_") {
   }
 
   # Process formulas to extract and set varnames attribute
-  out = list(variables = purrr::pmap(list(vars, names(vars), named_vars),
+  out$blueprint = purrr::pmap(list(vars, names(vars), named_vars),
                                      function(x, n, named) {
 
                                        if(!rlang::is_formula(x))
@@ -111,10 +120,7 @@ blueprint = function(..., sep = "_") {
                                              if(!named)
                                                stop("Right-hand formulas must be named.")
 
-                                             # Get name from name of argument
                                              x_out = x
-                                             attr(x_out, "varnames") = n
-
                                              x_out
 
                                            }
@@ -122,12 +128,11 @@ blueprint = function(..., sep = "_") {
                                          }
 
                                        }
-                                     }))
+                                     })
 
 
   # set attribute of "sep" for auto-numbering variables with multiple outputs
-  attr(out$variables, "sep") = sep
+  out$variable_sep = sep
 
-  class(out) = "simpr_blueprint"
   out
 }

@@ -38,8 +38,9 @@
 #' \code{produce} with values \code{"a"} and
 #' \code{"b"}.
 #'
-#' @param x a \code{simpr_blueprint} object (the output
-#'   of \code{\link{blueprint}})
+#' @param .x a \code{simpr_spec} object (the output
+#'   of \code{\link{blueprint}}), or NULL to
+#'   create a new specification
 #' @param ... metaparameters: named arguments
 #'   containing vectors or unidimensional lists of
 #'   objects to be used in the simulation.
@@ -79,9 +80,15 @@
 #' meta_list_out # generates S_index column
 #'
 #' @export
-meta = function(x, ..., suffix = "_index") {
+meta = function(.x = NULL, ..., suffix = "_index") {
   if(!(is.character(suffix)) || length(suffix) != 1 || nchar(suffix) <= 0)
     stop("suffix must be a string with at least 1 character")
+
+  if(is.null(.x)) {
+    out = new_simpr_spec()
+  } else {
+    out = .x
+  }
 
   meta = list(...)
 
@@ -113,22 +120,18 @@ meta = function(x, ..., suffix = "_index") {
     names(index_lookup) = paste0(names(index_lookup), suffix)
     indices = purrr::map(index_lookup, "index")
 
-    x$meta = list(indices = c(meta[!list_elements], purrr::map(index_lookup, "index")),
+    out$meta_info = list(indices = c(meta[!list_elements], purrr::map(index_lookup, "index")),
                   lookup =  purrr::map(index_lookup, "lookup"))
 
   } else {
-    x$meta = list(indices = meta,
+    out$meta_info = list(indices = meta,
                   lookup = NULL)
   }
 
-  specs = expand.grid(x$meta$indices, stringsAsFactors = FALSE) %>%
+  out$conditions = expand.grid(out$meta_info$indices, stringsAsFactors = FALSE) %>%
     tibble::as_tibble()
 
-  class(specs) = c("simpr_meta", class(specs))
 
-  attr(specs, "meta") = x$meta
-  attr(specs, "variables") = x$variables
-
-  specs
+  out
 }
 
