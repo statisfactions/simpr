@@ -4,15 +4,25 @@ magrittr::`%>%`
 
 
 # Run a given function on a simpr_mod object and tidy the output.
-apply_fits = function(simpr_mod, FUN) {
+apply_fits = function(obj, FUN) {
+ UseMethod("apply_fits")
+}
+
+apply_fits.simpr_include = function(obj, FUN) {
+  mc = match.call()
+
+  add_call(obj, mc, "apply_fits", replace_arg = "obj")
+}
+
+apply_fits.simpr_produce = function(obj, FUN) {
   ## Create reference meta df for merging
-  simpr_meta = simpr_mod %>%
-    dplyr::select(tidyselect::one_of(c(attr(simpr_mod, "meta"), "rep"))) %>%
+  simpr_meta = obj %>%
+    dplyr::select(tidyselect::one_of(c(attr(obj, "meta"), "rep"))) %>%
     dplyr::mutate(....id = as.character(1:(dplyr::n())))
 
   ## Extract all fit columns
-  simpr_mods = simpr_mod %>%
-    dplyr::select(tidyselect::one_of(c(attr(simpr_mod, "fits")))) %>%
+  simpr_mods = obj %>%
+    dplyr::select(tidyselect::one_of(c(attr(obj, "fits")))) %>%
     purrr::map(purrr::set_names, nm = simpr_meta$....id)
 
   ## For each fit column (identified as "source"), run tidy on each element of that column

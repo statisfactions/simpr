@@ -82,7 +82,8 @@ produce = function(obj, reps) {
 
 
 
-generate_sim_cell = function(variables, ..., variable_sep, include_calls) {
+generate_sim_cell = function(variables, ..., variable_sep,
+                             include_calls, meta_indices) {
   meta_values = list(...)
   eval_environment = rlang::as_environment(meta_values, parent = parent.frame())
 
@@ -140,6 +141,9 @@ generate_sim_cell = function(variables, ..., variable_sep, include_calls) {
     ## Add "simpr_produce" class
     class(df_full) = c("simpr_produce", class(df_full))
 
+    ## identify which variables are meta variables
+    attr(df_full, "meta") = meta_indices
+
     df_eval = purrr::reduce(.x = include_calls, .f = eval_pipe, .init = df_full)
 
     return(df_eval)
@@ -162,7 +166,8 @@ create_sim_results <- function(specs, x) {
     purrr::pmap(generate_sim_cell,
                 variables = x$blueprint,
                 include_calls = x$include_calls,
-                variable_sep = x$variable_sep) %>%
+                variable_sep = x$variable_sep,
+                meta_indices = names(x$meta_info$indices)) %>%
     dplyr::bind_rows()
 
   ## Add some attributes to the tibble to track meta and variables

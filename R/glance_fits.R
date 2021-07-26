@@ -13,7 +13,7 @@
 #' model fit; see \emph{Examples}. For looking at specific features of the model
 #' such as tests for individual parameter estimates, use \code{\link{tidy_fits}}.
 #'
-#' @param simpr_mod tibble with repetition number, metaparameters, simulated
+#' @param obj tibble with repetition number, metaparameters, simulated
 #'   data, and fitted models, from \code{\link{fit}}
 #'
 #' @return a tibble with the output of the
@@ -68,9 +68,9 @@
 #'   coord_cartesian(ylim = c(0,1))
 #' }
 #' @export
-glance_fits = function(simpr_mod) {
+glance_fits = function(obj) {
   ## Run broom::glance() on fit columns in simpr_mod
-  apply_fits(simpr_mod, broom::glance)
+  apply_fits(obj, broom::glance)
 }
 
 

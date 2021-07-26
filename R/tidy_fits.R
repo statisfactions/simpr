@@ -14,7 +14,7 @@
 #' looking at overall features of the model such as R-squared, use
 #' \code{\link{glance_fits}}.
 #'
-#' @param simpr_mod tibble with repetition number, metaparameters, simulated
+#' @param obj tibble with repetition number, metaparameters, simulated
 #'   data, and fitted models, from \code{\link{fit}}
 #'
 #' @return a tibble with the output of the
@@ -70,9 +70,9 @@
 #'   facet_grid(~g1)
 #' }
 #' @export
-tidy_fits = function(simpr_mod) {
+tidy_fits = function(obj) {
   ## Run broom::tidy() on fit columns in simpr_mod
-  apply_fits(simpr_mod, broom::tidy)
+  apply_fits(obj, broom::tidy)
 }
 
 

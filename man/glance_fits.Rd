@@ -4,10 +4,10 @@
 \alias{glance_fits}
 \title{Tidy simpr_gen simulated model results output into tibble of model summaries}
 \usage{
-glance_fits(simpr_mod)
+glance_fits(obj)
 }
 \arguments{
-\item{simpr_mod}{tibble with repetition number, metaparameters, simulated
+\item{obj}{tibble with repetition number, metaparameters, simulated
 data, and fitted models, from \code{\link{fit}}}
 }
 \value{

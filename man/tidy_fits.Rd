@@ -4,10 +4,10 @@
 \alias{tidy_fits}
 \title{Tidy simpr_gen simulated model results output into tibble of components}
 \usage{
-tidy_fits(simpr_mod)
+tidy_fits(obj)
 }
 \arguments{
-\item{simpr_mod}{tibble with repetition number, metaparameters, simulated
+\item{obj}{tibble with repetition number, metaparameters, simulated
 data, and fitted models, from \code{\link{fit}}}
 }
 \value{
