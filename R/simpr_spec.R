@@ -6,7 +6,7 @@
 #' \code{\link{blueprint}} and/or
 #' \code{\link{meta}} to specify the simulation
 #' variables, which is produced by
-#' \code{\link{produce}}.
+#' \code{\link{produce_sims}}.
 #'
 #' @param x a \code{simpr_spec} object
 #' @param \dots ignored

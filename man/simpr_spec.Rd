@@ -19,5 +19,5 @@ Class \code{simpr_spec} is created by
 \code{\link{blueprint}} and/or
 \code{\link{meta}} to specify the simulation
 variables, which is produced by
-\code{\link{produce}}.
+\code{\link{produce_sims}}.
 }

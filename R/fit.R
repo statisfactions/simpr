@@ -1,6 +1,6 @@
 #' Fit models to the simulated data
 #'
-#' Takes simulated data from \code{\link{produce}} and applies functions to it,
+#' Takes simulated data from \code{\link{produce_sims}} and applies functions to it,
 #' usually model-fitting functions.
 #'
 #' This is the fourth step in the simulation process: after generating the
@@ -18,13 +18,13 @@
 #' variables x, y, and z specified in \code{blueprint}.
 #'
 #' @param obj a \code{simpr_blueprint} object--the simulated data from
-#'   \code{\link{produce}}--or an \code{\link{include}} object
+#'   \code{\link{produce_sims}}--or an \code{\link{include}} object
 #' @param ... \code{purrr}-style formula functions used for computing on the
 #'   simulated data.  See \emph{Details} and \emph{Examples}.
 #'
 #' @return a \code{simpr_gen} object with additional list-columns for the output
 #'   of the provided functions (e.g. model outputs).  Just like the output of
-#'   \code{\link{produce}}, there is one row per repetition per combination of
+#'   \code{\link{produce_sims}}, there is one row per repetition per combination of
 #'   metaparameters, and the columns are the repetition number \code{rep}, the
 #'   metaparameter names, the simulated data \code{sim_cell}, with additional
 #'   columns for the function outputs specified in \code{\dots}.
@@ -34,7 +34,7 @@
 #' simple_linear_data = blueprint(x1 = ~ 2 + rnorm(n),
 #'                                y = ~ 5 + 3*x1 + rnorm(n, 0, sd = 0.5)) %>%
 #'   meta(n = 100:101) %>%
-#'   produce(2)
+#'   produce_sims(2)
 #'
 #' ## Fit with a single linear term
 #' linear_fit = simple_linear_data %>%

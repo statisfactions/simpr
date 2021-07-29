@@ -22,7 +22,7 @@ index column for list metaparameters,
 }
 \value{
 a \code{simpr_meta} object to pass onto
-  \code{\link{produce}} for the simulation.
+  \code{\link{produce_sims}} for the simulation.
   This is also a tibble containing all
   simulation conditions that can be examined or
   altered directly (in case a fully crossed
@@ -38,7 +38,7 @@ This is the second step in the simulation
 process, after specifying the simulated data
 using \code{\link{blueprint}}.  The output of
 \code{\link{meta}} is then passed to
-\code{\link{produce}} to actually generate the
+\code{\link{produce_sims}} to actually generate the
 simulation.
 
 Metaparameters are named arguments that are
@@ -58,28 +58,28 @@ generated, a fully crossed simulation design.
 
 When one of \code{\dots} is a list, a new
 column is generated in the output to
-\code{produce} to serve as the index of the
+\code{produce_sims} to serve as the index of the
 list.  This new column will be the name of the
 list argument,  with the \code{suffix} argument
 appended onto the end.  So if \code{Y = list(a
 = 1:2, b = letters[2:3])}, and \code{suffix =
 "_index"}, the default, a column named
 \code{Y_index} would be added to the output of
-\code{produce} with values \code{"a"} and
+\code{produce_sims} with values \code{"a"} and
 \code{"b"}.
 }
 \examples{
 # Simple example of setting a metaparameter
 simple_meta = blueprint(x = ~ 1 + rnorm(n)) \%>\%
   meta(n = c(5, 10)) \%>\%
-  produce(1)
+  produce_sims(1)
 
 simple_meta # $sim_cell has a 5-row tibble and a 10-row tibble
 
 multi_meta = blueprint(x = ~ mu + rnorm(n)) \%>\%
   meta(n = c(5, 10),
        mu = seq(-1, 1, length.out = 3)) \%>\%
-  produce(1)
+  produce_sims(1)
 
 multi_meta # generates simulations for all combos of n and mu
 
@@ -88,7 +88,7 @@ multi_meta # generates simulations for all combos of n and mu
 meta_list_out = blueprint(x = ~ MASS::mvrnorm(n, rep(0, 2), Sigma = S)) \%>\%
   meta(n = c(10, 20, 30),
        S = list(independent = diag(2), correlated = diag(2) + 2)) \%>\%
-  produce(1)
+  produce_sims(1)
 
 meta_list_out # generates S_index column
 

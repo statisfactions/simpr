@@ -6,11 +6,11 @@
 #'
 #' This is the third step in the simulation
 #' process: after specifying the variables and
-#' metaparameters, \code{produce} is the workhorse
+#' metaparameters, \code{produce_sims} is the workhorse
 #' function that actually generates the simulated
 #' datasets, one for each replication, for each
 #' combination of metaparameters. You likely want
-#' to use the output of \code{produce} to fit
+#' to use the output of \code{produce_sims} to fit
 #' model(s) with \code{\link{fit}}.
 #'
 #' Errors you get using this function usually have
@@ -25,7 +25,7 @@
 #'   whole number greater than 0)
 #' @seealso \code{\link{blueprint}} and
 #'   \code{\link{meta}} for examples of how these
-#'   functions affect the output of \code{produce}
+#'   functions affect the output of \code{produce_sims}
 #' @return a \code{simpr_gen} object, which is a
 #'   tibble with a row for each repetition (a
 #'   total of \code{rep} repetitions) for each
@@ -40,7 +40,7 @@
 #' meta_list_out = blueprint(x = ~ MASS::mvrnorm(n, rep(0, 2), Sigma = S)) %>%
 #'   meta(n = c(10, 20, 30),
 #'        S = list(independent = diag(2), correlated = diag(2) + 2)) %>%
-#'   produce(3)
+#'   produce_sims(3)
 #'
 #'  ## View overall structure of the result
 #'  meta_list_out
@@ -53,12 +53,12 @@
 #'  meta_list_2 = blueprint(x = ~ MASS::mvrnorm(n, rep(0, 2), Sigma = S)) %>%
 #'   meta(n = c(10, 20, 30),
 #'        S = list(independent = diag(2), correlated = diag(2) + 2)) %>%
-#'   produce(4)
+#'   produce_sims(4)
 #'
 #'  meta_list_2
 #'
 #' @export
-produce = function(obj, reps) {
+produce_sims = function(obj, reps) {
   validate_reps(reps)
 
   specs = dplyr::left_join(data.frame(rep = 1:reps),

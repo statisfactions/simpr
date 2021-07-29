@@ -13,7 +13,7 @@ test_that("glance_fits correctly returns broom::glance output", {
   set.seed(100)
   lin_test = blueprint(y1 = ~ 2 + rnorm(10),
             y2 = ~ y1 + rnorm(10)) %>%
-    produce(1) %>%
+    produce_sims(1) %>%
     fit(linear = ~ lm(y2 ~ y1, data = .)) %>%
     glance_fits
 
