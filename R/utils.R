@@ -8,7 +8,7 @@ apply_fits = function(obj, FUN) {
  UseMethod("apply_fits")
 }
 
-apply_fits.simpr_include = function(obj, FUN) {
+apply_fits.simpr_spec = function(obj, FUN) {
   mc = match.call()
 
   add_call(obj, mc, "apply_fits", replace_arg = "obj")

@@ -101,7 +101,7 @@ fit.simpr_produce = function(obj, ...) {
 }
 
 #' @export
-fit.simpr_include = function(obj, ...) {
+fit.simpr_spec = function(obj, ...) {
   mc = match.call()
 
   add_call(obj, mc, "fit", replace_arg = "obj")

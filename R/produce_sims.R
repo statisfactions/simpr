@@ -6,12 +6,13 @@
 #'
 #' This is the third step in the simulation
 #' process: after specifying the variables and
-#' metaparameters, \code{produce_sims} is the workhorse
-#' function that actually generates the simulated
-#' datasets, one for each replication, for each
-#' combination of metaparameters. You likely want
-#' to use the output of \code{produce_sims} to fit
-#' model(s) with \code{\link{fit}}.
+#' metaparameters, \code{produce_sims} is the
+#' workhorse function that actually generates the
+#' simulated datasets, one for each replication,
+#' for each combination of metaparameters. You
+#' likely want to use the output of
+#' \code{produce_sims} to fit model(s) with
+#' \code{\link{fit}}.
 #'
 #' Errors you get using this function usually have
 #' to do with how you specified the simulation in
@@ -25,9 +26,10 @@
 #'   whole number greater than 0)
 #' @seealso \code{\link{blueprint}} and
 #'   \code{\link{meta}} for examples of how these
-#'   functions affect the output of \code{produce_sims}
-#' @return a \code{simpr_gen} object, which is a
-#'   tibble with a row for each repetition (a
+#'   functions affect the output of
+#'   \code{produce_sims}
+#' @return a \code{simpr_produce} object, which is
+#'   a tibble with a row for each repetition (a
 #'   total of \code{rep} repetitions) for each
 #'   combination of metaparameters and some extra
 #'   metadata used by \code{\link{fit}}.  The
@@ -57,8 +59,60 @@
 #'
 #'  meta_list_2
 #'
+#'  ## Fitting, tidying functions can be included in this step by running those functions and then
+#'  ## produce_all.  This can save computation time when doing large
+#'  ## simulations, especially with parallel processing
+#'  meta_list_produce_all = blueprint(x = ~ MASS::mvrnorm(n, rep(0, 2), Sigma = S)) %>%
+#'   meta(n = c(10, 20, 30),
+#'        S = list(independent = diag(2), correlated = diag(2) + 2)) %>%
+#'   fit(lm = ~ lm(x_2 ~ x_1, data = .)) %>%
+#'   tidy_fits %>%
+#'   produce_all(4)
+#'
+#'   meta_list_produce_all
+#'
+#'   ## This is equivalent, but may be slower / more memory-intensive
+#'   meta_list_produce_sims = meta_list_2 %>%
+#'   fit(lm = ~ lm(x_2 ~ x_1, data = .)) %>%
+#'   tidy_fits
+#'
+#'
 #' @export
 produce_sims = function(obj, reps) {
+  UseMethod("produce_sims")
+}
+
+#' @export
+produce_sims.simpr_spec = function(obj, reps) {
+ produce(obj = obj, reps = reps)
+}
+
+#' @export
+produce_sims.simpr_include = function(obj, reps) {
+  warning("Additional post-simulation steps indicated but will be ignored. Did you mean `produce_all`?")
+  ## Delete include calls before running
+  obj$include_calls = NULL
+
+  produce(obj = obj, reps = reps)
+}
+
+#' @export
+#' @rdname produce_sims
+produce_all = function(obj, reps) {
+  UseMethod("produce_all")
+}
+
+#' @export
+produce_all.simpr_spec = function(obj, reps) {
+  stop("No additional post-simulation steps indicated.  Did you mean `produce_sims`?")
+}
+
+#' @export
+produce_all.simpr_include = function(obj, reps) {
+  produce(obj = obj, reps = reps)
+}
+
+produce = function(obj, reps) {
   validate_reps(reps)
 
   specs = dplyr::left_join(data.frame(rep = 1:reps),

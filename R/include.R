@@ -36,8 +36,10 @@ include = function(obj) {
 }
 
 create_include = function(obj) {
-  class(obj) = c("simpr_include", class(obj))
-  obj
+  if(!("simpr_include" %in% class(obj)))
+    class(obj) = c("simpr_include", class(obj))
+
+  return(obj)
 }
 
 #' @export
@@ -64,7 +66,7 @@ add_call = function(obj, obj_call, call_name, replace_arg = 2) {
 
   obj$include_calls = c(obj$include_calls, obj_call)
 
-  obj
+  create_include(obj)
 }
 
 
