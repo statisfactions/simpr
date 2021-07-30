@@ -93,10 +93,10 @@ simpr_gen = simpr_spec %>%
 simpr_gen
 ```
 
-Note the first 5 rows have everything the same with the column `n`, but `g1` varies, and each element of `sim_cell` is a tibble with 100 rows; then on the sixth row, we have the next value of `n`, 120, and a tibble with 120 rows, and so on. Each element of  `sim_cell` contains the generated `x1`, `x2`, and `y`, e.g.
+Note the first 5 rows have everything the same with the column `n`, but `g1` varies, and each element of `sim` is a tibble with 100 rows; then on the sixth row, we have the next value of `n`, 120, and a tibble with 120 rows, and so on. Each element of  `sim` contains the generated `x1`, `x2`, and `y`, e.g.
 
 ```{r}
-simpr_gen$sim_cell[[1]]
+simpr_gen$sim[[1]]
 ```
 
 Next, we can fit a model on this data using the `fit()` function; this uses similar formula syntax to `blueprint()`:

@@ -5,9 +5,9 @@
 \alias{produce_all}
 \title{Produce simulated data from specification}
 \usage{
-produce_sims(obj, reps, sim_name = "sim_cell")
+produce_sims(obj, reps, sim_name = "sim")
 
-produce_all(obj, reps, sim_name = "sim_cell")
+produce_all(obj, reps, sim_name = "sim")
 }
 \arguments{
 \item{obj}{a \code{simpr_spec} object generated
@@ -19,7 +19,7 @@ specifications of the simulation}
 whole number greater than 0)}
 
 \item{sim_name}{name of the list-column to be
-created, containing simulation results}
+created, containing simulation results.  Default is \code{"sim"}}
 }
 \value{
 a \code{simpr_produce} object, which is
@@ -29,7 +29,7 @@ a \code{simpr_produce} object, which is
   metadata used by \code{\link{fit}}.  The
   columns are \code{rep} for the repetition
   number, the names of the metaparameters, and
-  a list-column \code{sim_cell} containing the
+  a list-column (named by the argument \code{sim_name}) containing the
   dataset for each repetition and metaparameter
   combination.
 }
@@ -63,7 +63,7 @@ meta_list_out = blueprint(x = ~ MASS::mvrnorm(n, rep(0, 2), Sigma = S)) \%>\%
  meta_list_out
 
  ## View an individual dataset of the resulting simulation
- meta_list_out$sim_cell[[1]]
+ meta_list_out$sim[[1]]
 
  ## Changing reps will change the number of replications and thus the number of
  ## rows in the output

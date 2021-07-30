@@ -39,7 +39,7 @@ test_that("Earlier variables have access to output of later variables", {
    list(structure(list(x1 = 1, x2 = 2, y = 3), class = c("tbl_df",
                                                          "tbl", "data.frame"), row.names = c(NA, -1L)))
 
- expect_identical(out$sim_cell, ref)
+ expect_identical(out$sim, ref)
 })
 
 test_that("Gen runs without warnings or messages", {
@@ -82,7 +82,7 @@ test_that("Autonumber when generating multiple columns with named argument", {
     meta(n = 10) %>%
     produce_sims(1)
 
-  expect_identical(auto_out$sim_cell[[1]], as_tibble(mat_1))
+  expect_identical(auto_out$sim[[1]], as_tibble(mat_1))
 
 })
 
@@ -96,7 +96,7 @@ test_that("Can refer to autonumbered columns in blueprint()", {
     meta(n = 10) %>%
     produce_sims(1)
 
-  expect_identical(auto_refer$sim_cell[[1]], comp_3)
+  expect_identical(auto_refer$sim[[1]], comp_3)
 })
 
 test_that("Multiple columns with two-sided formulas and unnamed arguments", {
@@ -105,7 +105,7 @@ test_that("Multiple columns with two-sided formulas and unnamed arguments", {
                           MASS::mvrnorm(30, rep(0, 10), Sigma = diag(10))) %>%
     produce_sims(1)
 
-  expect_identical(cbind_out$sim_cell[[1]], as_tibble(mat_2))
+  expect_identical(cbind_out$sim[[1]], as_tibble(mat_2))
 })
 
 test_that("Can refer to two-sided formula columns as arguments in blueprint()", {
@@ -117,7 +117,7 @@ test_that("Can refer to two-sided formula columns as arguments in blueprint()", 
                           y = ~ a + b) %>%
     produce_sims(1)
 
-  expect_identical(cbind_refer$sim_cell[[1]], comp_4)
+  expect_identical(cbind_refer$sim[[1]], comp_4)
 })
 
 

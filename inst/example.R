@@ -283,10 +283,10 @@ rt_spec = blueprint(
 rt_gen = rt_spec %>%
   produce_sims(100)
 
-# wrangle sim data (inside sim_cell) from wide to long for modeling
+# wrangle sim data (inside sim) from wide to long for modeling
 rt_gen <- rt_gen %>%
   mutate(
-    sim_cell = sim_cell %>% map( # use purrr::map to vectorize
+    sim = sim %>% map( # use purrr::map to vectorize
       pivot_longer, # tidyr::pivot_longer for wrangling wide to long
       -id, # pivot all cols except ID
       names_to = "Condition", # column names go to a column called Condition
@@ -294,10 +294,10 @@ rt_gen <- rt_gen %>%
     )
   )
 
-# unnest the sim_cell data itself to be at the same 'level' as the metaparameters
+# unnest the sim data itself to be at the same 'level' as the metaparameters
 # (this makes the tibble much longer w/ a row for each sim data point)
 rt_gen_long <- rt_gen %>%
-  unnest(cols = sim_cell)
+  unnest(cols = sim)
 
 # now plot each condition's distribution for each metaparameter combination
 rt_gen_long %>%

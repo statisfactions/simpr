@@ -115,7 +115,7 @@ simpr_gen
 ```
 
     ## # A tibble: 550 x 6
-    ##      rep     n    b1    b2    g1 sim_cell          
+    ##      rep     n    b1    b2    g1 sim          
     ##    <int> <dbl> <dbl> <dbl> <dbl> <list>            
     ##  1     1   100     1     1  -1   <tibble [100 × 3]>
     ##  2     1   100     1     1  -0.5 <tibble [100 × 3]>
@@ -130,13 +130,13 @@ simpr_gen
     ## # … with 540 more rows
 
 Note the first 5 rows have everything the same with the column `n`, but
-`g1` varies, and each element of `sim_cell` is a tibble with 100 rows;
+`g1` varies, and each element of `sim` is a tibble with 100 rows;
 then on the sixth row, we have the next value of `n`, 120, and a tibble
-with 120 rows, and so on. Each element of `sim_cell` contains the
+with 120 rows, and so on. Each element of `sim` contains the
 generated `x1`, `x2`, and `y`, e.g.
 
 ``` r
-simpr_gen$sim_cell[[1]]
+simpr_gen$sim[[1]]
 ```
 
     ## # A tibble: 100 x 3
@@ -173,7 +173,7 @@ simpr_fit
 ```
 
     ## # A tibble: 550 x 7
-    ##      rep     n    b1    b2    g1 sim_cell           lm    
+    ##      rep     n    b1    b2    g1 sim           lm    
     ##    <int> <dbl> <dbl> <dbl> <dbl> <list>             <list>
     ##  1     1   100     1     1  -1   <tibble [100 × 3]> <lm>  
     ##  2     1   100     1     1  -0.5 <tibble [100 × 3]> <lm>  

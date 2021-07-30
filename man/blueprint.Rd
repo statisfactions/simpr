@@ -57,22 +57,22 @@ specifications elsewhere in R, e.g. \code{cbind(x, y) ~ MASS::mvrnorm(5, c(0,
 ## specify a variable and generate it in the simulation
 single_var = blueprint(x = ~ 1 + rnorm(5)) \%>\%
   produce_sims(1) # generate a single repetition of the simulation
-single_var$sim_cell[[1]] # peek at the simulation
+single_var$sim[[1]] # peek at the simulation
 
 two_var = blueprint(x = ~ 1 + rnorm(5),
                     y = ~ x + 2) \%>\%
   produce_sims(1)
-two_var$sim_cell[[1]]
+two_var$sim[[1]]
 
 ## Generates x_01 through x_10
 autonumber_var = blueprint(x = ~ MASS::mvrnorm(5, rep(0, 10), Sigma = diag(10))) \%>\%
   produce_sims(1)
-autonumber_var$sim_cell[[1]]
+autonumber_var$sim[[1]]
 
 # alternatively, you could use a two-sided formula for names
 multi_name = blueprint(cbind(x, y, z) ~ MASS::mvrnorm(5, rep(0, 3), Sigma = diag(3))) \%>\%
   produce_sims(1)
-multi_name$sim_cell[[1]]
+multi_name$sim[[1]]
 
 # Simple example of setting a metaparameter
 simple_meta = blueprint(x = ~ 1 + rnorm(n)) \%>\%
@@ -81,7 +81,7 @@ simple_meta = blueprint(x = ~ 1 + rnorm(n)) \%>\%
 
 
 simple_meta # has two rows now, one for each value of n
-simple_meta$sim_cell[[1]]
-simple_meta$sim_cell[[2]]
+simple_meta$sim[[1]]
+simple_meta$sim[[2]]
 
 }

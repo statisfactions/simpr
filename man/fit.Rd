@@ -18,7 +18,7 @@ a \code{simpr_gen} object with additional list-columns for the output
   of the provided functions (e.g. model outputs).  Just like the output of
   \code{\link{produce_sims}}, there is one row per repetition per combination of
   metaparameters, and the columns are the repetition number \code{rep}, the
-  metaparameter names, the simulated data \code{sim_cell}, with additional
+  metaparameter names, the simulated data \code{sim}, with additional
   columns for the function outputs specified in \code{\dots}.
 }
 \description{

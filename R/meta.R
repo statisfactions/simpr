@@ -61,7 +61,7 @@
 #'   meta(n = c(5, 10)) %>%
 #'   produce_sims(1)
 #'
-#' simple_meta # $sim_cell has a 5-row tibble and a 10-row tibble
+#' simple_meta # $sim has a 5-row tibble and a 10-row tibble
 #'
 #' multi_meta = blueprint(x = ~ mu + rnorm(n)) %>%
 #'   meta(n = c(5, 10),

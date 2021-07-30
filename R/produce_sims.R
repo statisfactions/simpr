@@ -25,7 +25,7 @@
 #' @param reps number of replications to run (a
 #'   whole number greater than 0)
 #' @param sim_name name of the list-column to be
-#'   created, containing simulation results
+#'   created, containing simulation results.  Default is \code{"sim"}
 #' @seealso \code{\link{blueprint}} and
 #'   \code{\link{meta}} for examples of how these
 #'   functions affect the output of
@@ -37,7 +37,7 @@
 #'   metadata used by \code{\link{fit}}.  The
 #'   columns are \code{rep} for the repetition
 #'   number, the names of the metaparameters, and
-#'   a list-column \code{sim_cell} containing the
+#'   a list-column (named by the argument \code{sim_name}) containing the
 #'   dataset for each repetition and metaparameter
 #'   combination.
 #' @examples
@@ -50,7 +50,7 @@
 #'  meta_list_out
 #'
 #'  ## View an individual dataset of the resulting simulation
-#'  meta_list_out$sim_cell[[1]]
+#'  meta_list_out$sim[[1]]
 #'
 #'  ## Changing reps will change the number of replications and thus the number of
 #'  ## rows in the output
@@ -80,17 +80,17 @@
 #'
 #'
 #' @export
-produce_sims = function(obj, reps, sim_name = "sim_cell") {
+produce_sims = function(obj, reps, sim_name = "sim") {
   UseMethod("produce_sims")
 }
 
 #' @export
-produce_sims.simpr_spec = function(obj, reps, sim_name = "sim_cell") {
+produce_sims.simpr_spec = function(obj, reps, sim_name = "sim") {
  produce(obj = obj, reps = reps, sim_name = sim_name)
 }
 
 #' @export
-produce_sims.simpr_include = function(obj, reps, sim_name = "sim_cell") {
+produce_sims.simpr_include = function(obj, reps, sim_name = "sim") {
   warning("Additional post-simulation steps indicated but will be ignored. Did you mean `produce_all`?")
   ## Delete include calls before running
   obj$include_calls = NULL
@@ -100,17 +100,17 @@ produce_sims.simpr_include = function(obj, reps, sim_name = "sim_cell") {
 
 #' @export
 #' @rdname produce_sims
-produce_all = function(obj, reps, sim_name = "sim_cell") {
+produce_all = function(obj, reps, sim_name = "sim") {
   UseMethod("produce_all")
 }
 
 #' @export
-produce_all.simpr_spec = function(obj, reps, sim_name = "sim_cell") {
+produce_all.simpr_spec = function(obj, reps, sim_name = "sim") {
   stop("No additional post-simulation steps indicated.  Did you mean `produce_sims`?")
 }
 
 #' @export
-produce_all.simpr_include = function(obj, reps, sim_name = "sim_cell") {
+produce_all.simpr_include = function(obj, reps, sim_name = "sim") {
   produce(obj = obj, reps = reps, sim_name = sim_name)
 }
 
@@ -140,7 +140,7 @@ produce = function(obj, reps, sim_name) {
 
 
 
-generate_sim_cell = function(variables, ..., variable_sep,
+generate_sim = function(variables, ..., variable_sep,
                              include_calls, meta_indices, sim_name) {
   meta_values = list(...)
   eval_environment = rlang::as_environment(meta_values, parent = parent.frame())
@@ -223,7 +223,7 @@ create_sim_results <- function(specs, x, sim_name) {
   ## Generate all replications
   sim_results = specs %>%
     tibble::as_tibble() %>%
-    purrr::pmap(generate_sim_cell,
+    purrr::pmap(generate_sim,
                 variables = x$blueprint,
                 include_calls = x$include_calls,
                 variable_sep = x$variable_sep,
