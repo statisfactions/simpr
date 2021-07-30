@@ -88,16 +88,16 @@ fit.simpr_produce = function(obj, ...) {
 
   fit_functions = list(...)
 
-  simpr_mod = obj
+  sim_name = get_sim_name(obj)
 
   for(i in names(fit_functions))
-    simpr_mod[[i]] = purrr::map(simpr_mod$sim_cell, fit_functions[[i]])
+    obj[[i]] = purrr::map(obj[[sim_name]], fit_functions[[i]])
 
-  attr(simpr_mod, "meta") = attr(obj, "meta")
-  attr(simpr_mod, "variables") = attr(obj, "variables")
-  attr(simpr_mod, "fits") = c(attr(obj, "fits"), names(fit_functions))
+  # attr(simpr_mod, "meta") = attr(obj, "meta")
+  # attr(simpr_mod, "variables") = attr(obj, "variables")
+  attr(obj, "fits") = c(attr(obj, "fits"), names(fit_functions))
 
-  simpr_mod
+  obj
 }
 
 #' @export

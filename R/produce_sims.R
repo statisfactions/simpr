@@ -202,6 +202,7 @@ generate_sim_cell = function(variables, ..., variable_sep,
 
     ## identify which variables are meta variables
     attr(df_full, "meta") = meta_indices
+    attr(df_full, "sim_name") = sim_name
 
     df_eval = purrr::reduce(.x = include_calls, .f = eval_pipe, .init = df_full)
 
@@ -233,6 +234,7 @@ create_sim_results <- function(specs, x, sim_name) {
   ## Add some attributes to the tibble to track meta and variables
   attr(sim_results, "meta") = names(x$meta_info$indices)
   attr(sim_results, "variables") = purrr::map(x$variables, ~ attr(., "varnames")) %>% unlist
+  attr(sim_results, "sim_name") = sim_name
 
   ## Add "simpr_produce" class
   class(sim_results) = c("simpr_produce", class(sim_results))

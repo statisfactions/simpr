@@ -2,6 +2,11 @@
 #' @export
 magrittr::`%>%`
 
+## Get the name of the simulation result column
+get_sim_name = function(obj) {
+  attr(obj, "sim_name")
+}
+
 
 # Run a given function on a simpr_mod object and tidy the output.
 apply_fits = function(obj, FUN) {
