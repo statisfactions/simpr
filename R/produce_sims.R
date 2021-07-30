@@ -24,6 +24,8 @@
 #'   specifications of the simulation
 #' @param reps number of replications to run (a
 #'   whole number greater than 0)
+#' @param sim_name name of the list-column to be
+#'   created, containing simulation results
 #' @seealso \code{\link{blueprint}} and
 #'   \code{\link{meta}} for examples of how these
 #'   functions affect the output of
@@ -78,41 +80,41 @@
 #'
 #'
 #' @export
-produce_sims = function(obj, reps) {
+produce_sims = function(obj, reps, sim_name = "sim_cell") {
   UseMethod("produce_sims")
 }
 
 #' @export
-produce_sims.simpr_spec = function(obj, reps) {
- produce(obj = obj, reps = reps)
+produce_sims.simpr_spec = function(obj, reps, sim_name = "sim_cell") {
+ produce(obj = obj, reps = reps, sim_name = sim_name)
 }
 
 #' @export
-produce_sims.simpr_include = function(obj, reps) {
+produce_sims.simpr_include = function(obj, reps, sim_name = "sim_cell") {
   warning("Additional post-simulation steps indicated but will be ignored. Did you mean `produce_all`?")
   ## Delete include calls before running
   obj$include_calls = NULL
 
-  produce(obj = obj, reps = reps)
+  produce(obj = obj, reps = reps, sim_name = sim_name)
 }
 
 #' @export
 #' @rdname produce_sims
-produce_all = function(obj, reps) {
+produce_all = function(obj, reps, sim_name = "sim_cell") {
   UseMethod("produce_all")
 }
 
 #' @export
-produce_all.simpr_spec = function(obj, reps) {
+produce_all.simpr_spec = function(obj, reps, sim_name = "sim_cell") {
   stop("No additional post-simulation steps indicated.  Did you mean `produce_sims`?")
 }
 
 #' @export
-produce_all.simpr_include = function(obj, reps) {
-  produce(obj = obj, reps = reps)
+produce_all.simpr_include = function(obj, reps, sim_name = "sim_cell") {
+  produce(obj = obj, reps = reps, sim_name = sim_name)
 }
 
-produce = function(obj, reps) {
+produce = function(obj, reps, sim_name) {
   validate_reps(reps)
 
   specs = dplyr::left_join(data.frame(rep = 1:reps),
@@ -128,16 +130,18 @@ produce = function(obj, reps) {
                            .y = names(obj$meta$lookup)) # the "by" argument to the join
   }
 
-  create_sim_results(specs = specs, x = obj[c("meta_info",
-                                            "blueprint",
-                                            "variable_sep",
-                                            "include_calls")])
+  create_sim_results(specs = specs,
+                     x = obj[c("meta_info",
+                               "blueprint",
+                               "variable_sep",
+                               "include_calls")],
+                     sim_name = sim_name)
 }
 
 
 
 generate_sim_cell = function(variables, ..., variable_sep,
-                             include_calls, meta_indices) {
+                             include_calls, meta_indices, sim_name) {
   meta_values = list(...)
   eval_environment = rlang::as_environment(meta_values, parent = parent.frame())
 
@@ -185,8 +189,9 @@ generate_sim_cell = function(variables, ..., variable_sep,
     gen_df
   })
 
-  df_full = data.frame(meta_values) %>% tibble::as_tibble() %>%
-    dplyr::mutate(sim_cell = list(df))
+  df_full = data.frame(meta_values) %>% tibble::as_tibble()
+
+  df_full[[sim_name]] = list(df)
 
   if(is.null(include_calls)) {
     return(df_full)
@@ -208,7 +213,7 @@ eval_pipe = function(lhs, rhs) {
   eval(call("%>%", lhs = lhs, rhs = rhs))
 }
 
-create_sim_results <- function(specs, x) {
+create_sim_results <- function(specs, x, sim_name) {
   ## Create simulation results from specification
 
   ## define variable "." to satisfy R CMD Check
@@ -221,7 +226,8 @@ create_sim_results <- function(specs, x) {
                 variables = x$blueprint,
                 include_calls = x$include_calls,
                 variable_sep = x$variable_sep,
-                meta_indices = names(x$meta_info$indices)) %>%
+                meta_indices = names(x$meta_info$indices),
+                sim_name = sim_name) %>%
     dplyr::bind_rows()
 
   ## Add some attributes to the tibble to track meta and variables

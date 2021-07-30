@@ -5,9 +5,9 @@
 \alias{produce_all}
 \title{Produce simulated data from specification}
 \usage{
-produce_sims(obj, reps)
+produce_sims(obj, reps, sim_name = "sim_cell")
 
-produce_all(obj, reps)
+produce_all(obj, reps, sim_name = "sim_cell")
 }
 \arguments{
 \item{obj}{a \code{simpr_spec} object generated
@@ -17,6 +17,9 @@ specifications of the simulation}
 
 \item{reps}{number of replications to run (a
 whole number greater than 0)}
+
+\item{sim_name}{name of the list-column to be
+created, containing simulation results}
 }
 \value{
 a \code{simpr_produce} object, which is
