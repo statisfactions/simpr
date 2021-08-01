@@ -21,6 +21,13 @@ getsignature = function(x) {
     paste(collapse = "\n")
 }
 
+## Print roxygen documentation for params
+get_params = function(x) {
+  args = names(formals(x)) %>% str_replace("^\\.\\.\\.$", "\\\\dots")
+  map_chr(args, ~ glue("#' @param {.x} See original function documentation")) %>%
+    paste0(collapse = "\n")
+}
+
 ## Get the name of the first argument of a function
 arg1 = function(x) {
   names(formals(x))[1]
@@ -31,6 +38,8 @@ arg1 = function(x) {
 build_simpr_methods = function(x, pkg) {
   cat(pkg, x, "\n")
   glue("
+  #' @rdname tidyverse_verbs
+  {get_params(x)}
   #' @export
   {x}.simpr_sims = {getsignature(x)} {{
   mc = match.call()
@@ -41,6 +50,8 @@ build_simpr_methods = function(x, pkg) {
   {arg1(x)}
   }}
 
+  #' @rdname tidyverse_verbs
+  {get_params(x)}
   #' @export
   {x}.simpr_spec = {getsignature(x)} {{
   mc = match.call()
@@ -55,6 +66,15 @@ built = imap(df_methods_package, ~ map_chr(.x, build_simpr_methods, pkg = .y)) %
   unlist %>%
   paste(collapse = "\n")
 
-cat("## simpr methods for tidyverse verbs, auto-generated\n",
+cat("#' Simpr methods for tidyverse verbs
+#'
+#' These are simpr-compatible methods for generic
+#' \\code{dplyr} and \\code{tidyr} verbs. The
+#' user is not expected to call these directly.
+#'
+#' See original function documentation for details of the functions
+#'
+#' @name tidyverse_verbs
+NULL\n",
     built,
-    file = "R/tidyverse_verb_methods.R")
+    file = "R/tidyverse_verb_methods.R", sep = "\n")
