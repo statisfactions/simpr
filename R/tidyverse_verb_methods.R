@@ -18,7 +18,7 @@ NULL
 #' @param .drop See original function documentation
 #' @export
 add_count.simpr_sims = function(x, ..., wt = NULL, sort = FALSE, name = NULL, 
-    .drop = deprecated()) {
+    .drop = lifecycle::deprecated()) {
 mc = match.call()
 mc[[1]] = quote(add_count)
 
@@ -36,7 +36,7 @@ x
 #' @param .drop See original function documentation
 #' @export
 add_count.simpr_spec = function(x, ..., wt = NULL, sort = FALSE, name = NULL, 
-    .drop = deprecated()) {
+    .drop = lifecycle::deprecated()) {
 mc = match.call()
 
 add_call(x, mc, 'add_count', replace_arg = 2)
@@ -541,7 +541,7 @@ add_call(.data, mc, 'group_by_', replace_arg = 2)
 #' @param .add See original function documentation
 #' @param .drop See original function documentation
 #' @export
-group_by.simpr_sims = function(.data, ..., .add = FALSE, .drop = group_by_drop_default(.data)) {
+group_by.simpr_sims = function(.data, ..., .add = FALSE, .drop = dplyr::group_by_drop_default(.data)) {
 mc = match.call()
 mc[[1]] = quote(group_by)
 
@@ -556,7 +556,7 @@ mc[[1]] = quote(group_by)
 #' @param .add See original function documentation
 #' @param .drop See original function documentation
 #' @export
-group_by.simpr_spec = function(.data, ..., .add = FALSE, .drop = group_by_drop_default(.data)) {
+group_by.simpr_spec = function(.data, ..., .add = FALSE, .drop = dplyr::group_by_drop_default(.data)) {
 mc = match.call()
 
 add_call(.data, mc, 'group_by', replace_arg = 2)
@@ -775,7 +775,7 @@ add_call(.tbl, mc, 'group_split', replace_arg = 2)
 #' @param .tbl See original function documentation
 #' @param .drop See original function documentation
 #' @export
-group_trim.simpr_sims = function(.tbl, .drop = group_by_drop_default(.tbl)) {
+group_trim.simpr_sims = function(.tbl, .drop = dplyr::group_by_drop_default(.tbl)) {
 mc = match.call()
 mc[[1]] = quote(group_trim)
 
@@ -788,7 +788,7 @@ mc[[1]] = quote(group_trim)
 #' @param .tbl See original function documentation
 #' @param .drop See original function documentation
 #' @export
-group_trim.simpr_spec = function(.tbl, .drop = group_by_drop_default(.tbl)) {
+group_trim.simpr_spec = function(.tbl, .drop = dplyr::group_by_drop_default(.tbl)) {
 mc = match.call()
 
 add_call(.tbl, mc, 'group_trim', replace_arg = 2)
@@ -1133,7 +1133,7 @@ add_call(.data, mc, 'rename_', replace_arg = 2)
 #' @param .cols See original function documentation
 #' @param \dots See original function documentation
 #' @export
-rename_with.simpr_sims = function(.data, .fn, .cols = everything(), ...) {
+rename_with.simpr_sims = function(.data, .fn, .cols = dplyr::everything(), ...) {
 mc = match.call()
 mc[[1]] = quote(rename_with)
 
@@ -1148,7 +1148,7 @@ mc[[1]] = quote(rename_with)
 #' @param .cols See original function documentation
 #' @param \dots See original function documentation
 #' @export
-rename_with.simpr_spec = function(.data, .fn, .cols = everything(), ...) {
+rename_with.simpr_spec = function(.data, .fn, .cols = dplyr::everything(), ...) {
 mc = match.call()
 
 add_call(.data, mc, 'rename_with', replace_arg = 2)
@@ -2349,7 +2349,7 @@ add_call(data, mc, 'nest_legacy', replace_arg = 2)
 #' @param .names_sep See original function documentation
 #' @param .key See original function documentation
 #' @export
-nest.simpr_sims = function(.data, ..., .names_sep = NULL, .key = deprecated()) {
+nest.simpr_sims = function(.data, ..., .names_sep = NULL, .key = lifecycle::deprecated()) {
 mc = match.call()
 mc[[1]] = quote(nest)
 
@@ -2364,7 +2364,7 @@ mc[[1]] = quote(nest)
 #' @param .names_sep See original function documentation
 #' @param .key See original function documentation
 #' @export
-nest.simpr_spec = function(.data, ..., .names_sep = NULL, .key = deprecated()) {
+nest.simpr_spec = function(.data, ..., .names_sep = NULL, .key = lifecycle::deprecated()) {
 mc = match.call()
 
 add_call(.data, mc, 'nest', replace_arg = 2)
@@ -2437,9 +2437,9 @@ add_call(data, mc, 'pivot_longer', replace_arg = 2)
 #' @param values_fn See original function documentation
 #' @param \dots See original function documentation
 #' @export
-pivot_wider.simpr_sims = function(data, id_cols = NULL, names_from = name, names_prefix = "", 
+pivot_wider.simpr_sims = function(data, id_cols = NULL, names_from = NULL, names_prefix = "", 
     names_sep = "_", names_glue = NULL, names_sort = FALSE, names_repair = "check_unique", 
-    values_from = value, values_fill = NULL, values_fn = NULL, 
+    values_from = NULL, values_fill = NULL, values_fn = NULL, 
     ...) {
 mc = match.call()
 mc[[1]] = quote(pivot_wider)
@@ -2463,9 +2463,9 @@ data
 #' @param values_fn See original function documentation
 #' @param \dots See original function documentation
 #' @export
-pivot_wider.simpr_spec = function(data, id_cols = NULL, names_from = name, names_prefix = "", 
+pivot_wider.simpr_spec = function(data, id_cols = NULL, names_from = NULL, names_prefix = "", 
     names_sep = "_", names_glue = NULL, names_sort = FALSE, names_repair = "check_unique", 
-    values_from = value, values_fill = NULL, values_fn = NULL, 
+    values_from = NULL, values_fill = NULL, values_fn = NULL, 
     ...) {
 mc = match.call()
 
@@ -2795,8 +2795,8 @@ add_call(data, mc, 'unnest_legacy', replace_arg = 2)
 #' @param .preserve See original function documentation
 #' @export
 unnest.simpr_sims = function(data, cols, ..., keep_empty = FALSE, ptype = NULL, 
-    names_sep = NULL, names_repair = "check_unique", .drop = deprecated(), 
-    .id = deprecated(), .sep = deprecated(), .preserve = deprecated()) {
+    names_sep = NULL, names_repair = "check_unique", .drop = lifecycle::deprecated(), 
+    .id = lifecycle::deprecated(), .sep = lifecycle::deprecated(), .preserve = lifecycle::deprecated()) {
 mc = match.call()
 mc[[1]] = quote(unnest)
 
@@ -2819,8 +2819,8 @@ data
 #' @param .preserve See original function documentation
 #' @export
 unnest.simpr_spec = function(data, cols, ..., keep_empty = FALSE, ptype = NULL, 
-    names_sep = NULL, names_repair = "check_unique", .drop = deprecated(), 
-    .id = deprecated(), .sep = deprecated(), .preserve = deprecated()) {
+    names_sep = NULL, names_repair = "check_unique", .drop = lifecycle::deprecated(), 
+    .id = lifecycle::deprecated(), .sep = lifecycle::deprecated(), .preserve = lifecycle::deprecated()) {
 mc = match.call()
 
 add_call(data, mc, 'unnest', replace_arg = 2)

@@ -220,7 +220,7 @@ add_count.simpr_sims(
   wt = NULL,
   sort = FALSE,
   name = NULL,
-  .drop = deprecated()
+  .drop = lifecycle::deprecated()
 )
 
 add_count.simpr_spec(
@@ -229,7 +229,7 @@ add_count.simpr_spec(
   wt = NULL,
   sort = FALSE,
   name = NULL,
-  .drop = deprecated()
+  .drop = lifecycle::deprecated()
 )
 
 anti_join.simpr_sims(x, y, by = NULL, copy = FALSE, ...)
@@ -332,14 +332,14 @@ group_by.simpr_sims(
   .data,
   ...,
   .add = FALSE,
-  .drop = group_by_drop_default(.data)
+  .drop = dplyr::group_by_drop_default(.data)
 )
 
 group_by.simpr_spec(
   .data,
   ...,
   .add = FALSE,
-  .drop = group_by_drop_default(.data)
+  .drop = dplyr::group_by_drop_default(.data)
 )
 
 group_data.simpr_sims(.data)
@@ -378,9 +378,9 @@ group_split.simpr_sims(.tbl, ..., .keep = TRUE)
 
 group_split.simpr_spec(.tbl, ..., .keep = TRUE)
 
-group_trim.simpr_sims(.tbl, .drop = group_by_drop_default(.tbl))
+group_trim.simpr_sims(.tbl, .drop = dplyr::group_by_drop_default(.tbl))
 
-group_trim.simpr_spec(.tbl, .drop = group_by_drop_default(.tbl))
+group_trim.simpr_spec(.tbl, .drop = dplyr::group_by_drop_default(.tbl))
 
 group_vars.simpr_sims(x)
 
@@ -482,9 +482,9 @@ rename_.simpr_sims(.data, ..., .dots = list())
 
 rename_.simpr_spec(.data, ..., .dots = list())
 
-rename_with.simpr_sims(.data, .fn, .cols = everything(), ...)
+rename_with.simpr_sims(.data, .fn, .cols = dplyr::everything(), ...)
 
-rename_with.simpr_spec(.data, .fn, .cols = everything(), ...)
+rename_with.simpr_spec(.data, .fn, .cols = dplyr::everything(), ...)
 
 rename.simpr_sims(.data, ...)
 
@@ -774,9 +774,9 @@ nest_legacy.simpr_sims(data, ..., .key = "data")
 
 nest_legacy.simpr_spec(data, ..., .key = "data")
 
-nest.simpr_sims(.data, ..., .names_sep = NULL, .key = deprecated())
+nest.simpr_sims(.data, ..., .names_sep = NULL, .key = lifecycle::deprecated())
 
-nest.simpr_spec(.data, ..., .names_sep = NULL, .key = deprecated())
+nest.simpr_spec(.data, ..., .names_sep = NULL, .key = lifecycle::deprecated())
 
 pivot_longer.simpr_sims(
   data,
@@ -815,13 +815,13 @@ pivot_longer.simpr_spec(
 pivot_wider.simpr_sims(
   data,
   id_cols = NULL,
-  names_from = name,
+  names_from = NULL,
   names_prefix = "",
   names_sep = "_",
   names_glue = NULL,
   names_sort = FALSE,
   names_repair = "check_unique",
-  values_from = value,
+  values_from = NULL,
   values_fill = NULL,
   values_fn = NULL,
   ...
@@ -830,13 +830,13 @@ pivot_wider.simpr_sims(
 pivot_wider.simpr_spec(
   data,
   id_cols = NULL,
-  names_from = name,
+  names_from = NULL,
   names_prefix = "",
   names_sep = "_",
   names_glue = NULL,
   names_sort = FALSE,
   names_repair = "check_unique",
-  values_from = value,
+  values_from = NULL,
   values_fill = NULL,
   values_fn = NULL,
   ...
@@ -976,10 +976,10 @@ unnest.simpr_sims(
   ptype = NULL,
   names_sep = NULL,
   names_repair = "check_unique",
-  .drop = deprecated(),
-  .id = deprecated(),
-  .sep = deprecated(),
-  .preserve = deprecated()
+  .drop = lifecycle::deprecated(),
+  .id = lifecycle::deprecated(),
+  .sep = lifecycle::deprecated(),
+  .preserve = lifecycle::deprecated()
 )
 
 unnest.simpr_spec(
@@ -990,10 +990,10 @@ unnest.simpr_spec(
   ptype = NULL,
   names_sep = NULL,
   names_repair = "check_unique",
-  .drop = deprecated(),
-  .id = deprecated(),
-  .sep = deprecated(),
-  .preserve = deprecated()
+  .drop = lifecycle::deprecated(),
+  .id = lifecycle::deprecated(),
+  .sep = lifecycle::deprecated(),
+  .preserve = lifecycle::deprecated()
 )
 }
 \arguments{

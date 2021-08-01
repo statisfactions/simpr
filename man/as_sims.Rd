@@ -2,10 +2,13 @@
 % Please edit documentation in R/as_sims.R
 \name{as_sims}
 \alias{as_sims}
+\alias{as_tibble.simpr_sims}
 \title{Work directly with simulation results with
 dplyr and tidyr}
 \usage{
 as_sims(obj)
+
+as_tibble.simpr_sims(obj)
 }
 \arguments{
 \item{obj}{A \code{simpr_produce} or \code{simpr_spec} object.}

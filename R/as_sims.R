@@ -37,6 +37,7 @@ as_sims.simpr_produce = function(obj) {
   obj
 }
 
+#' @export
 as_sims.simpr_spec = function(obj) {
   mc = match.call()
 
@@ -45,6 +46,7 @@ as_sims.simpr_spec = function(obj) {
 }
 
 #' @export
+#' @rdname as_sims
 as_tibble.simpr_sims = function(obj) {
   class(obj) = setdiff(class(obj), "simpr_sims")
   obj

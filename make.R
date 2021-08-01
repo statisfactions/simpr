@@ -18,6 +18,11 @@ getsignature = function(x) {
     str_replace_all(" = ,", ",") %>%
     str_replace_all(" = \\)", ")") %>%
     str_replace(glue("^{x}"), "function") %>%
+    str_replace_all("group_by_drop_default\\(", "dplyr::group_by_drop_default\\(") %>%
+    str_replace_all("names_from = name,", "names_from = NULL,") %>%
+    str_replace_all("values_from = value,", "values_from = NULL,") %>%
+    str_replace_all("deprecated\\(", "lifecycle::deprecated\\(") %>%
+    str_replace_all("everything\\(\\)", "dplyr::everything\\(\\)") %>%
     paste(collapse = "\n")
 }
 
