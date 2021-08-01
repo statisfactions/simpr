@@ -204,7 +204,8 @@ generate_sim = function(variables, ..., variable_sep,
     attr(df_full, "meta") = meta_indices
     attr(df_full, "sim_name") = sim_name
 
-    df_eval = purrr::reduce(.x = include_calls, .f = eval_pipe, .init = df_full)
+    df_eval = purrr::reduce(.x = include_calls, .f = eval_pipe, .init = df_full) %>%
+      tibble::as_tibble()
 
     return(df_eval)
     }
