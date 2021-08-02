@@ -19,7 +19,7 @@ apply_fits.simpr_spec = function(obj, FUN) {
   add_call(obj, mc, "apply_fits", replace_arg = "obj")
 }
 
-apply_fits.simpr_produce = function(obj, FUN) {
+apply_fits.simpr_tibble = function(obj, FUN) {
   ## Create reference meta df for merging
   simpr_meta = obj %>%
     dplyr::select(tidyselect::one_of(c(attr(obj, "meta"), "rep"))) %>%

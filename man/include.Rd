@@ -15,7 +15,7 @@ by \code{\link{meta}} or a
 }
 \value{
 a \code{simpr_include} object.  This
-  can be treated like a \code{simpr_produce}
+  can be treated like a \code{simpr_tibble}
   object for the purposes of the supported
   functions (see Details).
 }

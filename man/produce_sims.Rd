@@ -22,7 +22,7 @@ whole number greater than 0)}
 created, containing simulation results.  Default is \code{"sim"}}
 }
 \value{
-a \code{simpr_produce} object, which is
+a \code{simpr_tibble} object, which is
   a tibble with a row for each repetition (a
   total of \code{rep} repetitions) for each
   combination of metaparameters and some extra

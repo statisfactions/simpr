@@ -84,7 +84,7 @@ fit = function(obj, ...) {
 }
 
 #' @export
-fit.simpr_produce = function(obj, ...) {
+fit.simpr_tibble = function(obj, ...) {
 
   fit_functions = list(...)
 

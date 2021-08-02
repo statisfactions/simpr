@@ -11,7 +11,7 @@ as_sims(obj)
 as_tibble.simpr_sims(obj)
 }
 \arguments{
-\item{obj}{A \code{simpr_produce} or \code{simpr_spec} object.}
+\item{obj}{A \code{simpr_tibble} or \code{simpr_spec} object.}
 }
 \value{
 A \code{simpr_sims} object for use with dplyr and tidyr verbs.
@@ -24,7 +24,7 @@ tidyr verbs
 }
 \details{
 After producing simulation results (a
-\code{simpr_produce} object), it is sometimes
+\code{simpr_tibble} object), it is sometimes
 needed to do some data transformation to
 prepare for analysis.  This can always be
 specified in blueprint through custom
@@ -37,7 +37,7 @@ results.
 
 If, after running \code{as_sims}, you wish to
 return to the default behavoir to access
-\code{simpr_produce} results as a tibble with a
+\code{simpr_tibble} results as a tibble with a
 list_column for simulation results again, run
 \code{as_tibble()}.
 }

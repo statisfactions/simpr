@@ -30,7 +30,7 @@
 #'   \code{\link{meta}} for examples of how these
 #'   functions affect the output of
 #'   \code{produce_sims}
-#' @return a \code{simpr_produce} object, which is
+#' @return a \code{simpr_tibble} object, which is
 #'   a tibble with a row for each repetition (a
 #'   total of \code{rep} repetitions) for each
 #'   combination of metaparameters and some extra
@@ -197,8 +197,8 @@ generate_sim = function(variables, ..., variable_sep,
     return(df_full)
   } else {
 
-    ## Add "simpr_produce" class
-    class(df_full) = c("simpr_produce", class(df_full))
+    ## Add "simpr_tibble" class
+    class(df_full) = c("simpr_tibble", class(df_full))
 
     ## identify which variables are meta variables
     attr(df_full, "meta") = meta_indices
@@ -237,8 +237,8 @@ create_sim_results <- function(specs, x, sim_name) {
   attr(sim_results, "variables") = purrr::map(x$variables, ~ attr(., "varnames")) %>% unlist
   attr(sim_results, "sim_name") = sim_name
 
-  ## Add "simpr_produce" class
-  class(sim_results) = c("simpr_produce", class(sim_results))
+  ## Add "simpr_tibble" class
+  class(sim_results) = c("simpr_tibble", class(sim_results))
 
   sim_results
 }
