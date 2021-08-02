@@ -86,16 +86,22 @@ fit = function(obj, ...) {
 #' @export
 fit.simpr_tibble = function(obj, ...) {
 
-  fit_functions = list(...)
+  to_fit_fn = function(formula) {
+    stopifnot(rlang::is_formula(formula))
+    afl = rlang::as_function(formula) %>% as.list
+    afl[[5]] = call("with", data = quote(.), expr = afl[[5]])
+    alt_fn = as.function(afl)
+  }
 
+  fit_formulas = list(...)
   sim_name = get_sim_name(obj)
 
-  for(i in names(fit_functions))
-    obj[[i]] = purrr::map(obj[[sim_name]], fit_functions[[i]])
+  for(i in names(fit_formulas))
+    obj[[i]] = purrr::map(obj[[sim_name]], to_fit_fn(fit_formulas[[i]]))
 
   # attr(simpr_mod, "meta") = attr(obj, "meta")
   # attr(simpr_mod, "variables") = attr(obj, "variables")
-  attr(obj, "fits") = c(attr(obj, "fits"), names(fit_functions))
+  attr(obj, "fits") = c(attr(obj, "fits"), names(fit_formulas))
 
   obj
 }
