@@ -2,32 +2,43 @@
 % Please edit documentation in R/tidy_fits.R
 \name{tidy_fits}
 \alias{tidy_fits}
-\title{Tidy simpr_gen simulated model results output into tibble of components}
+\title{Tidy simpr_gen simulated model results output
+into tibble of components}
 \usage{
-tidy_fits(obj)
+tidy_fits(obj, ...)
 }
 \arguments{
-\item{obj}{tibble with repetition number, metaparameters, simulated
-data, and fitted models, from \code{\link{fit}}}
+\item{obj}{tibble with repetition number,
+metaparameters, simulated data, and fitted
+models, from \code{\link{fit}}}
+
+\item{\dots}{Additional arguments to \code{generics::tidy}.}
 }
 \value{
 a tibble with the output of the
-  \code{generics::\link[generics]{tidy}} method for the given object.
+  \code{generics::\link[generics]{tidy}} method
+  for the given object.
 }
 \description{
-Turn fitted model of simulated data (from \code{\link{fit}}) into a tidy
-tibble of model components (via \code{generics::\link[generics]{tidy}}).
+Turn fitted model of simulated data (from
+\code{\link{fit}}) into a tidy tibble of model
+components (via
+\code{generics::\link[generics]{tidy}}).
 }
 \details{
-This is part of the fifth step of the simulation process: after fitting the
-model with \code{\link{fit}}, now tidy the model output for further analysis
-such as evaluating power.  All model objects should be supported by
-\code{generics::\link[generics]{tidy}}, primarily via the \code{broom}
-package.
+This is part of the fifth step of the
+simulation process: after fitting the model
+with \code{\link{fit}}, now tidy the model
+output for further analysis such as evaluating
+power.  All model objects should be supported
+by \code{generics::\link[generics]{tidy}},
+primarily via the \code{broom} package.
 
-The output of this function is quite useful for calculating things such as
-power for specific tests within an overall model; see \emph{Examples}. For
-looking at overall features of the model such as R-squared, use
+The output of this function is quite useful for
+calculating things such as power for specific
+tests within an overall model; see
+\emph{Examples}. For looking at overall
+features of the model such as R-squared, use
 \code{\link{glance_fits}}.
 }
 \examples{
@@ -79,6 +90,8 @@ simpr_tidy \%>\%
 }
 }
 \seealso{
-\code{\link{glance_fits}} to view overall model statistics (e.g.
-  R-squared)
+\code{\link{glance_fits}} to view
+  overall model statistics (e.g. R-squared),
+  \code{\link{apply_fits}} to apply an
+  arbitrary function to the fits
 }

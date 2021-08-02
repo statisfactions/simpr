@@ -4,11 +4,13 @@
 \alias{glance_fits}
 \title{Tidy simpr_gen simulated model results output into tibble of model summaries}
 \usage{
-glance_fits(obj)
+glance_fits(obj, ...)
 }
 \arguments{
 \item{obj}{tibble with repetition number, metaparameters, simulated
 data, and fitted models, from \code{\link{fit}}}
+
+\item{\dots}{Additional arguments to \code{generics::glance}.}
 }
 \value{
 a tibble with the output of the
@@ -78,5 +80,7 @@ simpr_glance \%>\%
 }
 \seealso{
 \code{\link{tidy_fits}} to view model components (e.g.
-  parameter estimates)
+  parameter estimates),
+  \code{\link{apply_fits}} to apply an
+  arbitrary function to the fits
 }

@@ -1,4 +1,5 @@
 context("simpr::fit")
+library(dplyr)
 
 test_that("Multiple fit functions give different results", {
   set.seed(100)
@@ -13,6 +14,8 @@ test_that("Multiple fit functions give different results", {
     produce_sims(5) %>%
     fit(ChiSq = ~ suppressWarnings(chisq.test(.$c1, .$c2)),
         Unknown_Continuous_Correlation = ~cor.test(.$x1, .$x2))
+
+
 
   ## These should NOT be the same!
   expect_false(identical(chisq_fit$ChiSq, chisq_fit$Unknown_Continuous_Correlation))

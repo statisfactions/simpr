@@ -1,27 +1,39 @@
-#' Tidy simpr_gen simulated model results output into tibble of components
+#' Tidy simpr_gen simulated model results output
+#' into tibble of components
 #'
-#' Turn fitted model of simulated data (from \code{\link{fit}}) into a tidy
-#' tibble of model components (via \code{generics::\link[generics]{tidy}}).
+#' Turn fitted model of simulated data (from
+#' \code{\link{fit}}) into a tidy tibble of model
+#' components (via
+#' \code{generics::\link[generics]{tidy}}).
 #'
-#' This is part of the fifth step of the simulation process: after fitting the
-#' model with \code{\link{fit}}, now tidy the model output for further analysis
-#' such as evaluating power.  All model objects should be supported by
-#' \code{generics::\link[generics]{tidy}}, primarily via the \code{broom}
-#' package.
+#' This is part of the fifth step of the
+#' simulation process: after fitting the model
+#' with \code{\link{fit}}, now tidy the model
+#' output for further analysis such as evaluating
+#' power.  All model objects should be supported
+#' by \code{generics::\link[generics]{tidy}},
+#' primarily via the \code{broom} package.
 #'
-#' The output of this function is quite useful for calculating things such as
-#' power for specific tests within an overall model; see \emph{Examples}. For
-#' looking at overall features of the model such as R-squared, use
+#' The output of this function is quite useful for
+#' calculating things such as power for specific
+#' tests within an overall model; see
+#' \emph{Examples}. For looking at overall
+#' features of the model such as R-squared, use
 #' \code{\link{glance_fits}}.
 #'
-#' @param obj tibble with repetition number, metaparameters, simulated
-#'   data, and fitted models, from \code{\link{fit}}
+#' @param obj tibble with repetition number,
+#'   metaparameters, simulated data, and fitted
+#'   models, from \code{\link{fit}}
+#' @param \dots Additional arguments to \code{generics::tidy}.
 #'
 #' @return a tibble with the output of the
-#'   \code{generics::\link[generics]{tidy}} method for the given object.
+#'   \code{generics::\link[generics]{tidy}} method
+#'   for the given object.
 #'
-#' @seealso \code{\link{glance_fits}} to view overall model statistics (e.g.
-#'   R-squared)
+#' @seealso \code{\link{glance_fits}} to view
+#'   overall model statistics (e.g. R-squared),
+#'   \code{\link{apply_fits}} to apply an
+#'   arbitrary function to the fits
 #' @examples
 #' simple_linear_data = blueprint(x1 = ~ 2 + rnorm(n),
 #'           y = ~ 5 + 3 * x1 + rnorm(n, 0, sd = 0.5)) %>%
@@ -70,9 +82,9 @@
 #'   facet_grid(~g1)
 #' }
 #' @export
-tidy_fits = function(obj) {
+tidy_fits = function(obj, ...) {
   ## Run broom::tidy() on fit columns in simpr_mod
-  apply_fits(obj, broom::tidy)
+  apply_fits(obj, broom::tidy, ...)
 }
 
 
