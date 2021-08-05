@@ -5,7 +5,7 @@
 \title{Run a given function on a simpr_mod object and
 tidy the output.}
 \usage{
-apply_fits(obj, .f, ..., .progress = FALSE, .options = future_options())
+apply_fits(obj, .f, ..., .progress = FALSE, .options = furrr_options())
 }
 \arguments{
 \item{obj}{tibble with repetition number,
@@ -25,7 +25,7 @@ multisession, and multicore plans .}
 options to use with the workers when using
 futures. This must be the result from a call
 to
-\code{\link[furrr:future_options]{future_options()}}.}
+\code{\link[furrr:furrr_options]{furrr_options()}}.}
 }
 \description{
 This function applies a given function to all

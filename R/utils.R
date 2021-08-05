@@ -2,9 +2,9 @@
 #' @export
 magrittr::`%>%`
 
-#' @importFrom furrr future_options
+#' @importFrom furrr furrr_options
 #' @export
-furrr::future_options
+furrr::furrr_options
 
 ## Get the name of the simulation result column
 get_sim_name = function(obj) {

@@ -4,7 +4,7 @@
 \alias{fit}
 \title{Fit models to the simulated data}
 \usage{
-fit(obj, ..., .progress = FALSE, .options = future_options())
+fit(obj, ..., .progress = FALSE, .options = furrr_options())
 }
 \arguments{
 \item{obj}{a \code{simpr_blueprint} object--the
@@ -24,7 +24,7 @@ multisession, and multicore plans .}
 options to use with the workers when using
 futures. This must be the result from a call
 to
-\code{\link[furrr:future_options]{future_options()}}.}
+\code{\link[furrr:furrr_options]{furrr_options()}}.}
 }
 \value{
 a \code{simpr_gen} object with

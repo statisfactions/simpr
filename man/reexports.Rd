@@ -4,7 +4,7 @@
 \name{reexports}
 \alias{reexports}
 \alias{\%>\%}
-\alias{future_options}
+\alias{furrr_options}
 \title{Objects exported from other packages}
 \keyword{internal}
 \description{
@@ -12,7 +12,7 @@ These objects are imported from other packages. Follow the links
 below to see their documentation.
 
 \describe{
-  \item{furrr}{\code{\link[furrr]{future_options}}}
+  \item{furrr}{\code{\link[furrr]{furrr_options}}}
 
   \item{magrittr}{\code{\link[magrittr:pipe]{\%>\%}}}
 }}

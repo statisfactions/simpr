@@ -33,7 +33,7 @@
 #' @param .options The \code{future} specific
 #'   options to use with the workers when using futures. This must be
 #'   the result from a call to
-#'   \code{\link[furrr:future_options]{future_options()}}.
+#'   \code{\link[furrr:furrr_options]{furrr_options()}}.
 #' @seealso \code{\link{blueprint}} and
 #'   \code{\link{meta}} for examples of how these
 #'   functions affect the output of
@@ -93,14 +93,14 @@
 #' @export
 produce_sims = function(obj, reps, sim_name = "sim",
                         .progress = FALSE,
-                        .options = future_options()) {
+                        .options = furrr_options()) {
   UseMethod("produce_sims")
 }
 
 #' @export
 produce_sims.simpr_spec = function(obj, reps, sim_name = "sim",
                                    .progress = FALSE,
-                                   .options = future_options()) {
+                                   .options = furrr_options()) {
  produce(obj = obj, reps = reps, sim_name = sim_name,
          .progress = .progress,
          .options = .options)
@@ -109,7 +109,7 @@ produce_sims.simpr_spec = function(obj, reps, sim_name = "sim",
 #' @export
 produce_sims.simpr_include = function(obj, reps, sim_name = "sim",
                                       .progress = FALSE,
-                                      .options = future_options()) {
+                                      .options = furrr_options()) {
   warning("Additional post-simulation steps indicated but will be ignored. Did you mean `produce_all`?")
   ## Delete include calls before running
   obj$include_calls = NULL
@@ -123,21 +123,21 @@ produce_sims.simpr_include = function(obj, reps, sim_name = "sim",
 #' @rdname produce_sims
 produce_all = function(obj, reps, sim_name = "sim",
                        .progress = FALSE,
-                       .options = future_options()) {
+                       .options = furrr_options()) {
   UseMethod("produce_all")
 }
 
 #' @export
 produce_all.simpr_spec = function(obj, reps, sim_name = "sim",
                                   .progress = FALSE,
-                                  .options = future_options()) {
+                                  .options = furrr_options()) {
   stop("No additional post-simulation steps indicated.  Did you mean `produce_sims`?")
 }
 
 #' @export
 produce_all.simpr_include = function(obj, reps, sim_name = "sim",
                                      .progress = FALSE,
-                                     .options = future_options()) {
+                                     .options = furrr_options()) {
   produce(obj = obj, reps = reps, sim_name = sim_name,
           .progress = .progress,
           .options = .options)
@@ -249,7 +249,7 @@ eval_pipe = function(lhs, rhs) {
   ## Set future options here since not evaluated
   ## by include(), and future options are ignored
   ## anyway
-  .options = future_options()
+  .options = furrr_options()
   .progress = FALSE
   eval(call("%>%", lhs = lhs, rhs = rhs))
 }

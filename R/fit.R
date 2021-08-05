@@ -41,7 +41,7 @@
 #'   options to use with the workers when using
 #'   futures. This must be the result from a call
 #'   to
-#'   \code{\link[furrr:future_options]{future_options()}}.
+#'   \code{\link[furrr:furrr_options]{furrr_options()}}.
 #'
 #' @return a \code{simpr_gen} object with
 #'   additional list-columns for the output of the
@@ -106,13 +106,13 @@
 #'
 #' @export
 fit = function(obj, ..., .progress = FALSE,
-               .options = future_options()) {
+               .options = furrr_options()) {
   UseMethod("fit")
 }
 
 #' @export
 fit.simpr_tibble = function(obj, ..., .progress = FALSE,
-                            .options = future_options()) {
+                            .options = furrr_options()) {
 
   to_fit_fn = function(formula) {
     stopifnot(rlang::is_formula(formula))
@@ -138,7 +138,7 @@ fit.simpr_tibble = function(obj, ..., .progress = FALSE,
 
 #' @export
 fit.simpr_spec = function(obj, ..., .progress = FALSE,
-                          .options = future_options()) {
+                          .options = furrr_options()) {
   mc = match.call()
 
   add_call(obj, mc, "fit", replace_arg = "obj")

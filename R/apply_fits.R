@@ -17,14 +17,14 @@
 #' @seealso \code{\link{tidy_fits}}, \code{\link{glance_fits}}
 #' @export
 apply_fits = function(obj, .f, ..., .progress = FALSE,
-                      .options = future_options()) {
+                      .options = furrr_options()) {
   UseMethod("apply_fits")
 }
 
 
 #' @export
 apply_fits.simpr_spec = function(obj, .f, ..., .progress = FALSE,
-                                 .options = future_options()) {
+                                 .options = furrr_options()) {
   mc = match.call()
 
   add_call(obj, mc, "apply_fits", replace_arg = "obj")
@@ -32,7 +32,7 @@ apply_fits.simpr_spec = function(obj, .f, ..., .progress = FALSE,
 
 #' @export
 apply_fits.simpr_tibble = function(obj, .f, ..., .progress = FALSE,
-                                   .options = future_options()) {
+                                   .options = furrr_options()) {
 
   fn_map = function(...) dplyr::as_tibble(purrr::as_mapper(.f)(...))
   ## Create reference meta df for merging

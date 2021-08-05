@@ -4,7 +4,7 @@
 \alias{glance_fits}
 \title{Tidy simpr_gen simulated model results output into tibble of model summaries}
 \usage{
-glance_fits(obj, ..., .progress = FALSE, .options = future_options())
+glance_fits(obj, ..., .progress = FALSE, .options = furrr_options())
 }
 \arguments{
 \item{obj}{tibble with repetition number, metaparameters, simulated
@@ -20,7 +20,7 @@ multisession, and multicore plans .}
 options to use with the workers when using
 futures. This must be the result from a call
 to
-\code{\link[furrr:future_options]{future_options()}}.}
+\code{\link[furrr:furrr_options]{furrr_options()}}.}
 }
 \value{
 a tibble with the output of the

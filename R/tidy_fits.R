@@ -83,7 +83,7 @@
 #' }
 #' @export
 tidy_fits = function(obj, ..., .progress = FALSE,
-                     .options = future_options()) {
+                     .options = furrr_options()) {
   ## Run broom::tidy() on fit columns in simpr_mod
   apply_fits(obj, broom::tidy, ...,
              .progress = .progress,

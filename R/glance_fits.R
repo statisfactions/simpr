@@ -72,7 +72,7 @@
 #' }
 #' @export
 glance_fits = function(obj, ..., .progress = FALSE,
-                       .options = future_options()) {
+                       .options = furrr_options()) {
   ## Run broom::glance() on fit columns in simpr_mod
   apply_fits(obj, broom::glance, ...,
              .progress = .progress,
