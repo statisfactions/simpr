@@ -25,11 +25,21 @@
 #' @param reps number of replications to run (a
 #'   whole number greater than 0)
 #' @param sim_name name of the list-column to be
-#'   created, containing simulation results.  Default is \code{"sim"}
+#'   created, containing simulation results.
+#'   Default is \code{"sim"}
+#' @param .progress	A logical, for whether or not
+#'   to print a progress bar for multiprocess,
+#'   multisession, and multicore plans .
+#' @param .options The \code{future} specific
+#'   options to use with the workers. This must be
+#'   the result from a call to
+#'   \code{\link[furrr:future_options]{future_options()}}.
 #' @seealso \code{\link{blueprint}} and
 #'   \code{\link{meta}} for examples of how these
 #'   functions affect the output of
-#'   \code{produce_sims}
+#'   \code{produce_sims}. See the \code{furrr}
+#'   website for more information on working with
+#'   futures: \url{https://furrr.futureverse.org/}
 #' @return a \code{simpr_tibble} object, which is
 #'   a tibble with a row for each repetition (a
 #'   total of \code{rep} repetitions) for each
@@ -37,8 +47,9 @@
 #'   metadata used by \code{\link{fit}}.  The
 #'   columns are \code{rep} for the repetition
 #'   number, the names of the metaparameters, and
-#'   a list-column (named by the argument \code{sim_name}) containing the
-#'   dataset for each repetition and metaparameter
+#'   a list-column (named by the argument
+#'   \code{sim_name}) containing the dataset for
+#'   each repetition and metaparameter
 #'   combination.
 #' @examples
 #' meta_list_out = blueprint(x = ~ MASS::mvrnorm(n, rep(0, 2), Sigma = S)) %>%
@@ -80,41 +91,61 @@
 #'
 #'
 #' @export
-produce_sims = function(obj, reps, sim_name = "sim") {
+produce_sims = function(obj, reps, sim_name = "sim",
+                        .progress = FALSE,
+                        .options = future_options()) {
   UseMethod("produce_sims")
 }
 
 #' @export
-produce_sims.simpr_spec = function(obj, reps, sim_name = "sim") {
- produce(obj = obj, reps = reps, sim_name = sim_name)
+produce_sims.simpr_spec = function(obj, reps, sim_name = "sim",
+                                   .progress = FALSE,
+                                   .options = future_options()) {
+ produce(obj = obj, reps = reps, sim_name = sim_name,
+         .progress = .progress,
+         .options = .options)
 }
 
 #' @export
-produce_sims.simpr_include = function(obj, reps, sim_name = "sim") {
+produce_sims.simpr_include = function(obj, reps, sim_name = "sim",
+                                      .progress = FALSE,
+                                      .options = future_options()) {
   warning("Additional post-simulation steps indicated but will be ignored. Did you mean `produce_all`?")
   ## Delete include calls before running
   obj$include_calls = NULL
 
-  produce(obj = obj, reps = reps, sim_name = sim_name)
+  produce(obj = obj, reps = reps, sim_name = sim_name,
+          .progress = .progress,
+          .options = .options)
 }
 
 #' @export
 #' @rdname produce_sims
-produce_all = function(obj, reps, sim_name = "sim") {
+produce_all = function(obj, reps, sim_name = "sim",
+                       .progress = FALSE,
+                       .options = future_options()) {
   UseMethod("produce_all")
 }
 
 #' @export
-produce_all.simpr_spec = function(obj, reps, sim_name = "sim") {
+produce_all.simpr_spec = function(obj, reps, sim_name = "sim",
+                                  .progress = FALSE,
+                                  .options = future_options()) {
   stop("No additional post-simulation steps indicated.  Did you mean `produce_sims`?")
 }
 
 #' @export
-produce_all.simpr_include = function(obj, reps, sim_name = "sim") {
-  produce(obj = obj, reps = reps, sim_name = sim_name)
+produce_all.simpr_include = function(obj, reps, sim_name = "sim",
+                                     .progress = FALSE,
+                                     .options = future_options()) {
+  produce(obj = obj, reps = reps, sim_name = sim_name,
+          .progress = .progress,
+          .options = .options)
 }
 
-produce = function(obj, reps, sim_name) {
+produce = function(obj, reps, sim_name,
+                   .progress = .progress,
+                   .options = .options) {
   validate_reps(reps)
 
   specs = dplyr::left_join(data.frame(rep = 1:reps),
@@ -135,8 +166,11 @@ produce = function(obj, reps, sim_name) {
                                "blueprint",
                                "variable_sep",
                                "include_calls")],
-                     sim_name = sim_name)
+                     sim_name = sim_name,
+                     .progress = .progress,
+                     .options = .options)
 }
+
 
 
 
@@ -215,7 +249,7 @@ eval_pipe = function(lhs, rhs) {
   eval(call("%>%", lhs = lhs, rhs = rhs))
 }
 
-create_sim_results <- function(specs, x, sim_name) {
+create_sim_results <- function(specs, x, sim_name, .progress, .options) {
   ## Create simulation results from specification
 
   ## define variable "." to satisfy R CMD Check
@@ -224,12 +258,14 @@ create_sim_results <- function(specs, x, sim_name) {
   ## Generate all replications
   sim_results = specs %>%
     tibble::as_tibble() %>%
-    purrr::pmap(generate_sim,
+    furrr::future_pmap(generate_sim,
                 variables = x$blueprint,
                 include_calls = x$include_calls,
                 variable_sep = x$variable_sep,
                 meta_indices = names(x$meta_info$indices),
-                sim_name = sim_name) %>%
+                sim_name = sim_name,
+                .progress = .progress,
+                .options = .options) %>%
     dplyr::bind_rows()
 
   ## Add some attributes to the tibble to track meta and variables

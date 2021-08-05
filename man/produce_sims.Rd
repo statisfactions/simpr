@@ -5,9 +5,21 @@
 \alias{produce_all}
 \title{Produce simulated data from specification}
 \usage{
-produce_sims(obj, reps, sim_name = "sim")
+produce_sims(
+  obj,
+  reps,
+  sim_name = "sim",
+  .progress = FALSE,
+  .options = future_options()
+)
 
-produce_all(obj, reps, sim_name = "sim")
+produce_all(
+  obj,
+  reps,
+  sim_name = "sim",
+  .progress = FALSE,
+  .options = future_options()
+)
 }
 \arguments{
 \item{obj}{a \code{simpr_spec} object generated
@@ -19,7 +31,17 @@ specifications of the simulation}
 whole number greater than 0)}
 
 \item{sim_name}{name of the list-column to be
-created, containing simulation results.  Default is \code{"sim"}}
+created, containing simulation results.
+Default is \code{"sim"}}
+
+\item{.progress}{A logical, for whether or not
+to print a progress bar for multiprocess,
+multisession, and multicore plans .}
+
+\item{.options}{The \code{future} specific
+options to use with the workers. This must be
+the result from a call to
+\code{\link[furrr:future_options]{future_options()}}.}
 }
 \value{
 a \code{simpr_tibble} object, which is
@@ -29,8 +51,9 @@ a \code{simpr_tibble} object, which is
   metadata used by \code{\link{fit}}.  The
   columns are \code{rep} for the repetition
   number, the names of the metaparameters, and
-  a list-column (named by the argument \code{sim_name}) containing the
-  dataset for each repetition and metaparameter
+  a list-column (named by the argument
+  \code{sim_name}) containing the dataset for
+  each repetition and metaparameter
   combination.
 }
 \description{
@@ -97,5 +120,7 @@ meta_list_out = blueprint(x = ~ MASS::mvrnorm(n, rep(0, 2), Sigma = S)) \%>\%
 \code{\link{blueprint}} and
   \code{\link{meta}} for examples of how these
   functions affect the output of
-  \code{produce_sims}
+  \code{produce_sims}. See the \code{furrr}
+  website for more information on working with
+  futures: \url{https://furrr.futureverse.org/}
 }
