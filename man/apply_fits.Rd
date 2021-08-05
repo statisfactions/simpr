@@ -5,7 +5,7 @@
 \title{Run a given function on a simpr_mod object and
 tidy the output.}
 \usage{
-apply_fits(obj, .f, ...)
+apply_fits(obj, .f, ..., .progress = FALSE, .options = future_options())
 }
 \arguments{
 \item{obj}{tibble with repetition number,
@@ -16,6 +16,16 @@ models, from \code{\link{fit}}}
 fit object}
 
 \item{\dots}{Additional arguments to \code{.f}.}
+
+\item{.progress}{A logical, for whether or not
+to print a progress bar for multiprocess,
+multisession, and multicore plans .}
+
+\item{.options}{The \code{future} specific
+options to use with the workers when using
+futures. This must be the result from a call
+to
+\code{\link[furrr:future_options]{future_options()}}.}
 }
 \description{
 This function applies a given function to all

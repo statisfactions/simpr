@@ -13,22 +13,26 @@
 #' @param .f A function or \code{purrr}-style formula function used for computing on the
 #'   fit object
 #' @param \dots Additional arguments to \code{.f}.
+#' @inheritParams fit
 #' @seealso \code{\link{tidy_fits}}, \code{\link{glance_fits}}
 #' @export
-apply_fits = function(obj, .f, ...) {
+apply_fits = function(obj, .f, ..., .progress = FALSE,
+                      .options = future_options()) {
   UseMethod("apply_fits")
 }
 
 
 #' @export
-apply_fits.simpr_spec = function(obj, .f, ...) {
+apply_fits.simpr_spec = function(obj, .f, ..., .progress = FALSE,
+                                 .options = future_options()) {
   mc = match.call()
 
   add_call(obj, mc, "apply_fits", replace_arg = "obj")
 }
 
 #' @export
-apply_fits.simpr_tibble = function(obj, .f, ...) {
+apply_fits.simpr_tibble = function(obj, .f, ..., .progress = FALSE,
+                                   .options = future_options()) {
 
   fn_map = function(...) dplyr::as_tibble(purrr::as_mapper(.f)(...))
   ## Create reference meta df for merging
@@ -42,7 +46,10 @@ apply_fits.simpr_tibble = function(obj, .f, ...) {
     purrr::map(purrr::set_names, nm = simpr_meta$....id)
 
   ## For each fit column (identified as "source"), run tidy on each element of that column
-  simpr_tidy = purrr::map_dfr(simpr_mods, function(x, ...) purrr::map_dfr(x, fn_map, ..., .id = "....id"),
+  simpr_tidy = purrr::map_dfr(simpr_mods, function(x, ...)
+    furrr::future_map_dfr(x, fn_map, ..., .id = "....id",
+                          .progress = .progress,
+                          .options = .options),
                               ..., .id = "Source")
 
   ## Re-merge metaparameter columns to tidy output

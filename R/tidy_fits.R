@@ -25,7 +25,7 @@
 #'   metaparameters, simulated data, and fitted
 #'   models, from \code{\link{fit}}
 #' @param \dots Additional arguments to \code{generics::tidy}.
-#'
+#' @inheritParams fit
 #' @return a tibble with the output of the
 #'   \code{generics::\link[generics]{tidy}} method
 #'   for the given object.
@@ -82,9 +82,12 @@
 #'   facet_grid(~g1)
 #' }
 #' @export
-tidy_fits = function(obj, ...) {
+tidy_fits = function(obj, ..., .progress = FALSE,
+                     .options = future_options()) {
   ## Run broom::tidy() on fit columns in simpr_mod
-  apply_fits(obj, broom::tidy, ...)
+  apply_fits(obj, broom::tidy, ...,
+             .progress = .progress,
+             .options = .options)
 }
 
 

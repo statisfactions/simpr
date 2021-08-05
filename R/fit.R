@@ -1,33 +1,59 @@
 #' Fit models to the simulated data
 #'
-#' Takes simulated data from \code{\link{produce_sims}} and applies functions to it,
-#' usually model-fitting functions.
+#' Takes simulated data from
+#' \code{\link{produce_sims}} and applies
+#' functions to it, usually model-fitting
+#' functions.
 #'
-#' This is the fourth step in the simulation process: after generating the
-#' simulation data, apply functions such as fitting a statistical model to the
-#' data. The output is often then passed to \code{\link{tidy_fits}} or
-#' \code{\link{glance_fits}} to extract relevant parameters from the object,
-#' based on \code{\link[broom]{tidy}} and \code{\link[broom]{glance}} from the
+#' This is the fourth step in the simulation
+#' process: after generating the simulation data,
+#' apply functions such as fitting a statistical
+#' model to the data. The output is often then
+#' passed to \code{\link{tidy_fits}} or
+#' \code{\link{glance_fits}} to extract relevant
+#' parameters from the object, based on
+#' \code{\link[broom]{tidy}} and
+#' \code{\link[broom]{glance}} from the
 #' \code{broom} package.
 #'
-#' Similar to \code{\link{blueprint}}, the \code{\dots} arguments uses an
-#' efficient syntax to specify custom functions for fitting models to the data.
-#' These functions will usually be on the simulated data -- which is indicated
-#' by \code{.} in the formula function, e.g. \code{linear_model = ~lm(y ~ x + z,
-#' data = .)} computes linear models on each simulation cell if there are
-#' variables x, y, and z specified in \code{blueprint}.
+#' Similar to \code{\link{blueprint}}, the
+#' \code{\dots} arguments uses an efficient syntax
+#' to specify custom functions for fitting models
+#' to the data. These functions will usually be on
+#' the simulated data -- which is indicated by
+#' \code{.} in the formula function, e.g.
+#' \code{linear_model = ~lm(y ~ x + z, data = .)}
+#' computes linear models on each simulation cell
+#' if there are variables x, y, and z specified in
+#' \code{blueprint}.
 #'
-#' @param obj a \code{simpr_blueprint} object--the simulated data from
-#'   \code{\link{produce_sims}}--or an \code{\link{include}} object
-#' @param ... \code{purrr}-style formula functions used for computing on the
-#'   simulated data.  See \emph{Details} and \emph{Examples}.
+#' @param obj a \code{simpr_blueprint} object--the
+#'   simulated data from
+#'   \code{\link{produce_sims}}--or an
+#'   \code{\link{include}} object
+#' @param ... \code{purrr}-style formula functions
+#'   used for computing on the simulated data.
+#'   See \emph{Details} and \emph{Examples}.
+#' @param .progress	A logical, for whether or not
+#'   to print a progress bar for multiprocess,
+#'   multisession, and multicore plans .
+#' @param .options The \code{future} specific
+#'   options to use with the workers when using
+#'   futures. This must be the result from a call
+#'   to
+#'   \code{\link[furrr:future_options]{future_options()}}.
 #'
-#' @return a \code{simpr_gen} object with additional list-columns for the output
-#'   of the provided functions (e.g. model outputs).  Just like the output of
-#'   \code{\link{produce_sims}}, there is one row per repetition per combination of
-#'   metaparameters, and the columns are the repetition number \code{rep}, the
-#'   metaparameter names, the simulated data \code{sim}, with additional
-#'   columns for the function outputs specified in \code{\dots}.
+#' @return a \code{simpr_gen} object with
+#'   additional list-columns for the output of the
+#'   provided functions (e.g. model outputs).
+#'   Just like the output of
+#'   \code{\link{produce_sims}}, there is one row
+#'   per repetition per combination of
+#'   metaparameters, and the columns are the
+#'   repetition number \code{rep}, the
+#'   metaparameter names, the simulated data
+#'   \code{sim}, with additional columns for the
+#'   function outputs specified in \code{\dots}.
 #'
 #' @examples
 #' ## Generate data to fit models
@@ -79,12 +105,14 @@
 #' add_five_data$add_five
 #'
 #' @export
-fit = function(obj, ...) {
+fit = function(obj, ..., .progress = FALSE,
+               .options = future_options()) {
   UseMethod("fit")
 }
 
 #' @export
-fit.simpr_tibble = function(obj, ...) {
+fit.simpr_tibble = function(obj, ..., .progress = FALSE,
+                            .options = future_options()) {
 
   to_fit_fn = function(formula) {
     stopifnot(rlang::is_formula(formula))
@@ -97,7 +125,9 @@ fit.simpr_tibble = function(obj, ...) {
   sim_name = get_sim_name(obj)
 
   for(i in names(fit_formulas))
-    obj[[i]] = purrr::map(obj[[sim_name]], to_fit_fn(fit_formulas[[i]]))
+    obj[[i]] = furrr::future_map(obj[[sim_name]], to_fit_fn(fit_formulas[[i]]),
+                                 .progress = .progress,
+                                 .options = .options)
 
   # attr(simpr_mod, "meta") = attr(obj, "meta")
   # attr(simpr_mod, "variables") = attr(obj, "variables")
@@ -107,7 +137,8 @@ fit.simpr_tibble = function(obj, ...) {
 }
 
 #' @export
-fit.simpr_spec = function(obj, ...) {
+fit.simpr_spec = function(obj, ..., .progress = FALSE,
+                          .options = future_options()) {
   mc = match.call()
 
   add_call(obj, mc, "fit", replace_arg = "obj")

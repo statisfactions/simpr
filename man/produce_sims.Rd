@@ -39,7 +39,7 @@ to print a progress bar for multiprocess,
 multisession, and multicore plans .}
 
 \item{.options}{The \code{future} specific
-options to use with the workers. This must be
+options to use with the workers when using futures. This must be
 the result from a call to
 \code{\link[furrr:future_options]{future_options()}}.}
 }

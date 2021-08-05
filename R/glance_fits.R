@@ -16,7 +16,7 @@
 #' @param obj tibble with repetition number, metaparameters, simulated
 #'   data, and fitted models, from \code{\link{fit}}
 #' @param \dots Additional arguments to \code{generics::glance}.
-#'
+#' @inheritParams fit
 #' @return a tibble with the output of the
 #'   \code{generics::\link[generics]{glance}} method for the given object.
 #'
@@ -71,9 +71,12 @@
 #'   coord_cartesian(ylim = c(0,1))
 #' }
 #' @export
-glance_fits = function(obj, ...) {
+glance_fits = function(obj, ..., .progress = FALSE,
+                       .options = future_options()) {
   ## Run broom::glance() on fit columns in simpr_mod
-  apply_fits(obj, broom::glance, ...)
+  apply_fits(obj, broom::glance, ...,
+             .progress = .progress,
+             .options = .options)
 }
 
 

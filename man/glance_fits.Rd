@@ -4,13 +4,23 @@
 \alias{glance_fits}
 \title{Tidy simpr_gen simulated model results output into tibble of model summaries}
 \usage{
-glance_fits(obj, ...)
+glance_fits(obj, ..., .progress = FALSE, .options = future_options())
 }
 \arguments{
 \item{obj}{tibble with repetition number, metaparameters, simulated
 data, and fitted models, from \code{\link{fit}}}
 
 \item{\dots}{Additional arguments to \code{generics::glance}.}
+
+\item{.progress}{A logical, for whether or not
+to print a progress bar for multiprocess,
+multisession, and multicore plans .}
+
+\item{.options}{The \code{future} specific
+options to use with the workers when using
+futures. This must be the result from a call
+to
+\code{\link[furrr:future_options]{future_options()}}.}
 }
 \value{
 a tibble with the output of the

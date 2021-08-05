@@ -31,7 +31,7 @@
 #'   to print a progress bar for multiprocess,
 #'   multisession, and multicore plans .
 #' @param .options The \code{future} specific
-#'   options to use with the workers. This must be
+#'   options to use with the workers when using futures. This must be
 #'   the result from a call to
 #'   \code{\link[furrr:future_options]{future_options()}}.
 #' @seealso \code{\link{blueprint}} and
@@ -246,6 +246,11 @@ generate_sim = function(variables, ..., variable_sep,
 }
 
 eval_pipe = function(lhs, rhs) {
+  ## Set future options here since not evaluated
+  ## by include(), and future options are ignored
+  ## anyway
+  .options = future_options()
+  .progress = FALSE
   eval(call("%>%", lhs = lhs, rhs = rhs))
 }
 
