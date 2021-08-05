@@ -10,7 +10,7 @@ produce_sims(
   reps,
   sim_name = "sim",
   .progress = FALSE,
-  .options = furrr_options()
+  .options = furrr_options(seed = TRUE)
 )
 
 produce_all(
@@ -18,7 +18,7 @@ produce_all(
   reps,
   sim_name = "sim",
   .progress = FALSE,
-  .options = furrr_options()
+  .options = furrr_options(seed = TRUE)
 )
 }
 \arguments{
@@ -41,7 +41,7 @@ multisession, and multicore plans .}
 \item{.options}{The \code{future} specific
 options to use with the workers when using futures. This must be
 the result from a call to
-\code{\link[furrr:furrr_options]{furrr_options()}}.}
+\code{\link[furrr:furrr_options]{furrr_options(seed = TRUE)}}.}
 }
 \value{
 a \code{simpr_tibble} object, which is
