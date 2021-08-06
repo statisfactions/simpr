@@ -1,5 +1,4 @@
 context("simpr::gen")
-library(dplyr)
 
 ## Metaparameters and the global environment --------------
 
@@ -85,7 +84,7 @@ test_that("Autonumber when generating multiple columns with named argument", {
 
 test_that("Can refer to autonumbered columns in blueprint()", {
   comp_3 = as_tibble(mat_1) %>%
-    mutate (y = x_01 + x_02)
+    dplyr::mutate(y = x_01 + x_02)
 
   set.seed(100)
   auto_refer = blueprint(x = ~ MASS::mvrnorm(30, rep(0, 10), Sigma = diag(10)), sep = "_",
@@ -107,7 +106,7 @@ test_that("Multiple columns with two-sided formulas and unnamed arguments", {
 
 test_that("Can refer to two-sided formula columns as arguments in blueprint()", {
   comp_4 = as_tibble(mat_2) %>%
-    mutate (y = a + b)
+    dplyr::mutate (y = a + b)
 
   set.seed(100)
   cbind_refer = blueprint(cbind(a, b, c, d, e, f, g, h, i, j) ~ MASS::mvrnorm(30, rep(0, 10), Sigma = diag(10)),

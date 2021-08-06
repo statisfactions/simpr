@@ -14,8 +14,6 @@
 \alias{as.tbl.simpr_spec}
 \alias{auto_copy.simpr_sims}
 \alias{auto_copy.simpr_spec}
-\alias{collapse.simpr_sims}
-\alias{collapse.simpr_spec}
 \alias{collect.simpr_sims}
 \alias{collect.simpr_spec}
 \alias{compute.simpr_sims}
@@ -214,7 +212,7 @@
 \alias{unnest.simpr_spec}
 \title{Simpr methods for tidyverse verbs}
 \usage{
-add_count.simpr_sims(
+\method{add_count}{simpr_sims}(
   x,
   ...,
   wt = NULL,
@@ -223,7 +221,7 @@ add_count.simpr_sims(
   .drop = lifecycle::deprecated()
 )
 
-add_count.simpr_spec(
+\method{add_count}{simpr_spec}(
   x,
   ...,
   wt = NULL,
@@ -232,79 +230,75 @@ add_count.simpr_spec(
   .drop = lifecycle::deprecated()
 )
 
-anti_join.simpr_sims(x, y, by = NULL, copy = FALSE, ...)
+\method{anti_join}{simpr_sims}(x, y, by = NULL, copy = FALSE, ...)
 
-anti_join.simpr_spec(x, y, by = NULL, copy = FALSE, ...)
+\method{anti_join}{simpr_spec}(x, y, by = NULL, copy = FALSE, ...)
 
-arrange_.simpr_sims(.data, ..., .dots = list())
+\method{arrange_}{simpr_sims}(.data, ..., .dots = list())
 
-arrange_.simpr_spec(.data, ..., .dots = list())
+\method{arrange_}{simpr_spec}(.data, ..., .dots = list())
 
-arrange.simpr_sims(.data, ..., .by_group = FALSE)
+\method{arrange}{simpr_sims}(.data, ..., .by_group = FALSE)
 
-arrange.simpr_spec(.data, ..., .by_group = FALSE)
+\method{arrange}{simpr_spec}(.data, ..., .by_group = FALSE)
 
-as.tbl.simpr_sims(x, ...)
+\method{as.tbl}{simpr_sims}(x, ...)
 
-as.tbl.simpr_spec(x, ...)
+\method{as.tbl}{simpr_spec}(x, ...)
 
-auto_copy.simpr_sims(x, y, copy = FALSE, ...)
+\method{auto_copy}{simpr_sims}(x, y, copy = FALSE, ...)
 
-auto_copy.simpr_spec(x, y, copy = FALSE, ...)
+\method{auto_copy}{simpr_spec}(x, y, copy = FALSE, ...)
 
-collapse.simpr_sims(x, sep = "", width = Inf, last = "")
+\method{collect}{simpr_sims}(x, ...)
 
-collapse.simpr_spec(x, sep = "", width = Inf, last = "")
+\method{collect}{simpr_spec}(x, ...)
 
-collect.simpr_sims(x, ...)
+\method{compute}{simpr_sims}(x, ...)
 
-collect.simpr_spec(x, ...)
+\method{compute}{simpr_spec}(x, ...)
 
-compute.simpr_sims(x, ...)
+\method{count}{simpr_sims}(x, ..., wt = NULL, sort = FALSE, name = NULL)
 
-compute.simpr_spec(x, ...)
+\method{count}{simpr_spec}(x, ..., wt = NULL, sort = FALSE, name = NULL)
 
-count.simpr_sims(x, ..., wt = NULL, sort = FALSE, name = NULL)
+\method{distinct_}{simpr_sims}(.data, ..., .dots, .keep_all = FALSE)
 
-count.simpr_spec(x, ..., wt = NULL, sort = FALSE, name = NULL)
+\method{distinct_}{simpr_spec}(.data, ..., .dots, .keep_all = FALSE)
 
-distinct_.simpr_sims(.data, ..., .dots, .keep_all = FALSE)
+\method{distinct}{simpr_sims}(.data, ..., .keep_all = FALSE)
 
-distinct_.simpr_spec(.data, ..., .dots, .keep_all = FALSE)
+\method{distinct}{simpr_spec}(.data, ..., .keep_all = FALSE)
 
-distinct.simpr_sims(.data, ..., .keep_all = FALSE)
+\method{do_}{simpr_sims}(.data, ..., .dots = list())
 
-distinct.simpr_spec(.data, ..., .keep_all = FALSE)
+\method{do_}{simpr_spec}(.data, ..., .dots = list())
 
-do_.simpr_sims(.data, ..., .dots = list())
+\method{do}{simpr_sims}(.data, ...)
 
-do_.simpr_spec(.data, ..., .dots = list())
+\method{do}{simpr_spec}(.data, ...)
 
-do.simpr_sims(.data, ...)
+\method{dplyr_col_modify}{simpr_sims}(data, cols)
 
-do.simpr_spec(.data, ...)
+\method{dplyr_col_modify}{simpr_spec}(data, cols)
 
-dplyr_col_modify.simpr_sims(data, cols)
+\method{dplyr_reconstruct}{simpr_sims}(data, template)
 
-dplyr_col_modify.simpr_spec(data, cols)
+\method{dplyr_reconstruct}{simpr_spec}(data, template)
 
-dplyr_reconstruct.simpr_sims(data, template)
+\method{dplyr_row_slice}{simpr_sims}(data, i, ...)
 
-dplyr_reconstruct.simpr_spec(data, template)
+\method{dplyr_row_slice}{simpr_spec}(data, i, ...)
 
-dplyr_row_slice.simpr_sims(data, i, ...)
+\method{filter_}{simpr_sims}(.data, ..., .dots = list())
 
-dplyr_row_slice.simpr_spec(data, i, ...)
+\method{filter_}{simpr_spec}(.data, ..., .dots = list())
 
-filter_.simpr_sims(.data, ..., .dots = list())
+\method{filter}{simpr_sims}(.data, ..., .preserve = FALSE)
 
-filter_.simpr_spec(.data, ..., .dots = list())
+\method{filter}{simpr_spec}(.data, ..., .preserve = FALSE)
 
-filter.simpr_sims(.data, ..., .preserve = FALSE)
-
-filter.simpr_spec(.data, ..., .preserve = FALSE)
-
-full_join.simpr_sims(
+\method{full_join}{simpr_sims}(
   x,
   y,
   by = NULL,
@@ -314,7 +308,7 @@ full_join.simpr_sims(
   keep = FALSE
 )
 
-full_join.simpr_spec(
+\method{full_join}{simpr_spec}(
   x,
   y,
   by = NULL,
@@ -324,73 +318,63 @@ full_join.simpr_spec(
   keep = FALSE
 )
 
-group_by_.simpr_sims(.data, ..., .dots = list(), add = FALSE)
+\method{group_by_}{simpr_sims}(.data, ..., .dots = list(), add = FALSE)
 
-group_by_.simpr_spec(.data, ..., .dots = list(), add = FALSE)
+\method{group_by_}{simpr_spec}(.data, ..., .dots = list(), add = FALSE)
 
-group_by.simpr_sims(
-  .data,
-  ...,
-  .add = FALSE,
-  .drop = dplyr::group_by_drop_default(.data)
-)
+\method{group_by}{simpr_sims}(.data, ..., .add = FALSE, .drop = dplyr::group_by_drop_default(.data))
 
-group_by.simpr_spec(
-  .data,
-  ...,
-  .add = FALSE,
-  .drop = dplyr::group_by_drop_default(.data)
-)
+\method{group_by}{simpr_spec}(.data, ..., .add = FALSE, .drop = dplyr::group_by_drop_default(.data))
 
-group_data.simpr_sims(.data)
+\method{group_data}{simpr_sims}(.data)
 
-group_data.simpr_spec(.data)
+\method{group_data}{simpr_spec}(.data)
 
-group_indices_.simpr_sims(.data, ..., .dots = list())
+\method{group_indices_}{simpr_sims}(.data, ..., .dots = list())
 
-group_indices_.simpr_spec(.data, ..., .dots = list())
+\method{group_indices_}{simpr_spec}(.data, ..., .dots = list())
 
-group_indices.simpr_sims(.data, ...)
+\method{group_indices}{simpr_sims}(.data, ...)
 
-group_indices.simpr_spec(.data, ...)
+\method{group_indices}{simpr_spec}(.data, ...)
 
-group_keys.simpr_sims(.tbl, ...)
+\method{group_keys}{simpr_sims}(.tbl, ...)
 
-group_keys.simpr_spec(.tbl, ...)
+\method{group_keys}{simpr_spec}(.tbl, ...)
 
-group_map.simpr_sims(.data, .f, ..., .keep = FALSE)
+\method{group_map}{simpr_sims}(.data, .f, ..., .keep = FALSE)
 
-group_map.simpr_spec(.data, .f, ..., .keep = FALSE)
+\method{group_map}{simpr_spec}(.data, .f, ..., .keep = FALSE)
 
-group_modify.simpr_sims(.data, .f, ..., .keep = FALSE)
+\method{group_modify}{simpr_sims}(.data, .f, ..., .keep = FALSE)
 
-group_modify.simpr_spec(.data, .f, ..., .keep = FALSE)
+\method{group_modify}{simpr_spec}(.data, .f, ..., .keep = FALSE)
 
-group_nest.simpr_sims(.tbl, ..., .key = "data", keep = FALSE)
+\method{group_nest}{simpr_sims}(.tbl, ..., .key = "data", keep = FALSE)
 
-group_nest.simpr_spec(.tbl, ..., .key = "data", keep = FALSE)
+\method{group_nest}{simpr_spec}(.tbl, ..., .key = "data", keep = FALSE)
 
-group_size.simpr_sims(x)
+\method{group_size}{simpr_sims}(x)
 
-group_size.simpr_spec(x)
+\method{group_size}{simpr_spec}(x)
 
-group_split.simpr_sims(.tbl, ..., .keep = TRUE)
+\method{group_split}{simpr_sims}(.tbl, ..., .keep = TRUE)
 
-group_split.simpr_spec(.tbl, ..., .keep = TRUE)
+\method{group_split}{simpr_spec}(.tbl, ..., .keep = TRUE)
 
-group_trim.simpr_sims(.tbl, .drop = dplyr::group_by_drop_default(.tbl))
+\method{group_trim}{simpr_sims}(.tbl, .drop = dplyr::group_by_drop_default(.tbl))
 
-group_trim.simpr_spec(.tbl, .drop = dplyr::group_by_drop_default(.tbl))
+\method{group_trim}{simpr_spec}(.tbl, .drop = dplyr::group_by_drop_default(.tbl))
 
-group_vars.simpr_sims(x)
+\method{group_vars}{simpr_sims}(x)
 
-group_vars.simpr_spec(x)
+\method{group_vars}{simpr_spec}(x)
 
-groups.simpr_sims(x)
+\method{groups}{simpr_sims}(x)
 
-groups.simpr_spec(x)
+\method{groups}{simpr_spec}(x)
 
-inner_join.simpr_sims(
+\method{inner_join}{simpr_sims}(
   x,
   y,
   by = NULL,
@@ -400,7 +384,7 @@ inner_join.simpr_sims(
   keep = FALSE
 )
 
-inner_join.simpr_spec(
+\method{inner_join}{simpr_spec}(
   x,
   y,
   by = NULL,
@@ -410,11 +394,11 @@ inner_join.simpr_spec(
   keep = FALSE
 )
 
-intersect.simpr_sims(x, y, ...)
+\method{intersect}{simpr_sims}(x, y, ...)
 
-intersect.simpr_spec(x, y, ...)
+\method{intersect}{simpr_spec}(x, y, ...)
 
-left_join.simpr_sims(
+\method{left_join}{simpr_sims}(
   x,
   y,
   by = NULL,
@@ -424,7 +408,7 @@ left_join.simpr_sims(
   keep = FALSE
 )
 
-left_join.simpr_spec(
+\method{left_join}{simpr_spec}(
   x,
   y,
   by = NULL,
@@ -434,63 +418,47 @@ left_join.simpr_spec(
   keep = FALSE
 )
 
-mutate_.simpr_sims(.data, ..., .dots = list())
+\method{mutate_}{simpr_sims}(.data, ..., .dots = list())
 
-mutate_.simpr_spec(.data, ..., .dots = list())
+\method{mutate_}{simpr_spec}(.data, ..., .dots = list())
 
-mutate.simpr_sims(.data, ...)
+\method{mutate}{simpr_sims}(.data, ...)
 
-mutate.simpr_spec(.data, ...)
+\method{mutate}{simpr_spec}(.data, ...)
 
-n_groups.simpr_sims(x)
+\method{n_groups}{simpr_sims}(x)
 
-n_groups.simpr_spec(x)
+\method{n_groups}{simpr_spec}(x)
 
-nest_by.simpr_sims(.data, ..., .key = "data", .keep = FALSE)
+\method{nest_by}{simpr_sims}(.data, ..., .key = "data", .keep = FALSE)
 
-nest_by.simpr_spec(.data, ..., .key = "data", .keep = FALSE)
+\method{nest_by}{simpr_spec}(.data, ..., .key = "data", .keep = FALSE)
 
-nest_join.simpr_sims(
-  x,
-  y,
-  by = NULL,
-  copy = FALSE,
-  keep = FALSE,
-  name = NULL,
-  ...
-)
+\method{nest_join}{simpr_sims}(x, y, by = NULL, copy = FALSE, keep = FALSE, name = NULL, ...)
 
-nest_join.simpr_spec(
-  x,
-  y,
-  by = NULL,
-  copy = FALSE,
-  keep = FALSE,
-  name = NULL,
-  ...
-)
+\method{nest_join}{simpr_spec}(x, y, by = NULL, copy = FALSE, keep = FALSE, name = NULL, ...)
 
-pull.simpr_sims(.data, var = -1, name = NULL, ...)
+\method{pull}{simpr_sims}(.data, var = -1, name = NULL, ...)
 
-pull.simpr_spec(.data, var = -1, name = NULL, ...)
+\method{pull}{simpr_spec}(.data, var = -1, name = NULL, ...)
 
-relocate.simpr_sims(.data, ..., .before = NULL, .after = NULL)
+\method{relocate}{simpr_sims}(.data, ..., .before = NULL, .after = NULL)
 
-relocate.simpr_spec(.data, ..., .before = NULL, .after = NULL)
+\method{relocate}{simpr_spec}(.data, ..., .before = NULL, .after = NULL)
 
-rename_.simpr_sims(.data, ..., .dots = list())
+\method{rename_}{simpr_sims}(.data, ..., .dots = list())
 
-rename_.simpr_spec(.data, ..., .dots = list())
+\method{rename_}{simpr_spec}(.data, ..., .dots = list())
 
-rename_with.simpr_sims(.data, .fn, .cols = dplyr::everything(), ...)
+\method{rename_with}{simpr_sims}(.data, .fn, .cols = dplyr::everything(), ...)
 
-rename_with.simpr_spec(.data, .fn, .cols = dplyr::everything(), ...)
+\method{rename_with}{simpr_spec}(.data, .fn, .cols = dplyr::everything(), ...)
 
-rename.simpr_sims(.data, ...)
+\method{rename}{simpr_sims}(.data, ...)
 
-rename.simpr_spec(.data, ...)
+\method{rename}{simpr_spec}(.data, ...)
 
-right_join.simpr_sims(
+\method{right_join}{simpr_sims}(
   x,
   y,
   by = NULL,
@@ -500,7 +468,7 @@ right_join.simpr_sims(
   keep = FALSE
 )
 
-right_join.simpr_spec(
+\method{right_join}{simpr_spec}(
   x,
   y,
   by = NULL,
@@ -510,179 +478,151 @@ right_join.simpr_spec(
   keep = FALSE
 )
 
-rows_delete.simpr_sims(x, y, by = NULL, ..., copy = FALSE, in_place = FALSE)
+\method{rows_delete}{simpr_sims}(x, y, by = NULL, ..., copy = FALSE, in_place = FALSE)
 
-rows_delete.simpr_spec(x, y, by = NULL, ..., copy = FALSE, in_place = FALSE)
+\method{rows_delete}{simpr_spec}(x, y, by = NULL, ..., copy = FALSE, in_place = FALSE)
 
-rows_insert.simpr_sims(x, y, by = NULL, ..., copy = FALSE, in_place = FALSE)
+\method{rows_insert}{simpr_sims}(x, y, by = NULL, ..., copy = FALSE, in_place = FALSE)
 
-rows_insert.simpr_spec(x, y, by = NULL, ..., copy = FALSE, in_place = FALSE)
+\method{rows_insert}{simpr_spec}(x, y, by = NULL, ..., copy = FALSE, in_place = FALSE)
 
-rows_patch.simpr_sims(x, y, by = NULL, ..., copy = FALSE, in_place = FALSE)
+\method{rows_patch}{simpr_sims}(x, y, by = NULL, ..., copy = FALSE, in_place = FALSE)
 
-rows_patch.simpr_spec(x, y, by = NULL, ..., copy = FALSE, in_place = FALSE)
+\method{rows_patch}{simpr_spec}(x, y, by = NULL, ..., copy = FALSE, in_place = FALSE)
 
-rows_update.simpr_sims(x, y, by = NULL, ..., copy = FALSE, in_place = FALSE)
+\method{rows_update}{simpr_sims}(x, y, by = NULL, ..., copy = FALSE, in_place = FALSE)
 
-rows_update.simpr_spec(x, y, by = NULL, ..., copy = FALSE, in_place = FALSE)
+\method{rows_update}{simpr_spec}(x, y, by = NULL, ..., copy = FALSE, in_place = FALSE)
 
-rows_upsert.simpr_sims(x, y, by = NULL, ..., copy = FALSE, in_place = FALSE)
+\method{rows_upsert}{simpr_sims}(x, y, by = NULL, ..., copy = FALSE, in_place = FALSE)
 
-rows_upsert.simpr_spec(x, y, by = NULL, ..., copy = FALSE, in_place = FALSE)
+\method{rows_upsert}{simpr_spec}(x, y, by = NULL, ..., copy = FALSE, in_place = FALSE)
 
-rowwise.simpr_sims(data, ...)
+\method{rowwise}{simpr_sims}(data, ...)
 
-rowwise.simpr_spec(data, ...)
+\method{rowwise}{simpr_spec}(data, ...)
 
-same_src.simpr_sims(x, y)
+\method{same_src}{simpr_sims}(x, y)
 
-same_src.simpr_spec(x, y)
+\method{same_src}{simpr_spec}(x, y)
 
-sample_frac.simpr_sims(
-  tbl,
-  size = 1,
-  replace = FALSE,
-  weight = NULL,
-  .env = NULL,
-  ...
-)
+\method{sample_frac}{simpr_sims}(tbl, size = 1, replace = FALSE, weight = NULL, .env = NULL, ...)
 
-sample_frac.simpr_spec(
-  tbl,
-  size = 1,
-  replace = FALSE,
-  weight = NULL,
-  .env = NULL,
-  ...
-)
+\method{sample_frac}{simpr_spec}(tbl, size = 1, replace = FALSE, weight = NULL, .env = NULL, ...)
 
-sample_n.simpr_sims(
-  tbl,
-  size,
-  replace = FALSE,
-  weight = NULL,
-  .env = NULL,
-  ...
-)
+\method{sample_n}{simpr_sims}(tbl, size, replace = FALSE, weight = NULL, .env = NULL, ...)
 
-sample_n.simpr_spec(
-  tbl,
-  size,
-  replace = FALSE,
-  weight = NULL,
-  .env = NULL,
-  ...
-)
+\method{sample_n}{simpr_spec}(tbl, size, replace = FALSE, weight = NULL, .env = NULL, ...)
 
-select_.simpr_sims(.data, ..., .dots = list())
+\method{select_}{simpr_sims}(.data, ..., .dots = list())
 
-select_.simpr_spec(.data, ..., .dots = list())
+\method{select_}{simpr_spec}(.data, ..., .dots = list())
 
-select.simpr_sims(.data, ...)
+\method{select}{simpr_sims}(.data, ...)
 
-select.simpr_spec(.data, ...)
+\method{select}{simpr_spec}(.data, ...)
 
-semi_join.simpr_sims(x, y, by = NULL, copy = FALSE, ...)
+\method{semi_join}{simpr_sims}(x, y, by = NULL, copy = FALSE, ...)
 
-semi_join.simpr_spec(x, y, by = NULL, copy = FALSE, ...)
+\method{semi_join}{simpr_spec}(x, y, by = NULL, copy = FALSE, ...)
 
-setdiff.simpr_sims(x, y, ...)
+\method{setdiff}{simpr_sims}(x, y, ...)
 
-setdiff.simpr_spec(x, y, ...)
+\method{setdiff}{simpr_spec}(x, y, ...)
 
-setequal.simpr_sims(x, y, ...)
+\method{setequal}{simpr_sims}(x, y, ...)
 
-setequal.simpr_spec(x, y, ...)
+\method{setequal}{simpr_spec}(x, y, ...)
 
-slice_.simpr_sims(.data, ..., .dots = list())
+\method{slice_}{simpr_sims}(.data, ..., .dots = list())
 
-slice_.simpr_spec(.data, ..., .dots = list())
+\method{slice_}{simpr_spec}(.data, ..., .dots = list())
 
-slice_head.simpr_sims(.data, ..., n, prop)
+\method{slice_head}{simpr_sims}(.data, ..., n, prop)
 
-slice_head.simpr_spec(.data, ..., n, prop)
+\method{slice_head}{simpr_spec}(.data, ..., n, prop)
 
-slice_max.simpr_sims(.data, order_by, ..., n, prop, with_ties = TRUE)
+\method{slice_max}{simpr_sims}(.data, order_by, ..., n, prop, with_ties = TRUE)
 
-slice_max.simpr_spec(.data, order_by, ..., n, prop, with_ties = TRUE)
+\method{slice_max}{simpr_spec}(.data, order_by, ..., n, prop, with_ties = TRUE)
 
-slice_min.simpr_sims(.data, order_by, ..., n, prop, with_ties = TRUE)
+\method{slice_min}{simpr_sims}(.data, order_by, ..., n, prop, with_ties = TRUE)
 
-slice_min.simpr_spec(.data, order_by, ..., n, prop, with_ties = TRUE)
+\method{slice_min}{simpr_spec}(.data, order_by, ..., n, prop, with_ties = TRUE)
 
-slice_sample.simpr_sims(.data, ..., n, prop, weight_by = NULL, replace = FALSE)
+\method{slice_sample}{simpr_sims}(.data, ..., n, prop, weight_by = NULL, replace = FALSE)
 
-slice_sample.simpr_spec(.data, ..., n, prop, weight_by = NULL, replace = FALSE)
+\method{slice_sample}{simpr_spec}(.data, ..., n, prop, weight_by = NULL, replace = FALSE)
 
-slice_tail.simpr_sims(.data, ..., n, prop)
+\method{slice_tail}{simpr_sims}(.data, ..., n, prop)
 
-slice_tail.simpr_spec(.data, ..., n, prop)
+\method{slice_tail}{simpr_spec}(.data, ..., n, prop)
 
-slice.simpr_sims(.data, ..., .preserve = FALSE)
+\method{slice}{simpr_sims}(.data, ..., .preserve = FALSE)
 
-slice.simpr_spec(.data, ..., .preserve = FALSE)
+\method{slice}{simpr_spec}(.data, ..., .preserve = FALSE)
 
-summarise_.simpr_sims(.data, ..., .dots = list())
+\method{summarise_}{simpr_sims}(.data, ..., .dots = list())
 
-summarise_.simpr_spec(.data, ..., .dots = list())
+\method{summarise_}{simpr_spec}(.data, ..., .dots = list())
 
-summarise.simpr_sims(.data, ..., .groups = NULL)
+\method{summarise}{simpr_sims}(.data, ..., .groups = NULL)
 
-summarise.simpr_spec(.data, ..., .groups = NULL)
+\method{summarise}{simpr_spec}(.data, ..., .groups = NULL)
 
-tally.simpr_sims(x, wt = NULL, sort = FALSE, name = NULL)
+\method{tally}{simpr_sims}(x, wt = NULL, sort = FALSE, name = NULL)
 
-tally.simpr_spec(x, wt = NULL, sort = FALSE, name = NULL)
+\method{tally}{simpr_spec}(x, wt = NULL, sort = FALSE, name = NULL)
 
-tbl_vars.simpr_sims(x)
+\method{tbl_vars}{simpr_sims}(x)
 
-tbl_vars.simpr_spec(x)
+\method{tbl_vars}{simpr_spec}(x)
 
-transmute_.simpr_sims(.data, ..., .dots = list())
+\method{transmute_}{simpr_sims}(.data, ..., .dots = list())
 
-transmute_.simpr_spec(.data, ..., .dots = list())
+\method{transmute_}{simpr_spec}(.data, ..., .dots = list())
 
-transmute.simpr_sims(.data, ...)
+\method{transmute}{simpr_sims}(.data, ...)
 
-transmute.simpr_spec(.data, ...)
+\method{transmute}{simpr_spec}(.data, ...)
 
-ungroup.simpr_sims(x, ...)
+\method{ungroup}{simpr_sims}(x, ...)
 
-ungroup.simpr_spec(x, ...)
+\method{ungroup}{simpr_spec}(x, ...)
 
-union_all.simpr_sims(x, y, ...)
+\method{union_all}{simpr_sims}(x, y, ...)
 
-union_all.simpr_spec(x, y, ...)
+\method{union_all}{simpr_spec}(x, y, ...)
 
-union.simpr_sims(x, y, ...)
+\method{union}{simpr_sims}(x, y, ...)
 
-union.simpr_spec(x, y, ...)
+\method{union}{simpr_spec}(x, y, ...)
 
-complete_.simpr_sims(data, cols, fill = list(), ...)
+\method{complete_}{simpr_sims}(data, cols, fill = list(), ...)
 
-complete_.simpr_spec(data, cols, fill = list(), ...)
+\method{complete_}{simpr_spec}(data, cols, fill = list(), ...)
 
-complete.simpr_sims(data, ..., fill = list())
+\method{complete}{simpr_sims}(data, ..., fill = list())
 
-complete.simpr_spec(data, ..., fill = list())
+\method{complete}{simpr_spec}(data, ..., fill = list())
 
-drop_na_.simpr_sims(data, vars)
+\method{drop_na_}{simpr_sims}(data, vars)
 
-drop_na_.simpr_spec(data, vars)
+\method{drop_na_}{simpr_spec}(data, vars)
 
-drop_na.simpr_sims(data, ...)
+\method{drop_na}{simpr_sims}(data, ...)
 
-drop_na.simpr_spec(data, ...)
+\method{drop_na}{simpr_spec}(data, ...)
 
-expand_.simpr_sims(data, dots, ...)
+\method{expand_}{simpr_sims}(data, dots, ...)
 
-expand_.simpr_spec(data, dots, ...)
+\method{expand_}{simpr_spec}(data, dots, ...)
 
-expand.simpr_sims(data, ..., .name_repair = "check_unique")
+\method{expand}{simpr_sims}(data, ..., .name_repair = "check_unique")
 
-expand.simpr_spec(data, ..., .name_repair = "check_unique")
+\method{expand}{simpr_spec}(data, ..., .name_repair = "check_unique")
 
-extract_.simpr_sims(
+\method{extract_}{simpr_sims}(
   data,
   col,
   into,
@@ -692,7 +632,7 @@ extract_.simpr_sims(
   ...
 )
 
-extract_.simpr_spec(
+\method{extract_}{simpr_spec}(
   data,
   col,
   into,
@@ -702,7 +642,7 @@ extract_.simpr_spec(
   ...
 )
 
-extract.simpr_sims(
+\method{extract}{simpr_sims}(
   data,
   col,
   into,
@@ -712,7 +652,7 @@ extract.simpr_sims(
   ...
 )
 
-extract.simpr_spec(
+\method{extract}{simpr_spec}(
   data,
   col,
   into,
@@ -722,15 +662,15 @@ extract.simpr_spec(
   ...
 )
 
-fill_.simpr_sims(data, fill_cols, .direction = c("down", "up"))
+\method{fill_}{simpr_sims}(data, fill_cols, .direction = c("down", "up"))
 
-fill_.simpr_spec(data, fill_cols, .direction = c("down", "up"))
+\method{fill_}{simpr_spec}(data, fill_cols, .direction = c("down", "up"))
 
-fill.simpr_sims(data, ..., .direction = c("down", "up", "downup", "updown"))
+\method{fill}{simpr_sims}(data, ..., .direction = c("down", "up", "downup", "updown"))
 
-fill.simpr_spec(data, ..., .direction = c("down", "up", "downup", "updown"))
+\method{fill}{simpr_spec}(data, ..., .direction = c("down", "up", "downup", "updown"))
 
-gather_.simpr_sims(
+\method{gather_}{simpr_sims}(
   data,
   key_col,
   value_col,
@@ -740,7 +680,7 @@ gather_.simpr_sims(
   factor_key = FALSE
 )
 
-gather_.simpr_spec(
+\method{gather_}{simpr_spec}(
   data,
   key_col,
   value_col,
@@ -750,7 +690,7 @@ gather_.simpr_spec(
   factor_key = FALSE
 )
 
-gather.simpr_sims(
+\method{gather}{simpr_sims}(
   data,
   key = "key",
   value = "value",
@@ -760,7 +700,7 @@ gather.simpr_sims(
   factor_key = FALSE
 )
 
-gather.simpr_spec(
+\method{gather}{simpr_spec}(
   data,
   key = "key",
   value = "value",
@@ -770,15 +710,15 @@ gather.simpr_spec(
   factor_key = FALSE
 )
 
-nest_legacy.simpr_sims(data, ..., .key = "data")
+\method{nest_legacy}{simpr_sims}(data, ..., .key = "data")
 
-nest_legacy.simpr_spec(data, ..., .key = "data")
+\method{nest_legacy}{simpr_spec}(data, ..., .key = "data")
 
-nest.simpr_sims(.data, ..., .names_sep = NULL, .key = lifecycle::deprecated())
+\method{nest}{simpr_sims}(.data, ..., .names_sep = NULL, .key = lifecycle::deprecated())
 
-nest.simpr_spec(.data, ..., .names_sep = NULL, .key = lifecycle::deprecated())
+\method{nest}{simpr_spec}(.data, ..., .names_sep = NULL, .key = lifecycle::deprecated())
 
-pivot_longer.simpr_sims(
+\method{pivot_longer}{simpr_sims}(
   data,
   cols,
   names_to = "name",
@@ -795,7 +735,7 @@ pivot_longer.simpr_sims(
   ...
 )
 
-pivot_longer.simpr_spec(
+\method{pivot_longer}{simpr_spec}(
   data,
   cols,
   names_to = "name",
@@ -812,7 +752,7 @@ pivot_longer.simpr_spec(
   ...
 )
 
-pivot_wider.simpr_sims(
+\method{pivot_wider}{simpr_sims}(
   data,
   id_cols = NULL,
   names_from = NULL,
@@ -827,7 +767,7 @@ pivot_wider.simpr_sims(
   ...
 )
 
-pivot_wider.simpr_spec(
+\method{pivot_wider}{simpr_spec}(
   data,
   id_cols = NULL,
   names_from = NULL,
@@ -842,11 +782,11 @@ pivot_wider.simpr_spec(
   ...
 )
 
-replace_na.simpr_sims(data, replace, ...)
+\method{replace_na}{simpr_sims}(data, replace, ...)
 
-replace_na.simpr_spec(data, replace, ...)
+\method{replace_na}{simpr_spec}(data, replace, ...)
 
-separate_.simpr_sims(
+\method{separate_}{simpr_sims}(
   data,
   col,
   into,
@@ -858,7 +798,7 @@ separate_.simpr_sims(
   ...
 )
 
-separate_.simpr_spec(
+\method{separate_}{simpr_spec}(
   data,
   col,
   into,
@@ -870,15 +810,15 @@ separate_.simpr_spec(
   ...
 )
 
-separate_rows_.simpr_sims(data, cols, sep = "[^[:alnum:].]+", convert = FALSE)
+\method{separate_rows_}{simpr_sims}(data, cols, sep = "[^[:alnum:].]+", convert = FALSE)
 
-separate_rows_.simpr_spec(data, cols, sep = "[^[:alnum:].]+", convert = FALSE)
+\method{separate_rows_}{simpr_spec}(data, cols, sep = "[^[:alnum:].]+", convert = FALSE)
 
-separate_rows.simpr_sims(data, ..., sep = "[^[:alnum:].]+", convert = FALSE)
+\method{separate_rows}{simpr_sims}(data, ..., sep = "[^[:alnum:].]+", convert = FALSE)
 
-separate_rows.simpr_spec(data, ..., sep = "[^[:alnum:].]+", convert = FALSE)
+\method{separate_rows}{simpr_spec}(data, ..., sep = "[^[:alnum:].]+", convert = FALSE)
 
-separate.simpr_sims(
+\method{separate}{simpr_sims}(
   data,
   col,
   into,
@@ -890,7 +830,7 @@ separate.simpr_sims(
   ...
 )
 
-separate.simpr_spec(
+\method{separate}{simpr_spec}(
   data,
   col,
   into,
@@ -902,7 +842,7 @@ separate.simpr_spec(
   ...
 )
 
-spread_.simpr_sims(
+\method{spread_}{simpr_sims}(
   data,
   key_col,
   value_col,
@@ -912,7 +852,7 @@ spread_.simpr_sims(
   sep = NULL
 )
 
-spread_.simpr_spec(
+\method{spread_}{simpr_spec}(
   data,
   key_col,
   value_col,
@@ -922,53 +862,23 @@ spread_.simpr_spec(
   sep = NULL
 )
 
-spread.simpr_sims(
-  data,
-  key,
-  value,
-  fill = NA,
-  convert = FALSE,
-  drop = TRUE,
-  sep = NULL
-)
+\method{spread}{simpr_sims}(data, key, value, fill = NA, convert = FALSE, drop = TRUE, sep = NULL)
 
-spread.simpr_spec(
-  data,
-  key,
-  value,
-  fill = NA,
-  convert = FALSE,
-  drop = TRUE,
-  sep = NULL
-)
+\method{spread}{simpr_spec}(data, key, value, fill = NA, convert = FALSE, drop = TRUE, sep = NULL)
 
-unite_.simpr_sims(data, col, from, sep = "_", remove = TRUE)
+\method{unite_}{simpr_sims}(data, col, from, sep = "_", remove = TRUE)
 
-unite_.simpr_spec(data, col, from, sep = "_", remove = TRUE)
+\method{unite_}{simpr_spec}(data, col, from, sep = "_", remove = TRUE)
 
-unite.simpr_sims(data, col, ..., sep = "_", remove = TRUE, na.rm = FALSE)
+\method{unite}{simpr_sims}(data, col, ..., sep = "_", remove = TRUE, na.rm = FALSE)
 
-unite.simpr_spec(data, col, ..., sep = "_", remove = TRUE, na.rm = FALSE)
+\method{unite}{simpr_spec}(data, col, ..., sep = "_", remove = TRUE, na.rm = FALSE)
 
-unnest_legacy.simpr_sims(
-  data,
-  ...,
-  .drop = NA,
-  .id = NULL,
-  .sep = NULL,
-  .preserve = NULL
-)
+\method{unnest_legacy}{simpr_sims}(data, ..., .drop = NA, .id = NULL, .sep = NULL, .preserve = NULL)
 
-unnest_legacy.simpr_spec(
-  data,
-  ...,
-  .drop = NA,
-  .id = NULL,
-  .sep = NULL,
-  .preserve = NULL
-)
+\method{unnest_legacy}{simpr_spec}(data, ..., .drop = NA, .id = NULL, .sep = NULL, .preserve = NULL)
 
-unnest.simpr_sims(
+\method{unnest}{simpr_sims}(
   data,
   cols,
   ...,
@@ -982,7 +892,7 @@ unnest.simpr_sims(
   .preserve = lifecycle::deprecated()
 )
 
-unnest.simpr_spec(
+\method{unnest}{simpr_spec}(
   data,
   cols,
   ...,
@@ -1020,12 +930,6 @@ unnest.simpr_spec(
 \item{.dots}{See original function documentation}
 
 \item{.by_group}{See original function documentation}
-
-\item{sep}{See original function documentation}
-
-\item{width}{See original function documentation}
-
-\item{last}{See original function documentation}
 
 \item{.keep_all}{See original function documentation}
 
@@ -1162,6 +1066,8 @@ unnest.simpr_spec(
 \item{values_fill}{See original function documentation}
 
 \item{values_fn}{See original function documentation}
+
+\item{sep}{See original function documentation}
 
 \item{extra}{See original function documentation}
 

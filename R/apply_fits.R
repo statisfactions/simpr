@@ -34,6 +34,7 @@ apply_fits.simpr_spec = function(obj, .f, ..., .progress = FALSE,
 apply_fits.simpr_tibble = function(obj, .f, ..., .progress = FALSE,
                                    .options = furrr_options()) {
 
+  obj = as_tibble(obj, bare_tibble = TRUE)
   fn_map = function(...) dplyr::as_tibble(purrr::as_mapper(.f)(...))
   ## Create reference meta df for merging
   simpr_meta = obj %>%

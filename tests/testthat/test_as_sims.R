@@ -1,6 +1,4 @@
 context("simpr::as_sims")
-library(dplyr)
-library(tidyr)
 
 test_that("add_sims works with mutate", {
   set.seed(203)

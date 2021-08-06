@@ -19,7 +19,7 @@
 #' results.
 #'
 #' If, after running \code{as_sims}, you wish to
-#' return to the default behavoir to access
+#' return to the default behavior to access
 #' \code{simpr_tibble} results as a tibble with a
 #' list_column for simulation results again, run
 #' \code{as_tibble()}.
@@ -43,19 +43,5 @@ as_sims.simpr_spec = function(obj) {
 
   add_call(obj, mc, "as_sims", replace_arg = "obj")
 
-}
-
-#' @export
-#' @rdname as_sims
-as_tibble.simpr_sims = function(obj) {
-  class(obj) = setdiff(class(obj), "simpr_sims")
-  obj
-}
-
-#' @export
-mutate.simpr_sims = function(.data, ...) {
-  .data[[get_sim_name(.data)]] =  purrr::map(.data[[get_sim_name(.data)]],
-                                             mutate, ...)
-  .data
 }
 

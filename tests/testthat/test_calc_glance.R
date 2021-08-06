@@ -1,5 +1,4 @@
 context("glance_fits")
-library(dplyr)
 
 test_that("glance_fits correctly returns broom::glance output", {
   ## Reference
@@ -20,7 +19,7 @@ test_that("glance_fits correctly returns broom::glance output", {
     glance_fits
 
   broom_test =  lin_test %>%
-    select(-rep, -Source) %>%
+    dplyr::select(-rep, -Source) %>%
     as_tibble
 
     expect_equivalent(broom_test, broom_target)

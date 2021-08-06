@@ -2,13 +2,10 @@
 % Please edit documentation in R/as_sims.R
 \name{as_sims}
 \alias{as_sims}
-\alias{as_tibble.simpr_sims}
 \title{Work directly with simulation results with
 dplyr and tidyr}
 \usage{
 as_sims(obj)
-
-as_tibble.simpr_sims(obj)
 }
 \arguments{
 \item{obj}{A \code{simpr_tibble} or \code{simpr_spec} object.}
@@ -36,7 +33,7 @@ simulation result and it will be applied to all
 results.
 
 If, after running \code{as_sims}, you wish to
-return to the default behavoir to access
+return to the default behavior to access
 \code{simpr_tibble} results as a tibble with a
 list_column for simulation results again, run
 \code{as_tibble()}.

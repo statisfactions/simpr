@@ -9,6 +9,10 @@
 #' @name tidyverse_verbs
 NULL
 
+#' @importFrom dplyr add_count
+#' @export
+dplyr::add_count
+
 #' @rdname tidyverse_verbs
 #' @param x See original function documentation
 #' @param \dots See original function documentation
@@ -41,6 +45,10 @@ mc = match.call()
 
 add_call(x, mc, 'add_count', replace_arg = 2)
 }
+#' @importFrom dplyr anti_join
+#' @export
+dplyr::anti_join
+
 #' @rdname tidyverse_verbs
 #' @param x See original function documentation
 #' @param y See original function documentation
@@ -69,6 +77,10 @@ mc = match.call()
 
 add_call(x, mc, 'anti_join', replace_arg = 2)
 }
+#' @importFrom dplyr arrange_
+#' @export
+dplyr::arrange_
+
 #' @rdname tidyverse_verbs
 #' @param .data See original function documentation
 #' @param \dots See original function documentation
@@ -93,6 +105,10 @@ mc = match.call()
 
 add_call(.data, mc, 'arrange_', replace_arg = 2)
 }
+#' @importFrom dplyr arrange
+#' @export
+dplyr::arrange
+
 #' @rdname tidyverse_verbs
 #' @param .data See original function documentation
 #' @param \dots See original function documentation
@@ -117,6 +133,10 @@ mc = match.call()
 
 add_call(.data, mc, 'arrange', replace_arg = 2)
 }
+#' @importFrom dplyr as.tbl
+#' @export
+dplyr::as.tbl
+
 #' @rdname tidyverse_verbs
 #' @param x See original function documentation
 #' @param \dots See original function documentation
@@ -139,6 +159,10 @@ mc = match.call()
 
 add_call(x, mc, 'as.tbl', replace_arg = 2)
 }
+#' @importFrom dplyr auto_copy
+#' @export
+dplyr::auto_copy
+
 #' @rdname tidyverse_verbs
 #' @param x See original function documentation
 #' @param y See original function documentation
@@ -165,32 +189,10 @@ mc = match.call()
 
 add_call(x, mc, 'auto_copy', replace_arg = 2)
 }
-#' @rdname tidyverse_verbs
-#' @param x See original function documentation
-#' @param sep See original function documentation
-#' @param width See original function documentation
-#' @param last See original function documentation
+#' @importFrom dplyr collect
 #' @export
-collapse.simpr_sims = function(x, sep = "", width = Inf, last = "") {
-mc = match.call()
-mc[[1]] = quote(collapse)
+dplyr::collect
 
-x[[get_sim_name(x)]] =  purrr::map(x[[get_sim_name(x)]],
-                                           ~ eval(mc))
-x
-}
-
-#' @rdname tidyverse_verbs
-#' @param x See original function documentation
-#' @param sep See original function documentation
-#' @param width See original function documentation
-#' @param last See original function documentation
-#' @export
-collapse.simpr_spec = function(x, sep = "", width = Inf, last = "") {
-mc = match.call()
-
-add_call(x, mc, 'collapse', replace_arg = 2)
-}
 #' @rdname tidyverse_verbs
 #' @param x See original function documentation
 #' @param \dots See original function documentation
@@ -213,6 +215,10 @@ mc = match.call()
 
 add_call(x, mc, 'collect', replace_arg = 2)
 }
+#' @importFrom dplyr compute
+#' @export
+dplyr::compute
+
 #' @rdname tidyverse_verbs
 #' @param x See original function documentation
 #' @param \dots See original function documentation
@@ -235,6 +241,10 @@ mc = match.call()
 
 add_call(x, mc, 'compute', replace_arg = 2)
 }
+#' @importFrom dplyr count
+#' @export
+dplyr::count
+
 #' @rdname tidyverse_verbs
 #' @param x See original function documentation
 #' @param \dots See original function documentation
@@ -263,6 +273,10 @@ mc = match.call()
 
 add_call(x, mc, 'count', replace_arg = 2)
 }
+#' @importFrom dplyr distinct_
+#' @export
+dplyr::distinct_
+
 #' @rdname tidyverse_verbs
 #' @param .data See original function documentation
 #' @param \dots See original function documentation
@@ -289,6 +303,10 @@ mc = match.call()
 
 add_call(.data, mc, 'distinct_', replace_arg = 2)
 }
+#' @importFrom dplyr distinct
+#' @export
+dplyr::distinct
+
 #' @rdname tidyverse_verbs
 #' @param .data See original function documentation
 #' @param \dots See original function documentation
@@ -313,6 +331,10 @@ mc = match.call()
 
 add_call(.data, mc, 'distinct', replace_arg = 2)
 }
+#' @importFrom dplyr do_
+#' @export
+dplyr::do_
+
 #' @rdname tidyverse_verbs
 #' @param .data See original function documentation
 #' @param \dots See original function documentation
@@ -337,6 +359,10 @@ mc = match.call()
 
 add_call(.data, mc, 'do_', replace_arg = 2)
 }
+#' @importFrom dplyr do
+#' @export
+dplyr::do
+
 #' @rdname tidyverse_verbs
 #' @param .data See original function documentation
 #' @param \dots See original function documentation
@@ -359,6 +385,10 @@ mc = match.call()
 
 add_call(.data, mc, 'do', replace_arg = 2)
 }
+#' @importFrom dplyr dplyr_col_modify
+#' @export
+dplyr::dplyr_col_modify
+
 #' @rdname tidyverse_verbs
 #' @param data See original function documentation
 #' @param cols See original function documentation
@@ -381,6 +411,10 @@ mc = match.call()
 
 add_call(data, mc, 'dplyr_col_modify', replace_arg = 2)
 }
+#' @importFrom dplyr dplyr_reconstruct
+#' @export
+dplyr::dplyr_reconstruct
+
 #' @rdname tidyverse_verbs
 #' @param data See original function documentation
 #' @param template See original function documentation
@@ -403,6 +437,10 @@ mc = match.call()
 
 add_call(data, mc, 'dplyr_reconstruct', replace_arg = 2)
 }
+#' @importFrom dplyr dplyr_row_slice
+#' @export
+dplyr::dplyr_row_slice
+
 #' @rdname tidyverse_verbs
 #' @param data See original function documentation
 #' @param i See original function documentation
@@ -427,6 +465,10 @@ mc = match.call()
 
 add_call(data, mc, 'dplyr_row_slice', replace_arg = 2)
 }
+#' @importFrom dplyr filter_
+#' @export
+dplyr::filter_
+
 #' @rdname tidyverse_verbs
 #' @param .data See original function documentation
 #' @param \dots See original function documentation
@@ -451,6 +493,10 @@ mc = match.call()
 
 add_call(.data, mc, 'filter_', replace_arg = 2)
 }
+#' @importFrom dplyr filter
+#' @export
+dplyr::filter
+
 #' @rdname tidyverse_verbs
 #' @param .data See original function documentation
 #' @param \dots See original function documentation
@@ -475,6 +521,10 @@ mc = match.call()
 
 add_call(.data, mc, 'filter', replace_arg = 2)
 }
+#' @importFrom dplyr full_join
+#' @export
+dplyr::full_join
+
 #' @rdname tidyverse_verbs
 #' @param x See original function documentation
 #' @param y See original function documentation
@@ -509,6 +559,10 @@ mc = match.call()
 
 add_call(x, mc, 'full_join', replace_arg = 2)
 }
+#' @importFrom dplyr group_by_
+#' @export
+dplyr::group_by_
+
 #' @rdname tidyverse_verbs
 #' @param .data See original function documentation
 #' @param \dots See original function documentation
@@ -535,6 +589,10 @@ mc = match.call()
 
 add_call(.data, mc, 'group_by_', replace_arg = 2)
 }
+#' @importFrom dplyr group_by
+#' @export
+dplyr::group_by
+
 #' @rdname tidyverse_verbs
 #' @param .data See original function documentation
 #' @param \dots See original function documentation
@@ -561,6 +619,10 @@ mc = match.call()
 
 add_call(.data, mc, 'group_by', replace_arg = 2)
 }
+#' @importFrom dplyr group_data
+#' @export
+dplyr::group_data
+
 #' @rdname tidyverse_verbs
 #' @param .data See original function documentation
 #' @export
@@ -581,6 +643,10 @@ mc = match.call()
 
 add_call(.data, mc, 'group_data', replace_arg = 2)
 }
+#' @importFrom dplyr group_indices_
+#' @export
+dplyr::group_indices_
+
 #' @rdname tidyverse_verbs
 #' @param .data See original function documentation
 #' @param \dots See original function documentation
@@ -605,6 +671,10 @@ mc = match.call()
 
 add_call(.data, mc, 'group_indices_', replace_arg = 2)
 }
+#' @importFrom dplyr group_indices
+#' @export
+dplyr::group_indices
+
 #' @rdname tidyverse_verbs
 #' @param .data See original function documentation
 #' @param \dots See original function documentation
@@ -627,6 +697,10 @@ mc = match.call()
 
 add_call(.data, mc, 'group_indices', replace_arg = 2)
 }
+#' @importFrom dplyr group_keys
+#' @export
+dplyr::group_keys
+
 #' @rdname tidyverse_verbs
 #' @param .tbl See original function documentation
 #' @param \dots See original function documentation
@@ -649,6 +723,10 @@ mc = match.call()
 
 add_call(.tbl, mc, 'group_keys', replace_arg = 2)
 }
+#' @importFrom dplyr group_map
+#' @export
+dplyr::group_map
+
 #' @rdname tidyverse_verbs
 #' @param .data See original function documentation
 #' @param .f See original function documentation
@@ -675,6 +753,10 @@ mc = match.call()
 
 add_call(.data, mc, 'group_map', replace_arg = 2)
 }
+#' @importFrom dplyr group_modify
+#' @export
+dplyr::group_modify
+
 #' @rdname tidyverse_verbs
 #' @param .data See original function documentation
 #' @param .f See original function documentation
@@ -701,6 +783,10 @@ mc = match.call()
 
 add_call(.data, mc, 'group_modify', replace_arg = 2)
 }
+#' @importFrom dplyr group_nest
+#' @export
+dplyr::group_nest
+
 #' @rdname tidyverse_verbs
 #' @param .tbl See original function documentation
 #' @param \dots See original function documentation
@@ -727,6 +813,10 @@ mc = match.call()
 
 add_call(.tbl, mc, 'group_nest', replace_arg = 2)
 }
+#' @importFrom dplyr group_size
+#' @export
+dplyr::group_size
+
 #' @rdname tidyverse_verbs
 #' @param x See original function documentation
 #' @export
@@ -747,6 +837,10 @@ mc = match.call()
 
 add_call(x, mc, 'group_size', replace_arg = 2)
 }
+#' @importFrom dplyr group_split
+#' @export
+dplyr::group_split
+
 #' @rdname tidyverse_verbs
 #' @param .tbl See original function documentation
 #' @param \dots See original function documentation
@@ -771,6 +865,10 @@ mc = match.call()
 
 add_call(.tbl, mc, 'group_split', replace_arg = 2)
 }
+#' @importFrom dplyr group_trim
+#' @export
+dplyr::group_trim
+
 #' @rdname tidyverse_verbs
 #' @param .tbl See original function documentation
 #' @param .drop See original function documentation
@@ -793,6 +891,10 @@ mc = match.call()
 
 add_call(.tbl, mc, 'group_trim', replace_arg = 2)
 }
+#' @importFrom dplyr group_vars
+#' @export
+dplyr::group_vars
+
 #' @rdname tidyverse_verbs
 #' @param x See original function documentation
 #' @export
@@ -813,6 +915,10 @@ mc = match.call()
 
 add_call(x, mc, 'group_vars', replace_arg = 2)
 }
+#' @importFrom dplyr groups
+#' @export
+dplyr::groups
+
 #' @rdname tidyverse_verbs
 #' @param x See original function documentation
 #' @export
@@ -833,6 +939,10 @@ mc = match.call()
 
 add_call(x, mc, 'groups', replace_arg = 2)
 }
+#' @importFrom dplyr inner_join
+#' @export
+dplyr::inner_join
+
 #' @rdname tidyverse_verbs
 #' @param x See original function documentation
 #' @param y See original function documentation
@@ -867,6 +977,10 @@ mc = match.call()
 
 add_call(x, mc, 'inner_join', replace_arg = 2)
 }
+#' @importFrom dplyr intersect
+#' @export
+dplyr::intersect
+
 #' @rdname tidyverse_verbs
 #' @param x See original function documentation
 #' @param y See original function documentation
@@ -891,6 +1005,10 @@ mc = match.call()
 
 add_call(x, mc, 'intersect', replace_arg = 2)
 }
+#' @importFrom dplyr left_join
+#' @export
+dplyr::left_join
+
 #' @rdname tidyverse_verbs
 #' @param x See original function documentation
 #' @param y See original function documentation
@@ -925,6 +1043,10 @@ mc = match.call()
 
 add_call(x, mc, 'left_join', replace_arg = 2)
 }
+#' @importFrom dplyr mutate_
+#' @export
+dplyr::mutate_
+
 #' @rdname tidyverse_verbs
 #' @param .data See original function documentation
 #' @param \dots See original function documentation
@@ -949,6 +1071,10 @@ mc = match.call()
 
 add_call(.data, mc, 'mutate_', replace_arg = 2)
 }
+#' @importFrom dplyr mutate
+#' @export
+dplyr::mutate
+
 #' @rdname tidyverse_verbs
 #' @param .data See original function documentation
 #' @param \dots See original function documentation
@@ -971,6 +1097,10 @@ mc = match.call()
 
 add_call(.data, mc, 'mutate', replace_arg = 2)
 }
+#' @importFrom dplyr n_groups
+#' @export
+dplyr::n_groups
+
 #' @rdname tidyverse_verbs
 #' @param x See original function documentation
 #' @export
@@ -991,6 +1121,10 @@ mc = match.call()
 
 add_call(x, mc, 'n_groups', replace_arg = 2)
 }
+#' @importFrom dplyr nest_by
+#' @export
+dplyr::nest_by
+
 #' @rdname tidyverse_verbs
 #' @param .data See original function documentation
 #' @param \dots See original function documentation
@@ -1017,6 +1151,10 @@ mc = match.call()
 
 add_call(.data, mc, 'nest_by', replace_arg = 2)
 }
+#' @importFrom dplyr nest_join
+#' @export
+dplyr::nest_join
+
 #' @rdname tidyverse_verbs
 #' @param x See original function documentation
 #' @param y See original function documentation
@@ -1051,6 +1189,10 @@ mc = match.call()
 
 add_call(x, mc, 'nest_join', replace_arg = 2)
 }
+#' @importFrom dplyr pull
+#' @export
+dplyr::pull
+
 #' @rdname tidyverse_verbs
 #' @param .data See original function documentation
 #' @param var See original function documentation
@@ -1077,6 +1219,10 @@ mc = match.call()
 
 add_call(.data, mc, 'pull', replace_arg = 2)
 }
+#' @importFrom dplyr relocate
+#' @export
+dplyr::relocate
+
 #' @rdname tidyverse_verbs
 #' @param .data See original function documentation
 #' @param \dots See original function documentation
@@ -1103,6 +1249,10 @@ mc = match.call()
 
 add_call(.data, mc, 'relocate', replace_arg = 2)
 }
+#' @importFrom dplyr rename_
+#' @export
+dplyr::rename_
+
 #' @rdname tidyverse_verbs
 #' @param .data See original function documentation
 #' @param \dots See original function documentation
@@ -1127,6 +1277,10 @@ mc = match.call()
 
 add_call(.data, mc, 'rename_', replace_arg = 2)
 }
+#' @importFrom dplyr rename_with
+#' @export
+dplyr::rename_with
+
 #' @rdname tidyverse_verbs
 #' @param .data See original function documentation
 #' @param .fn See original function documentation
@@ -1153,6 +1307,10 @@ mc = match.call()
 
 add_call(.data, mc, 'rename_with', replace_arg = 2)
 }
+#' @importFrom dplyr rename
+#' @export
+dplyr::rename
+
 #' @rdname tidyverse_verbs
 #' @param .data See original function documentation
 #' @param \dots See original function documentation
@@ -1175,6 +1333,10 @@ mc = match.call()
 
 add_call(.data, mc, 'rename', replace_arg = 2)
 }
+#' @importFrom dplyr right_join
+#' @export
+dplyr::right_join
+
 #' @rdname tidyverse_verbs
 #' @param x See original function documentation
 #' @param y See original function documentation
@@ -1209,6 +1371,10 @@ mc = match.call()
 
 add_call(x, mc, 'right_join', replace_arg = 2)
 }
+#' @importFrom dplyr rows_delete
+#' @export
+dplyr::rows_delete
+
 #' @rdname tidyverse_verbs
 #' @param x See original function documentation
 #' @param y See original function documentation
@@ -1239,6 +1405,10 @@ mc = match.call()
 
 add_call(x, mc, 'rows_delete', replace_arg = 2)
 }
+#' @importFrom dplyr rows_insert
+#' @export
+dplyr::rows_insert
+
 #' @rdname tidyverse_verbs
 #' @param x See original function documentation
 #' @param y See original function documentation
@@ -1269,6 +1439,10 @@ mc = match.call()
 
 add_call(x, mc, 'rows_insert', replace_arg = 2)
 }
+#' @importFrom dplyr rows_patch
+#' @export
+dplyr::rows_patch
+
 #' @rdname tidyverse_verbs
 #' @param x See original function documentation
 #' @param y See original function documentation
@@ -1299,6 +1473,10 @@ mc = match.call()
 
 add_call(x, mc, 'rows_patch', replace_arg = 2)
 }
+#' @importFrom dplyr rows_update
+#' @export
+dplyr::rows_update
+
 #' @rdname tidyverse_verbs
 #' @param x See original function documentation
 #' @param y See original function documentation
@@ -1329,6 +1507,10 @@ mc = match.call()
 
 add_call(x, mc, 'rows_update', replace_arg = 2)
 }
+#' @importFrom dplyr rows_upsert
+#' @export
+dplyr::rows_upsert
+
 #' @rdname tidyverse_verbs
 #' @param x See original function documentation
 #' @param y See original function documentation
@@ -1359,6 +1541,10 @@ mc = match.call()
 
 add_call(x, mc, 'rows_upsert', replace_arg = 2)
 }
+#' @importFrom dplyr rowwise
+#' @export
+dplyr::rowwise
+
 #' @rdname tidyverse_verbs
 #' @param data See original function documentation
 #' @param \dots See original function documentation
@@ -1381,6 +1567,10 @@ mc = match.call()
 
 add_call(data, mc, 'rowwise', replace_arg = 2)
 }
+#' @importFrom dplyr same_src
+#' @export
+dplyr::same_src
+
 #' @rdname tidyverse_verbs
 #' @param x See original function documentation
 #' @param y See original function documentation
@@ -1403,6 +1593,10 @@ mc = match.call()
 
 add_call(x, mc, 'same_src', replace_arg = 2)
 }
+#' @importFrom dplyr sample_frac
+#' @export
+dplyr::sample_frac
+
 #' @rdname tidyverse_verbs
 #' @param tbl See original function documentation
 #' @param size See original function documentation
@@ -1435,6 +1629,10 @@ mc = match.call()
 
 add_call(tbl, mc, 'sample_frac', replace_arg = 2)
 }
+#' @importFrom dplyr sample_n
+#' @export
+dplyr::sample_n
+
 #' @rdname tidyverse_verbs
 #' @param tbl See original function documentation
 #' @param size See original function documentation
@@ -1467,6 +1665,10 @@ mc = match.call()
 
 add_call(tbl, mc, 'sample_n', replace_arg = 2)
 }
+#' @importFrom dplyr select_
+#' @export
+dplyr::select_
+
 #' @rdname tidyverse_verbs
 #' @param .data See original function documentation
 #' @param \dots See original function documentation
@@ -1491,6 +1693,10 @@ mc = match.call()
 
 add_call(.data, mc, 'select_', replace_arg = 2)
 }
+#' @importFrom dplyr select
+#' @export
+dplyr::select
+
 #' @rdname tidyverse_verbs
 #' @param .data See original function documentation
 #' @param \dots See original function documentation
@@ -1513,6 +1719,10 @@ mc = match.call()
 
 add_call(.data, mc, 'select', replace_arg = 2)
 }
+#' @importFrom dplyr semi_join
+#' @export
+dplyr::semi_join
+
 #' @rdname tidyverse_verbs
 #' @param x See original function documentation
 #' @param y See original function documentation
@@ -1541,6 +1751,10 @@ mc = match.call()
 
 add_call(x, mc, 'semi_join', replace_arg = 2)
 }
+#' @importFrom dplyr setdiff
+#' @export
+dplyr::setdiff
+
 #' @rdname tidyverse_verbs
 #' @param x See original function documentation
 #' @param y See original function documentation
@@ -1565,6 +1779,10 @@ mc = match.call()
 
 add_call(x, mc, 'setdiff', replace_arg = 2)
 }
+#' @importFrom dplyr setequal
+#' @export
+dplyr::setequal
+
 #' @rdname tidyverse_verbs
 #' @param x See original function documentation
 #' @param y See original function documentation
@@ -1589,6 +1807,10 @@ mc = match.call()
 
 add_call(x, mc, 'setequal', replace_arg = 2)
 }
+#' @importFrom dplyr slice_
+#' @export
+dplyr::slice_
+
 #' @rdname tidyverse_verbs
 #' @param .data See original function documentation
 #' @param \dots See original function documentation
@@ -1613,6 +1835,10 @@ mc = match.call()
 
 add_call(.data, mc, 'slice_', replace_arg = 2)
 }
+#' @importFrom dplyr slice_head
+#' @export
+dplyr::slice_head
+
 #' @rdname tidyverse_verbs
 #' @param .data See original function documentation
 #' @param \dots See original function documentation
@@ -1639,6 +1865,10 @@ mc = match.call()
 
 add_call(.data, mc, 'slice_head', replace_arg = 2)
 }
+#' @importFrom dplyr slice_max
+#' @export
+dplyr::slice_max
+
 #' @rdname tidyverse_verbs
 #' @param .data See original function documentation
 #' @param order_by See original function documentation
@@ -1669,6 +1899,10 @@ mc = match.call()
 
 add_call(.data, mc, 'slice_max', replace_arg = 2)
 }
+#' @importFrom dplyr slice_min
+#' @export
+dplyr::slice_min
+
 #' @rdname tidyverse_verbs
 #' @param .data See original function documentation
 #' @param order_by See original function documentation
@@ -1699,6 +1933,10 @@ mc = match.call()
 
 add_call(.data, mc, 'slice_min', replace_arg = 2)
 }
+#' @importFrom dplyr slice_sample
+#' @export
+dplyr::slice_sample
+
 #' @rdname tidyverse_verbs
 #' @param .data See original function documentation
 #' @param \dots See original function documentation
@@ -1731,6 +1969,10 @@ mc = match.call()
 
 add_call(.data, mc, 'slice_sample', replace_arg = 2)
 }
+#' @importFrom dplyr slice_tail
+#' @export
+dplyr::slice_tail
+
 #' @rdname tidyverse_verbs
 #' @param .data See original function documentation
 #' @param \dots See original function documentation
@@ -1757,6 +1999,10 @@ mc = match.call()
 
 add_call(.data, mc, 'slice_tail', replace_arg = 2)
 }
+#' @importFrom dplyr slice
+#' @export
+dplyr::slice
+
 #' @rdname tidyverse_verbs
 #' @param .data See original function documentation
 #' @param \dots See original function documentation
@@ -1781,6 +2027,10 @@ mc = match.call()
 
 add_call(.data, mc, 'slice', replace_arg = 2)
 }
+#' @importFrom dplyr summarise_
+#' @export
+dplyr::summarise_
+
 #' @rdname tidyverse_verbs
 #' @param .data See original function documentation
 #' @param \dots See original function documentation
@@ -1805,6 +2055,10 @@ mc = match.call()
 
 add_call(.data, mc, 'summarise_', replace_arg = 2)
 }
+#' @importFrom dplyr summarise
+#' @export
+dplyr::summarise
+
 #' @rdname tidyverse_verbs
 #' @param .data See original function documentation
 #' @param \dots See original function documentation
@@ -1829,6 +2083,10 @@ mc = match.call()
 
 add_call(.data, mc, 'summarise', replace_arg = 2)
 }
+#' @importFrom dplyr tally
+#' @export
+dplyr::tally
+
 #' @rdname tidyverse_verbs
 #' @param x See original function documentation
 #' @param wt See original function documentation
@@ -1855,6 +2113,10 @@ mc = match.call()
 
 add_call(x, mc, 'tally', replace_arg = 2)
 }
+#' @importFrom dplyr tbl_vars
+#' @export
+dplyr::tbl_vars
+
 #' @rdname tidyverse_verbs
 #' @param x See original function documentation
 #' @export
@@ -1875,6 +2137,10 @@ mc = match.call()
 
 add_call(x, mc, 'tbl_vars', replace_arg = 2)
 }
+#' @importFrom dplyr transmute_
+#' @export
+dplyr::transmute_
+
 #' @rdname tidyverse_verbs
 #' @param .data See original function documentation
 #' @param \dots See original function documentation
@@ -1899,6 +2165,10 @@ mc = match.call()
 
 add_call(.data, mc, 'transmute_', replace_arg = 2)
 }
+#' @importFrom dplyr transmute
+#' @export
+dplyr::transmute
+
 #' @rdname tidyverse_verbs
 #' @param .data See original function documentation
 #' @param \dots See original function documentation
@@ -1921,6 +2191,10 @@ mc = match.call()
 
 add_call(.data, mc, 'transmute', replace_arg = 2)
 }
+#' @importFrom dplyr ungroup
+#' @export
+dplyr::ungroup
+
 #' @rdname tidyverse_verbs
 #' @param x See original function documentation
 #' @param \dots See original function documentation
@@ -1943,6 +2217,10 @@ mc = match.call()
 
 add_call(x, mc, 'ungroup', replace_arg = 2)
 }
+#' @importFrom dplyr union_all
+#' @export
+dplyr::union_all
+
 #' @rdname tidyverse_verbs
 #' @param x See original function documentation
 #' @param y See original function documentation
@@ -1967,6 +2245,10 @@ mc = match.call()
 
 add_call(x, mc, 'union_all', replace_arg = 2)
 }
+#' @importFrom dplyr union
+#' @export
+dplyr::union
+
 #' @rdname tidyverse_verbs
 #' @param x See original function documentation
 #' @param y See original function documentation
@@ -1991,6 +2273,10 @@ mc = match.call()
 
 add_call(x, mc, 'union', replace_arg = 2)
 }
+#' @importFrom tidyr complete_
+#' @export
+tidyr::complete_
+
 #' @rdname tidyverse_verbs
 #' @param data See original function documentation
 #' @param cols See original function documentation
@@ -2017,6 +2303,10 @@ mc = match.call()
 
 add_call(data, mc, 'complete_', replace_arg = 2)
 }
+#' @importFrom tidyr complete
+#' @export
+tidyr::complete
+
 #' @rdname tidyverse_verbs
 #' @param data See original function documentation
 #' @param \dots See original function documentation
@@ -2041,6 +2331,10 @@ mc = match.call()
 
 add_call(data, mc, 'complete', replace_arg = 2)
 }
+#' @importFrom tidyr drop_na_
+#' @export
+tidyr::drop_na_
+
 #' @rdname tidyverse_verbs
 #' @param data See original function documentation
 #' @param vars See original function documentation
@@ -2063,6 +2357,10 @@ mc = match.call()
 
 add_call(data, mc, 'drop_na_', replace_arg = 2)
 }
+#' @importFrom tidyr drop_na
+#' @export
+tidyr::drop_na
+
 #' @rdname tidyverse_verbs
 #' @param data See original function documentation
 #' @param \dots See original function documentation
@@ -2085,6 +2383,10 @@ mc = match.call()
 
 add_call(data, mc, 'drop_na', replace_arg = 2)
 }
+#' @importFrom tidyr expand_
+#' @export
+tidyr::expand_
+
 #' @rdname tidyverse_verbs
 #' @param data See original function documentation
 #' @param dots See original function documentation
@@ -2109,6 +2411,10 @@ mc = match.call()
 
 add_call(data, mc, 'expand_', replace_arg = 2)
 }
+#' @importFrom tidyr expand
+#' @export
+tidyr::expand
+
 #' @rdname tidyverse_verbs
 #' @param data See original function documentation
 #' @param \dots See original function documentation
@@ -2133,6 +2439,10 @@ mc = match.call()
 
 add_call(data, mc, 'expand', replace_arg = 2)
 }
+#' @importFrom tidyr extract_
+#' @export
+tidyr::extract_
+
 #' @rdname tidyverse_verbs
 #' @param data See original function documentation
 #' @param col See original function documentation
@@ -2167,6 +2477,10 @@ mc = match.call()
 
 add_call(data, mc, 'extract_', replace_arg = 2)
 }
+#' @importFrom tidyr extract
+#' @export
+tidyr::extract
+
 #' @rdname tidyverse_verbs
 #' @param data See original function documentation
 #' @param col See original function documentation
@@ -2201,6 +2515,10 @@ mc = match.call()
 
 add_call(data, mc, 'extract', replace_arg = 2)
 }
+#' @importFrom tidyr fill_
+#' @export
+tidyr::fill_
+
 #' @rdname tidyverse_verbs
 #' @param data See original function documentation
 #' @param fill_cols See original function documentation
@@ -2225,6 +2543,10 @@ mc = match.call()
 
 add_call(data, mc, 'fill_', replace_arg = 2)
 }
+#' @importFrom tidyr fill
+#' @export
+tidyr::fill
+
 #' @rdname tidyverse_verbs
 #' @param data See original function documentation
 #' @param \dots See original function documentation
@@ -2251,6 +2573,10 @@ mc = match.call()
 
 add_call(data, mc, 'fill', replace_arg = 2)
 }
+#' @importFrom tidyr gather_
+#' @export
+tidyr::gather_
+
 #' @rdname tidyverse_verbs
 #' @param data See original function documentation
 #' @param key_col See original function documentation
@@ -2285,6 +2611,10 @@ mc = match.call()
 
 add_call(data, mc, 'gather_', replace_arg = 2)
 }
+#' @importFrom tidyr gather
+#' @export
+tidyr::gather
+
 #' @rdname tidyverse_verbs
 #' @param data See original function documentation
 #' @param key See original function documentation
@@ -2319,6 +2649,10 @@ mc = match.call()
 
 add_call(data, mc, 'gather', replace_arg = 2)
 }
+#' @importFrom tidyr nest_legacy
+#' @export
+tidyr::nest_legacy
+
 #' @rdname tidyverse_verbs
 #' @param data See original function documentation
 #' @param \dots See original function documentation
@@ -2343,6 +2677,10 @@ mc = match.call()
 
 add_call(data, mc, 'nest_legacy', replace_arg = 2)
 }
+#' @importFrom tidyr nest
+#' @export
+tidyr::nest
+
 #' @rdname tidyverse_verbs
 #' @param .data See original function documentation
 #' @param \dots See original function documentation
@@ -2369,6 +2707,10 @@ mc = match.call()
 
 add_call(.data, mc, 'nest', replace_arg = 2)
 }
+#' @importFrom tidyr pivot_longer
+#' @export
+tidyr::pivot_longer
+
 #' @rdname tidyverse_verbs
 #' @param data See original function documentation
 #' @param cols See original function documentation
@@ -2423,6 +2765,10 @@ mc = match.call()
 
 add_call(data, mc, 'pivot_longer', replace_arg = 2)
 }
+#' @importFrom tidyr pivot_wider
+#' @export
+tidyr::pivot_wider
+
 #' @rdname tidyverse_verbs
 #' @param data See original function documentation
 #' @param id_cols See original function documentation
@@ -2471,6 +2817,10 @@ mc = match.call()
 
 add_call(data, mc, 'pivot_wider', replace_arg = 2)
 }
+#' @importFrom tidyr replace_na
+#' @export
+tidyr::replace_na
+
 #' @rdname tidyverse_verbs
 #' @param data See original function documentation
 #' @param replace See original function documentation
@@ -2495,6 +2845,10 @@ mc = match.call()
 
 add_call(data, mc, 'replace_na', replace_arg = 2)
 }
+#' @importFrom tidyr separate_
+#' @export
+tidyr::separate_
+
 #' @rdname tidyverse_verbs
 #' @param data See original function documentation
 #' @param col See original function documentation
@@ -2533,6 +2887,10 @@ mc = match.call()
 
 add_call(data, mc, 'separate_', replace_arg = 2)
 }
+#' @importFrom tidyr separate_rows_
+#' @export
+tidyr::separate_rows_
+
 #' @rdname tidyverse_verbs
 #' @param data See original function documentation
 #' @param cols See original function documentation
@@ -2559,6 +2917,10 @@ mc = match.call()
 
 add_call(data, mc, 'separate_rows_', replace_arg = 2)
 }
+#' @importFrom tidyr separate_rows
+#' @export
+tidyr::separate_rows
+
 #' @rdname tidyverse_verbs
 #' @param data See original function documentation
 #' @param \dots See original function documentation
@@ -2585,6 +2947,10 @@ mc = match.call()
 
 add_call(data, mc, 'separate_rows', replace_arg = 2)
 }
+#' @importFrom tidyr separate
+#' @export
+tidyr::separate
+
 #' @rdname tidyverse_verbs
 #' @param data See original function documentation
 #' @param col See original function documentation
@@ -2623,6 +2989,10 @@ mc = match.call()
 
 add_call(data, mc, 'separate', replace_arg = 2)
 }
+#' @importFrom tidyr spread_
+#' @export
+tidyr::spread_
+
 #' @rdname tidyverse_verbs
 #' @param data See original function documentation
 #' @param key_col See original function documentation
@@ -2657,6 +3027,10 @@ mc = match.call()
 
 add_call(data, mc, 'spread_', replace_arg = 2)
 }
+#' @importFrom tidyr spread
+#' @export
+tidyr::spread
+
 #' @rdname tidyverse_verbs
 #' @param data See original function documentation
 #' @param key See original function documentation
@@ -2691,6 +3065,10 @@ mc = match.call()
 
 add_call(data, mc, 'spread', replace_arg = 2)
 }
+#' @importFrom tidyr unite_
+#' @export
+tidyr::unite_
+
 #' @rdname tidyverse_verbs
 #' @param data See original function documentation
 #' @param col See original function documentation
@@ -2719,6 +3097,10 @@ mc = match.call()
 
 add_call(data, mc, 'unite_', replace_arg = 2)
 }
+#' @importFrom tidyr unite
+#' @export
+tidyr::unite
+
 #' @rdname tidyverse_verbs
 #' @param data See original function documentation
 #' @param col See original function documentation
@@ -2749,6 +3131,10 @@ mc = match.call()
 
 add_call(data, mc, 'unite', replace_arg = 2)
 }
+#' @importFrom tidyr unnest_legacy
+#' @export
+tidyr::unnest_legacy
+
 #' @rdname tidyverse_verbs
 #' @param data See original function documentation
 #' @param \dots See original function documentation
@@ -2781,6 +3167,10 @@ mc = match.call()
 
 add_call(data, mc, 'unnest_legacy', replace_arg = 2)
 }
+#' @importFrom tidyr unnest
+#' @export
+tidyr::unnest
+
 #' @rdname tidyverse_verbs
 #' @param data See original function documentation
 #' @param cols See original function documentation

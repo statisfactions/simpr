@@ -1,5 +1,4 @@
 context("simpr::tidy_fits")
-library(dplyr)
 
 test_that("Calc tidy terms match terms from fit",
           {
@@ -14,18 +13,18 @@ test_that("Calc tidy terms match terms from fit",
               tidy_fits
 
             lm_tidy_unique_terms = lm_tidy %>%
-              count(n, rep, term, name = "count")
+              dplyr::count(n, rep, term, name = "count")
             expect_true(all(lm_tidy_unique_terms$count == 1))
 
             lm_fit_coef = purrr::map_df(lm_fit$lm, ~ coef(.) %>% t %>%
                   as.data.frame(check.names = F)) %>%
-              bind_cols(lm_fit %>% select(n, rep), .) %>%
-              arrange(n, rep)
+              dplyr::bind_cols(lm_fit %>% as_tibble %>% select(n, rep), .) %>%
+              dplyr::arrange(n, rep)
 
             lm_tidy_coef = lm_tidy %>%
-              select(n, rep, term, estimate) %>%
+              dplyr::select(n, rep, term, estimate) %>%
               tidyr::spread(term, estimate) %>%
-              arrange(n, rep)
+              dplyr::arrange(n, rep)
 
             expect_equivalent(lm_fit_coef, lm_tidy_coef)
           })
@@ -61,8 +60,8 @@ test_that("Each iteration of simulation has model terms listed correctly in tidy
   ## Count how many times a given combo of metaparameters and rep occur;
   ## we expect ONLY ONE each time
   tidy_unique_terms = simpr_calc %>%
-    group_by_at(.vars = c(names(meta_list), "term")) %>%
-    tally(name = "count")
+    dplyr::group_by_at(.vars = c(names(meta_list), "term")) %>%
+    dplyr::tally(name = "count")
   expect_true(all(tidy_unique_terms$count == 1))
 
 })

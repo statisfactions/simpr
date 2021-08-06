@@ -10,6 +10,8 @@ df_methods = map(search_pkgs, ~ ls(getNamespace(.x), all.names = TRUE) %>%
 
 ## Only include methods for generics that are actually exported in these packages
 df_methods_package = imap(df_methods, ~ .x[.x %in% ls(glue("package:{.y}"))])
+## Exclude "collapse", not needed and causing issues
+df_methods_package$dplyr = setdiff(df_methods_package$dplyr, "collapse")
 
 ## Get the function signature for a function x, specified as a character string
 getsignature = function(x) {
@@ -38,11 +40,13 @@ arg1 = function(x) {
   names(formals(x))[1]
 }
 
-
-
 build_simpr_methods = function(x, pkg) {
   cat(pkg, x, "\n")
   glue("
+  #' @importFrom {pkg} {x}
+  #' @export
+  {pkg}::{x}
+
   #' @rdname tidyverse_verbs
   {get_params(x)}
   #' @export
