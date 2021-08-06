@@ -3,17 +3,19 @@ library(dplyr)
 
 test_that("glance_fits correctly returns broom::glance output", {
   ## Reference
-  set.seed(100)
-  x1 = 2 + rnorm(10)
-  x2 = x1 + rnorm(10)
+  set.seed(100, kind = "L'Ecuyer-CMRG")
+  broom_target = furrr::future_map(1, function(x) {
+    x1 = 2 + rnorm(10)
+    x2 = x1 + rnorm(10)
 
-  broom_target = broom::glance(lm(x2 ~ x1))
+    broom::glance(lm(x2 ~ x1))
+  }, .options = furrr_options(seed = TRUE))[[1]]
 
   ## glance_fits
-  set.seed(100)
+  set.seed(100, kind = "L'Ecuyer-CMRG")
   lin_test = blueprint(y1 = ~ 2 + rnorm(10),
             y2 = ~ y1 + rnorm(10)) %>%
-    produce_sims(1) %>%
+    produce_sims(1, .options = furrr_options(seed = TRUE)) %>%
     fit(linear = ~ lm(y2 ~ y1, data = .)) %>%
     glance_fits
 

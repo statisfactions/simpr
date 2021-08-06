@@ -1,7 +1,5 @@
 context("simpr::gen")
-library(MASS)
 library(dplyr)
-select = dplyr::select
 
 ## Metaparameters and the global environment --------------
 
@@ -55,7 +53,7 @@ test_that("Gen runs without warnings or messages", {
 ## meta can handle lists which can contain multiple matrices, etc.
 
 test_that("meta() can handle lists", {
-  expect_silent(meta_list_out <- blueprint(x = ~ mvrnorm(n, rep(0, 2), Sigma = S)[, 2, drop = TRUE],
+  expect_silent(meta_list_out <- blueprint(x = ~ MASS::mvrnorm(n, rep(0, 2), Sigma = S)[, 2, drop = TRUE],
             y = ~ x + rnorm(n)) %>%
     meta(n = c(10, 20, 30),
          S = list(independent = diag(2), correlated = diag(2) + 2)) %>%
@@ -67,17 +65,16 @@ test_that("meta() can handle lists", {
 
 ## Generate multiple variables from a single command -------------------
 
-set.seed(100)
-
-mat_1 = MASS::mvrnorm(30, rep(0, 10), Sigma = diag(10))
-mat_2 = mat_1
-
+set.seed(100, kind = "L'Ecuyer-CMRG")
+mat_1 = furrr::future_map(1, ~ MASS::mvrnorm(30, rep(0, 10), Sigma = diag(10)),
+                                           .options = furrr::furrr_options(seed = TRUE))[[1]]
 
 colnames(mat_1) = sprintf("x_%02.0f", 1:10)
+mat_2 = mat_1
 colnames(mat_2) = letters[1:10]
 
 test_that("Autonumber when generating multiple columns with named argument", {
-  set.seed(100)
+  set.seed(100, kind = "L'Ecuyer-CMRG")
   auto_out = blueprint(x = ~ MASS::mvrnorm(30, rep(0, 10), Sigma = diag(10)), sep = "_") %>%
     meta(n = 10) %>%
     produce_sims(1)
@@ -91,7 +88,7 @@ test_that("Can refer to autonumbered columns in blueprint()", {
     mutate (y = x_01 + x_02)
 
   set.seed(100)
-  auto_refer = blueprint(x = ~ mvrnorm(30, rep(0, 10), Sigma = diag(10)), sep = "_",
+  auto_refer = blueprint(x = ~ MASS::mvrnorm(30, rep(0, 10), Sigma = diag(10)), sep = "_",
                          y = ~ x_01 + x_02) %>%
     meta(n = 10) %>%
     produce_sims(1)
@@ -113,7 +110,7 @@ test_that("Can refer to two-sided formula columns as arguments in blueprint()", 
     mutate (y = a + b)
 
   set.seed(100)
-  cbind_refer = blueprint(cbind(a, b, c, d, e, f, g, h, i, j) ~ mvrnorm(30, rep(0, 10), Sigma = diag(10)),
+  cbind_refer = blueprint(cbind(a, b, c, d, e, f, g, h, i, j) ~ MASS::mvrnorm(30, rep(0, 10), Sigma = diag(10)),
                           y = ~ a + b) %>%
     produce_sims(1)
 
