@@ -13,8 +13,8 @@ simulated data from
 \code{\link{include}} object}
 
 \item{...}{\code{purrr}-style formula functions
-used for computing on the simulated data.
-See \emph{Details} and \emph{Examples}.}
+used for computing on the simulated data. See
+\emph{Details} and \emph{Examples}.}
 
 \item{.progress}{A logical, for whether or not
 to print a progress bar for multiprocess,
@@ -29,8 +29,8 @@ to
 \value{
 a \code{simpr_gen} object with
   additional list-columns for the output of the
-  provided functions (e.g. model outputs).
-  Just like the output of
+  provided functions (e.g. model outputs). Just
+  like the output of
   \code{\link{produce_sims}}, there is one row
   per repetition per combination of
   metaparameters, and the columns are the
@@ -58,15 +58,19 @@ parameters from the object, based on
 \code{broom} package.
 
 Similar to \code{\link{blueprint}}, the
-\code{\dots} arguments uses an efficient syntax
-to specify custom functions for fitting models
-to the data. These functions will usually be on
-the simulated data -- which is indicated by
-\code{.} in the formula function, e.g.
-\code{linear_model = ~lm(y ~ x + z, data = .)}
-computes linear models on each simulation cell
-if there are variables x, y, and z specified in
-\code{blueprint}.
+\code{\dots} arguments uses \code{purrr}-style
+formula functions to specify fitting models to
+the data. The functions are computed within
+each simulation cell, so dataset names are
+often unnecessary: for instance, to compute
+regressions on each cell, you could specify
+\code{fit(linear_model = ~lm(y ~ x + z)}.  If
+your modeling function requires a reference to
+the full dataset, use \code{.}, e.g.
+\code{fit(linear_model = ~lm(y ~ x + z, data =
+.)}. These equivalent specifications would compute linear models on each
+simulation cell if there are variables x, y,
+and z specified in \code{blueprint}.
 }
 \examples{
 ## Generate data to fit models
@@ -79,7 +83,7 @@ simple_linear_data = blueprint(x1 = ~ 2 + rnorm(n),
 linear_fit = simple_linear_data \%>\%
   fit(linear = ~lm(y ~ x1, data = .))
 
-linear_fit
+linear_fit # first fit element also prints
 
 ## Each element of $linear is a model object
 linear_fit$linear
@@ -103,18 +107,12 @@ multi_fit \%>\%
 multi_fit \%>\%
   glance_fits
 
-## We can also use .$colname syntax in fit(), e.g.,:
-linear_fit = simple_linear_data \%>\%
-  fit(linear = ~lm(.$y ~ .$x1)) # no need for "data=."
-
 ## Fit functions do not actually need to be any particular kind of model, they
 ## can be any arbitrary function. However, not all functions will lead to useful
 ## output with tidy_fits and glance_fits.
 add_five_data = simple_linear_data \%>\%
-  fit(add_five = ~ tibble::as_tibble(. + 5))
+  fit(add_five = ~ . + 5)
 
 add_five_data
-
-add_five_data$add_five
 
 }

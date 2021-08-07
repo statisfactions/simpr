@@ -39,22 +39,28 @@ to print a progress bar for multiprocess,
 multisession, and multicore plans .}
 
 \item{.options}{The \code{future} specific
-options to use with the workers when using futures. This must be
-the result from a call to
-\code{\link[furrr:furrr_options]{furrr_options(seed = TRUE)}}.}
+options to use with the workers when using
+futures. This must be the result from a call
+to
+\code{\link[furrr:furrr_options]{furrr_options(seed
+ = TRUE)}}.}
 }
 \value{
-a \code{simpr_tibble} object, which is
-  a tibble with a row for each repetition (a
-  total of \code{rep} repetitions) for each
-  combination of metaparameters and some extra
-  metadata used by \code{\link{fit}}.  The
-  columns are \code{rep} for the repetition
-  number, the names of the metaparameters, and
-  a list-column (named by the argument
+a \code{\link{simpr_sims}}
+  object, which is a tibble with a row for each
+  repetition (a total of \code{rep}
+  repetitions) for each combination of
+  metaparameters and some extra metadata used
+  by \code{\link{fit}}.  The columns are
+  \code{rep} for the repetition number, the
+  names of the metaparameters, and a
+  list-column (named by the argument
   \code{sim_name}) containing the dataset for
   each repetition and metaparameter
-  combination.
+  combination. \code{simpr_sims} objects can be
+  manipulated elementwise by \code{dplyr} and
+  \code{tidyr} verbs: the command is applied to
+  each element of the simulation list-column.
 }
 \description{
 Use specification from \code{\link{blueprint}}
@@ -82,11 +88,12 @@ meta_list_out = blueprint(x = ~ MASS::mvrnorm(n, rep(0, 2), Sigma = S)) \%>\%
        S = list(independent = diag(2), correlated = diag(2) + 2)) \%>\%
   produce_sims(3)
 
- ## View overall structure of the result
+ ## View overall structure of the result and a single simulation output
  meta_list_out
 
- ## View an individual dataset of the resulting simulation
- meta_list_out$sim[[1]]
+ ## Tidyverse verbs change each simulation output
+ meta_list_out \%>\%
+   mutate(y = x_1 + x_2)
 
  ## Changing reps will change the number of replications and thus the number of
  ## rows in the output

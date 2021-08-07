@@ -31,37 +31,44 @@
 #'   to print a progress bar for multiprocess,
 #'   multisession, and multicore plans .
 #' @param .options The \code{future} specific
-#'   options to use with the workers when using futures. This must be
-#'   the result from a call to
-#'   \code{\link[furrr:furrr_options]{furrr_options(seed = TRUE)}}.
+#'   options to use with the workers when using
+#'   futures. This must be the result from a call
+#'   to
+#'   \code{\link[furrr:furrr_options]{furrr_options(seed
+#'    = TRUE)}}.
 #' @seealso \code{\link{blueprint}} and
 #'   \code{\link{meta}} for examples of how these
 #'   functions affect the output of
 #'   \code{produce_sims}. See the \code{furrr}
 #'   website for more information on working with
 #'   futures: \url{https://furrr.futureverse.org/}
-#' @return a \code{simpr_tibble} object, which is
-#'   a tibble with a row for each repetition (a
-#'   total of \code{rep} repetitions) for each
-#'   combination of metaparameters and some extra
-#'   metadata used by \code{\link{fit}}.  The
-#'   columns are \code{rep} for the repetition
-#'   number, the names of the metaparameters, and
-#'   a list-column (named by the argument
+#' @return a \code{\link{simpr_sims}}
+#'   object, which is a tibble with a row for each
+#'   repetition (a total of \code{rep}
+#'   repetitions) for each combination of
+#'   metaparameters and some extra metadata used
+#'   by \code{\link{fit}}.  The columns are
+#'   \code{rep} for the repetition number, the
+#'   names of the metaparameters, and a
+#'   list-column (named by the argument
 #'   \code{sim_name}) containing the dataset for
 #'   each repetition and metaparameter
-#'   combination.
+#'   combination. \code{simpr_sims} objects can be
+#'   manipulated elementwise by \code{dplyr} and
+#'   \code{tidyr} verbs: the command is applied to
+#'   each element of the simulation list-column.
 #' @examples
 #' meta_list_out = blueprint(x = ~ MASS::mvrnorm(n, rep(0, 2), Sigma = S)) %>%
 #'   meta(n = c(10, 20, 30),
 #'        S = list(independent = diag(2), correlated = diag(2) + 2)) %>%
 #'   produce_sims(3)
 #'
-#'  ## View overall structure of the result
+#'  ## View overall structure of the result and a single simulation output
 #'  meta_list_out
 #'
-#'  ## View an individual dataset of the resulting simulation
-#'  meta_list_out$sim[[1]]
+#'  ## Tidyverse verbs change each simulation output
+#'  meta_list_out %>%
+#'    mutate(y = x_1 + x_2)
 #'
 #'  ## Changing reps will change the number of replications and thus the number of
 #'  ## rows in the output

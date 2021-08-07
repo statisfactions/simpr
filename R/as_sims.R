@@ -26,6 +26,7 @@
 #'
 #' @param obj A \code{simpr_tibble} or \code{simpr_spec} object.
 #' @return A \code{simpr_sims} object for use with dplyr and tidyr verbs.
+#' @aliases simpr_sims
 #' @export
 as_sims = function(obj) {
  UseMethod("as_sims")

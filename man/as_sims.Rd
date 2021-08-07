@@ -2,6 +2,7 @@
 % Please edit documentation in R/as_sims.R
 \name{as_sims}
 \alias{as_sims}
+\alias{simpr_sims}
 \title{Work directly with simulation results with
 dplyr and tidyr}
 \usage{

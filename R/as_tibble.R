@@ -21,6 +21,8 @@
 #' @param .rows Ignored.
 #' @param .name_repair Ignored.
 #' @param rownames Ignored.
+#' @return A tibble with the metaparameters and simulation results
+#' @aliases simpr_tibble
 #' @export
 as_tibble.simpr_sims = function(x,..., bare_tibble = FALSE, .rows, .name_repair, rownames) {
   class(x) = setdiff(class(x), "simpr_sims")

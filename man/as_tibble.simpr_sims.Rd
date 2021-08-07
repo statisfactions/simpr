@@ -2,6 +2,7 @@
 % Please edit documentation in R/as_tibble.R
 \name{as_tibble.simpr_sims}
 \alias{as_tibble.simpr_sims}
+\alias{simpr_tibble}
 \title{Convert a simpr_sims object back to a
 simpr_tibble or bare tibble}
 \usage{
@@ -20,6 +21,9 @@ simpr_tibble or bare tibble}
 \item{.name_repair}{Ignored.}
 
 \item{rownames}{Ignored.}
+}
+\value{
+A tibble with the metaparameters and simulation results
 }
 \description{
 Allows access to simulation results as a
