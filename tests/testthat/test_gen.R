@@ -52,11 +52,20 @@ test_that("Gen runs without warnings or messages", {
 ## meta can handle lists which can contain multiple matrices, etc.
 
 test_that("meta() can handle lists", {
-  expect_silent(meta_list_out <- blueprint(x = ~ MASS::mvrnorm(n, rep(0, 2), Sigma = S)[, 2, drop = TRUE],
-            y = ~ x + rnorm(n)) %>%
-    meta(n = c(10, 20, 30),
-         S = list(independent = diag(2), correlated = diag(2) + 2)) %>%
-    produce_sims(1))
+
+  set.seed(100, kind = "L'Ecuyer-CMRG")
+  possible_S = list(independent = diag(2), correlated = diag(2) + 2)
+  possible_n = 10
+  mat_refs = furrr::future_map(possible_S, ~ MASS::mvrnorm(possible_n, rep(0, 2), Sigma = .),
+                              .options = furrr::furrr_options(seed = TRUE))
+
+  set.seed(100, kind = "L'Ecuyer-CMRG")
+  meta_list_out <- blueprint(x = ~ MASS::mvrnorm(n, rep(0, 2), Sigma = S)) %>%
+    meta(n = 10,
+         S = possible_S) %>%
+    produce_sims(1)
+
+  expect_equivalent(mat_refs, purrr::map(meta_list_out$sim, as.matrix))
 
 })
 

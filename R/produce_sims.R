@@ -230,7 +230,9 @@ generate_sim = function(variables, ..., variable_sep,
     gen_df
   })
 
-  df_full = data.frame(meta_values) %>% tibble::as_tibble()
+  ## Create a 1-row tibble with meta values and the simulation cell
+  df_full = purrr::map(meta_values, ~ if(length(.) == 1) return(.) else return(list(.))) %>%
+    tibble::as_tibble(.rows = 1)
 
   df_full[[sim_name]] = list(df)
 
