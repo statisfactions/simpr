@@ -287,8 +287,9 @@ create_sim_results <- function(specs, x, sim_name, .progress, .options) {
   attr(sim_results, "variables") = purrr::map(x$variables, ~ attr(., "varnames")) %>% unlist
   attr(sim_results, "sim_name") = sim_name
 
-  ## Add "simpr_sims" and "simpr_tibble" classes
-  class(sim_results) = c("simpr_sims", "simpr_tibble", class(sim_results))
+  ## Add "simpr_sims" and "simpr_tibble" classes if there is still a sim column
+  if(get_sim_name(sim_results) %in% names(sim_results))
+    class(sim_results) = c("simpr_sims", "simpr_tibble", class(sim_results))
 
   sim_results
 }

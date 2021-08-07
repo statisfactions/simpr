@@ -77,7 +77,12 @@ test_that("delayed tidy() and glance() same as produce_sims()", {
 
   expect_equivalent(lm_produce_tidy, lm_include_tidy)
   expect_equivalent(lm_produce_glance, lm_include_glance)
+
+  expect_identical(class(lm_produce_tidy), class(lm_include_tidy))
+  expect_identical(class(lm_produce_glance), class(lm_include_glance))
 })
+
+
 
 
 
