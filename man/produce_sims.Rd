@@ -9,6 +9,8 @@ produce_sims(
   obj,
   reps,
   sim_name = "sim",
+  quiet = TRUE,
+  warn_on_error = TRUE,
   .progress = FALSE,
   .options = furrr_options(seed = TRUE)
 )
@@ -17,6 +19,8 @@ produce_all(
   obj,
   reps,
   sim_name = "sim",
+  quiet = TRUE,
+  warn_on_error = TRUE,
   .progress = FALSE,
   .options = furrr_options(seed = TRUE)
 )
@@ -34,6 +38,12 @@ whole number greater than 0)}
 created, containing simulation results.
 Default is \code{"sim"}}
 
+\item{quiet}{Should simulation errors be
+broadcast to the user as they occur?}
+
+\item{warn_on_error}{Should there be a warning
+when simulation errors occur?}
+
 \item{.progress}{A logical, for whether or not
 to print a progress bar for multiprocess,
 multisession, and multicore plans .}
@@ -46,8 +56,8 @@ to
  = TRUE)}}.}
 }
 \value{
-a \code{\link{simpr_sims}}
-  object, which is a tibble with a row for each
+a \code{\link{simpr_sims}} object,
+  which is a tibble with a row for each
   repetition (a total of \code{rep}
   repetitions) for each combination of
   metaparameters and some extra metadata used
