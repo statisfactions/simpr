@@ -197,7 +197,7 @@ produce = function(obj, reps, sim_name,
 }
 
 
-generate_sim = function(y, eval_environment) {
+generate_sim = function(y, eval_environment, variable_sep) {
   eval_fun = purrr::as_mapper(y)
   environment(eval_fun) <- eval_environment
 
@@ -246,7 +246,8 @@ generate_row = function(variables, ..., variable_sep,
   eval_environment = rlang::as_environment(meta_values, parent = parent.frame())
 
   sim_list = safely(purrr::map_dfc, otherwise = NULL, quiet = quiet)(variables, generate_sim,
-                                                                     eval_environment = eval_environment)
+                                                                     eval_environment = eval_environment,
+                                                                     variable_sep = variable_sep)
 
   ## Create a 1-row tibble with meta values and the simulation cell
   df_full = purrr::map(meta_values, ~ if(length(.) == 1) return(.) else return(list(.))) %>%
