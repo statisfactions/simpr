@@ -245,7 +245,7 @@ generate_row = function(variables, ..., variable_sep,
   meta_values = list(...)
   eval_environment = rlang::as_environment(meta_values, parent = parent.frame())
 
-  sim_list = safely(purrr::map_dfc, otherwise = NULL, quiet = quiet)(variables, generate_sim,
+  sim_list = purrr::safely(purrr::map_dfc, otherwise = NULL, quiet = quiet)(variables, generate_sim,
                                                                      eval_environment = eval_environment,
                                                                      variable_sep = variable_sep)
 
