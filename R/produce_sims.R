@@ -171,9 +171,16 @@ produce = function(obj, reps, sim_name,
                    .options) {
   validate_reps(reps)
 
+  ## Satisfying R CMD check
+  .sim_id = ""
+
+  ## Create specs from conditions, reps; add unique id as well.
   specs = dplyr::left_join(data.frame(rep = 1:reps),
                            obj$conditions,
-                           by = character())
+                           by = character()) %>%
+    dplyr::mutate(.sim_id = 1:(dplyr::n())) %>%
+    dplyr::relocate(.sim_id) %>%
+    dplyr::relocate(rep, .after = dplyr::everything())
 
   if(!is.null(obj$meta_info$lookup)) {
     ## If there are list elements, join cells representing those list-columns
@@ -313,6 +320,7 @@ create_sim_results <- function(specs, x, sim_name, quiet, warn_on_error, .progre
   attr(sim_results, "meta") = names(x$meta_info$indices)
   attr(sim_results, "variables") = purrr::map(x$variables, ~ attr(., "varnames")) %>% unlist
   attr(sim_results, "sim_name") = sim_name
+  attr(sim_results, "sim_total") = max(specs$.sim_id)
 
   ## Add "simpr_sims" and "simpr_tibble" classes if there is still a sim column
   if(get_sim_name(sim_results) %in% names(sim_results))
