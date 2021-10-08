@@ -8,7 +8,9 @@ test_that("glance_fits correctly returns broom::glance output", {
     x2 = x1 + rnorm(10)
 
     broom::glance(lm(x2 ~ x1))
-  }, .options = furrr_options(seed = TRUE))[[1]]
+  }, .options = furrr_options(seed = TRUE))[[1]] %>%
+    mutate(.sim_id = 1) %>%
+    relocate(.sim_id)
 
   ## glance_fits
   set.seed(100, kind = "L'Ecuyer-CMRG")

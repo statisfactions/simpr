@@ -38,24 +38,23 @@ apply_fits.simpr_tibble = function(obj, .f, ..., .progress = FALSE,
   fn_map = function(...) dplyr::as_tibble(purrr::as_mapper(.f)(...))
   ## Create reference meta df for merging
   simpr_meta = obj %>%
-    dplyr::select(tidyselect::one_of(c(attr(obj, "meta"), "rep"))) %>%
-    dplyr::mutate(....id = as.character(1:(dplyr::n())))
+    dplyr::select(tidyselect::one_of(c(".sim_id", attr(obj, "meta"), "rep")))
 
   ## Extract all fit columns
   simpr_mods = obj %>%
     dplyr::select(tidyselect::one_of(c(attr(obj, "fits")))) %>%
-    purrr::map(purrr::set_names, nm = simpr_meta$....id)
+    purrr::map(purrr::set_names, nm = simpr_meta$.sim_id)
 
   ## For each fit column (identified as "source"), run tidy on each element of that column
   simpr_tidy = purrr::map_dfr(simpr_mods, function(x, ...)
-    furrr::future_map_dfr(x, fn_map, ..., .id = "....id",
+    furrr::future_map_dfr(x, fn_map, ..., .id = ".sim_id",
                           .progress = .progress,
                           .options = .options),
                               ..., .id = "Source")
+  simpr_tidy$.sim_id = as.integer(simpr_tidy$.sim_id)
 
   ## Re-merge metaparameter columns to tidy output
-  output = dplyr::right_join(simpr_meta, simpr_tidy, by = "....id")
-  output$....id = NULL
+  output = dplyr::right_join(simpr_meta, simpr_tidy, by = ".sim_id")
 
   output
 }

@@ -18,11 +18,11 @@ test_that("Calc tidy terms match terms from fit",
 
             lm_fit_coef = purrr::map_df(lm_fit$lm, ~ coef(.) %>% t %>%
                   as.data.frame(check.names = F)) %>%
-              dplyr::bind_cols(lm_fit %>% as_tibble %>% select(n, rep), .) %>%
+              dplyr::bind_cols(lm_fit %>% as_tibble %>% select(.sim_id, n, rep), .) %>%
               dplyr::arrange(n, rep)
 
             lm_tidy_coef = lm_tidy %>%
-              dplyr::select(n, rep, term, estimate) %>%
+              dplyr::select(.sim_id, n, rep, term, estimate) %>%
               tidyr::spread(term, estimate) %>%
               dplyr::arrange(n, rep)
 
@@ -65,3 +65,4 @@ test_that("Each iteration of simulation has model terms listed correctly in tidy
   expect_true(all(tidy_unique_terms$count == 1))
 
 })
+
