@@ -8,6 +8,7 @@
 produce_sims(
   obj,
   reps,
+  ...,
   sim_name = "sim",
   quiet = TRUE,
   warn_on_error = TRUE,
@@ -18,6 +19,7 @@ produce_sims(
 produce_all(
   obj,
   reps,
+  ...,
   sim_name = "sim",
   quiet = TRUE,
   warn_on_error = TRUE,
@@ -33,6 +35,13 @@ specifications of the simulation}
 
 \item{reps}{number of replications to run (a
 whole number greater than 0)}
+
+\item{\dots}{filtering criteria for which rows to
+simulate, passed to
+\code{\link[dplyr]{filter}}.  This is useful
+for reproducing just a few selected rows of a
+simulation without needing to redo the entire
+simulation.}
 
 \item{sim_name}{name of the list-column to be
 created, containing simulation results.

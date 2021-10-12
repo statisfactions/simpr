@@ -125,5 +125,21 @@ test_that("Can refer to two-sided formula columns as arguments in blueprint()", 
   expect_identical(cbind_refer$sim[[1]], comp_4)
 })
 
+## Resimulating just a subset ----------
+test_that("Subsetting in produce_sims is identical to subsetting afterwards", {
+  set.seed(100)
+  sim_ref = blueprint(x1 = ~ 2 + rnorm(n)) %>%
+    meta(n = 10) %>%
+    produce_sims(10) %>%
+    as_tibble() %>%
+    filter(.sim_id == 3) %>%
+    as_sims()
 
+  set.seed(100)
+  sim_filt = blueprint(x1 = ~ 2 + rnorm(n)) %>%
+    meta(n = 10) %>%
+    produce_sims(10, .sim_id == 3)
+
+  expect_equivalent(sim_ref, sim_filt)
+})
 

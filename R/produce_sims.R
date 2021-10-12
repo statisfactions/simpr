@@ -24,6 +24,12 @@
 #'   specifications of the simulation
 #' @param reps number of replications to run (a
 #'   whole number greater than 0)
+#' @param \dots filtering criteria for which rows to
+#'   simulate, passed to
+#'   \code{\link[dplyr]{filter}}.  This is useful
+#'   for reproducing just a few selected rows of a
+#'   simulation without needing to redo the entire
+#'   simulation.
 #' @param sim_name name of the list-column to be
 #'   created, containing simulation results.
 #'   Default is \code{"sim"}
@@ -102,7 +108,8 @@
 #'
 #'
 #' @export
-produce_sims = function(obj, reps, sim_name = "sim",
+produce_sims = function(obj, reps, ...,
+                        sim_name = "sim",
                         quiet = TRUE, warn_on_error = TRUE,
                         .progress = FALSE,
                         .options = furrr_options(seed = TRUE)) {
@@ -110,11 +117,11 @@ produce_sims = function(obj, reps, sim_name = "sim",
 }
 
 #' @export
-produce_sims.simpr_spec = function(obj, reps, sim_name = "sim",
+produce_sims.simpr_spec = function(obj, reps, ..., sim_name = "sim",
                                    quiet = TRUE, warn_on_error = TRUE,
                                    .progress = FALSE,
                                    .options = furrr_options(seed = TRUE)) {
- produce(obj = obj, reps = reps, sim_name = sim_name,
+ produce(obj = obj, reps = reps, ..., sim_name = sim_name,
          quiet = quiet,
          warn_on_error = warn_on_error,
          .progress = .progress,
@@ -122,7 +129,7 @@ produce_sims.simpr_spec = function(obj, reps, sim_name = "sim",
 }
 
 #' @export
-produce_sims.simpr_include = function(obj, reps, sim_name = "sim",
+produce_sims.simpr_include = function(obj, reps, ..., sim_name = "sim",
                                       quiet = TRUE, warn_on_error = TRUE,
                                       .progress = FALSE,
                                       .options = furrr_options(seed = TRUE)) {
@@ -130,7 +137,8 @@ produce_sims.simpr_include = function(obj, reps, sim_name = "sim",
   ## Delete include calls before running
   obj$include_calls = NULL
 
-  produce(obj = obj, reps = reps, sim_name = sim_name,
+  produce(obj = obj, reps = reps, ...,
+          sim_name = sim_name,
           quiet = quiet,
           warn_on_error = warn_on_error,
           .progress = .progress,
@@ -139,7 +147,7 @@ produce_sims.simpr_include = function(obj, reps, sim_name = "sim",
 
 #' @export
 #' @rdname produce_sims
-produce_all = function(obj, reps, sim_name = "sim",
+produce_all = function(obj, reps, ..., sim_name = "sim",
                        quiet = TRUE, warn_on_error = TRUE,
                        .progress = FALSE,
                        .options = furrr_options(seed = TRUE)) {
@@ -147,7 +155,7 @@ produce_all = function(obj, reps, sim_name = "sim",
 }
 
 #' @export
-produce_all.simpr_spec = function(obj, reps, sim_name = "sim",
+produce_all.simpr_spec = function(obj, reps, ..., sim_name = "sim",
                                   quiet = TRUE, warn_on_error = TRUE,
                                   .progress = FALSE,
                                   .options = furrr_options(seed = TRUE)) {
@@ -155,20 +163,21 @@ produce_all.simpr_spec = function(obj, reps, sim_name = "sim",
 }
 
 #' @export
-produce_all.simpr_include = function(obj, reps, sim_name = "sim",
+produce_all.simpr_include = function(obj, reps, ..., sim_name = "sim",
                                      quiet = TRUE, warn_on_error = TRUE,
                                      .progress = FALSE,
                                      .options = furrr_options(seed = TRUE)) {
-  produce(obj = obj, reps = reps, sim_name = sim_name,
+  produce(obj = obj, reps = reps,  ..., sim_name = sim_name,
           quiet = quiet, warn_on_error = warn_on_error,
           .progress = .progress,
           .options = .options)
 }
 
-produce = function(obj, reps, sim_name,
+produce = function(obj, reps, ..., sim_name,
                    quiet, warn_on_error,
                    .progress,
                    .options) {
+
   validate_reps(reps)
 
   ## Satisfying R CMD check
@@ -181,6 +190,10 @@ produce = function(obj, reps, sim_name,
     dplyr::mutate(.sim_id = 1:(dplyr::n())) %>%
     dplyr::relocate(.sim_id) %>%
     dplyr::relocate(rep, .after = dplyr::everything())
+
+  specs_filter = dplyr::filter(specs, ...)
+
+  excluded_sim_ids = specs$.sim_id[!(specs$.sim_id %in% specs_filter$.sim_id)]
 
   if(!is.null(obj$meta_info$lookup)) {
     ## If there are list elements, join cells representing those list-columns
@@ -200,7 +213,8 @@ produce = function(obj, reps, sim_name,
                      quiet = quiet,
                      warn_on_error = warn_on_error,
                      .progress = .progress,
-                     .options = .options)
+                     .options = .options,
+                     excluded_sim_ids = excluded_sim_ids)
 }
 
 
@@ -248,8 +262,15 @@ generate_sim = function(y, eval_environment, variable_sep) {
 }
 
 generate_row = function(variables, ..., variable_sep,
-                             include_calls, meta_indices, sim_name, quiet) {
+                             include_calls, meta_indices, sim_name, quiet,
+                        excluded_sim_ids) {
+
   meta_values = list(...)
+
+  ## Exclude and don't calculate if this row is filtered out
+  if(meta_values$.sim_id %in% excluded_sim_ids)
+    return(NULL)
+
   eval_environment = rlang::as_environment(meta_values, parent = parent.frame())
 
   sim_list = purrr::safely(purrr::map_dfc, otherwise = NULL, quiet = quiet)(variables, generate_sim,
@@ -292,7 +313,8 @@ eval_pipe = function(lhs, rhs) {
   eval(call("%>%", lhs = lhs, rhs = rhs))
 }
 
-create_sim_results <- function(specs, x, sim_name, quiet, warn_on_error, .progress, .options) {
+create_sim_results <- function(specs, x, sim_name, quiet, warn_on_error, .progress, .options,
+                               excluded_sim_ids) {
   ## Create simulation results from specification
 
   ## define variable "." to satisfy R CMD Check
@@ -309,7 +331,8 @@ create_sim_results <- function(specs, x, sim_name, quiet, warn_on_error, .progre
                 sim_name = sim_name,
                 quiet = quiet,
                 .progress = .progress,
-                .options = .options) %>%
+                .options = .options,
+                excluded_sim_ids = excluded_sim_ids) %>%
     dplyr::bind_rows()
 
   ## Give warning if errors occured
