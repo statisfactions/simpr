@@ -126,16 +126,18 @@ test_that("Can refer to two-sided formula columns as arguments in blueprint()", 
 })
 
 ## Resimulating just a subset ----------
-test_that("Subsetting in produce_sims or produce_all is identical to subsetting afterwards", {
+test_that("Subsetting in produce_sims or produce_all is equivalent to subsetting afterwards", {
   set.seed(100)
   sim_ref = blueprint(x1 = ~ 2 + rnorm(n)) %>%
     meta(n = 10) %>%
-    produce_sims(10)
+    produce_sims(10) %>%
+    fit(dumb_model = ~ lm(x1 ~ 1))
 
   set.seed(100)
   sim_filt = blueprint(x1 = ~ 2 + rnorm(n)) %>%
     meta(n = 10) %>%
-    produce_sims(10, .sim_id == 3)
+    produce_sims(10, .sim_id == 3) %>%
+    fit(dumb_model = ~ lm(x1 ~ 1))
 
   set.seed(100)
   sim_filt_delay = blueprint(x1 = ~ 2 + rnorm(n)) %>%
@@ -143,9 +145,8 @@ test_that("Subsetting in produce_sims or produce_all is identical to subsetting 
     fit(dumb_model = ~ lm(x1 ~ 1)) %>%
     produce_all(10, .sim_id == 3)
 
-  expect_identical(sim_ref[3,], sim_filt)
-  ## Not identical because of fit() features
-  expect_equivalent(sim_ref[3,], sim_filt_delay[, 1:4])
+  expect_equivalent(sim_ref[3,], sim_filt)
+  expect_equivalent(sim_ref[3,], sim_filt_delay)
 })
 
 
