@@ -10,7 +10,7 @@ workflow is:
 1.  Specify **variables** for your simulation data, with `blueprint()`
 2.  Specify **parameters** that you want to systematically vary between
     different cells of your simulation design (e.g. *n*, effect size,
-    distribution type), with `meta()`
+    distribution type), with `define()`
 3.  Generate the simulation data with `generate()`
 4.  Fit models with your data (e.g. `lm()`), with `fit()`
 5.  Tidy the model output for further processing, such as computing
@@ -36,7 +36,7 @@ simpr_tidy = ## Specify the simulation
   blueprint(x1 = ~ 2 + rnorm(n),
                        x2 = ~ 3 + 2*x1 + rnorm(n, 0, sd = 0.5),
                        y = ~ 5 + b1*x1 + b2*x2 + g1*x1*x2 + 10 * rnorm(n)) %>%
-  meta(n = seq(100, 300, by = 20),
+  define(n = seq(100, 300, by = 20),
        b1 = 1,
        b2 = 1,
        g1 = seq(-1, 1, by = 0.5)) %>% 
@@ -74,7 +74,7 @@ First, we specify how we want the data to be generated:
 simpr_spec = blueprint(x1 = ~ 2 + rnorm(n),
                        x2 = ~ 3 + 2*x1 + rnorm(n, 0, sd = 0.5),
                        y = ~ 5 + b1*x1 + b2*x2 + g1*x1*x2 + 10 * rnorm(n)) %>%
-  meta(n = seq(100, 300, by = 20),
+  define(n = seq(100, 300, by = 20),
        b1 = 1,
        b2 = 1,
        g1 = seq(-1, 1, by = 0.5))
@@ -89,7 +89,7 @@ other variables not yet defined (`n`, the sample size; `b1`, the slope
 of `x1`; `b2`, the slope of `x2`; `g1`, the interaction slope).
 
 We can define these variables, which we call *metaparameters* of the
-simulation, in the `meta()` command. `meta()` also takes named
+simulation, in the `define()` command. `define()` also takes named
 arguments, and here we define what those metaparameters are. We can
 specify them either as constants, or as lists or vectors; `simpr` will
 generate all possible combinations of these metaparameters and run the

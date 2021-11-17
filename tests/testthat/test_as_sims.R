@@ -32,7 +32,7 @@ test_that("reshaping works as expected", {
                     sdlog = sigma + sig_diff) # scale (sd)
   ) %>%
     # define the meta-parameters
-    meta(n = 100, # number of trials
+    define(n = 100, # number of trials
          mu = c(-.5), # note: exp(mu) is the median RT, so these correspond to .6 and 1 sec, respectively
          sigma = c(.2), # standard deviation (scale) of the log-normal -- corresp. to 1.22 & 1.65 secs
          mu_diff = c(.2), # how much mu shifts from Ctrl to Exp -- .2 is a 22% increase, .4 is 49% incr

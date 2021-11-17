@@ -7,7 +7,7 @@ test_that("Multiple fit functions give different results", {
                          x2 = ~x1 + rnorm(n, 0, sd = 2),
                          c1 = ~ cut(x1, breaks = b) %>% as.numeric,
                          c2 = ~ cut(x2, breaks = b) %>% as.numeric) %>%
-    meta(n = c(50, 100),
+    define(n = c(50, 100),
          b = c(2, 10))
 
   chisq_fit = chisq_spec %>%

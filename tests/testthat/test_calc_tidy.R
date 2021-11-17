@@ -5,7 +5,7 @@ test_that("Calc tidy terms match terms from fit",
             set.seed(100)
             lm_fit = blueprint(x1 = ~ 2 + rnorm(n),
                                y = ~ 5 + 3*x1 + rnorm(n, 0, sd = 0.5)) %>%
-              meta(n = 100:101) %>%
+              define(n = 100:101) %>%
               generate(2) %>%
               fit(lm = ~lm(y ~ x1, data = .))
 
@@ -31,7 +31,7 @@ test_that("Calc tidy terms match terms from fit",
 
 
 test_that("Each iteration of simulation has model terms listed correctly in tidy_fits output", {
-  # define metaparamters (to use in meta() and test)
+  # define metaparamters (to use in define() and test)
   meta_list = list(n = seq(100, 300, by = 20),
   b1 = 1,
   b2 = 1,
@@ -46,7 +46,7 @@ test_that("Each iteration of simulation has model terms listed correctly in tidy
   simpr_spec = blueprint(x1 = ~ 2 + rnorm(n),
                          x2 = ~ 3 + 2*x1 + rnorm(n, 0, sd = 0.5),
                          y = ~ 5 + b1*x1 + b2*x2 + g1*x1*x2 + rnorm(n, 0, sd = 3)) %>%
-    meta(n = meta_list$n,
+    define(n = meta_list$n,
          b1 = meta_list$b1,
          b2 = meta_list$b2,
          g1 = meta_list$g1)

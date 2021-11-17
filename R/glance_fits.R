@@ -27,7 +27,7 @@
 #' @examples
 #' simple_linear_data = blueprint(x1 = ~ 2 + rnorm(n),
 #'           y = ~ 5 + 3 * x1 + rnorm(n, 0, sd = 0.5)) %>%
-#'   meta(n = 100:101) %>%
+#'   define(n = 100:101) %>%
 #'   generate(2)
 #'
 #' ## Can show glance output for multiple competing models,
@@ -50,7 +50,7 @@
 #'   blueprint(x1 = ~ 2 + rnorm(n),
 #'             x2 = ~ 3 + 2*x1 + rnorm(n, 0, sd = 0.5),
 #'             y = ~ 5 + x1 + x2 + g1*x1*x2 + 10 * rnorm(n)) %>%
-#'   meta(n = seq(100, 300, by = 20),
+#'   define(n = seq(100, 300, by = 20),
 #'        g1 = seq(-1, 1, by = 0.5)) %>%
 #'   ## Generate the data
 #'   generate(10) %>%

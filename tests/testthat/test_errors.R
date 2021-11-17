@@ -8,7 +8,7 @@ set.seed(100)
 blue_only = blueprint(x1 = ~ 2 + rnorm(n),
                       y = ~ 5 + 3*x1 + rnorm(n, 0, sd = 0.5) + errgt(x1))
 spec = blue_only %>%
-  meta(n = 10)
+  define(n = 10)
 
 err_out = generate(spec, 30, warn_on_error = FALSE, .options = furrr_options(seed = TRUE,
                                                                                  globals = list(errgt = errgt)))

@@ -62,7 +62,7 @@
 #' ## Generate data to fit models
 #' simple_linear_data = blueprint(x1 = ~ 2 + rnorm(n),
 #'                                y = ~ 5 + 3*x1 + rnorm(n, 0, sd = 0.5)) %>%
-#'   meta(n = 100:101) %>%
+#'   define(n = 100:101) %>%
 #'   generate(2)
 #'
 #' ## Fit with a single linear term

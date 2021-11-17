@@ -1,4 +1,4 @@
-#' Specify metaparameters to vary in simulation
+#' Define metaparameters to vary in simulation
 #'
 #' Takes the output of \code{\link{blueprint}} (a
 #' \code{simpr_blueprint} object) and defines the
@@ -7,7 +7,7 @@
 #' This is the second step in the simulation
 #' process, after specifying the simulated data
 #' using \code{\link{blueprint}}.  The output of
-#' \code{\link{meta}} is then passed to
+#' \code{\link{define}} is then passed to
 #' \code{\link{generate}} to actually generate the
 #' simulation.
 #'
@@ -48,7 +48,7 @@
 #'   index column for list metaparameters,
 #'   \code{"_index"} by default.  See
 #'   \emph{Details}.
-#' @return a \code{simpr_meta} object to pass onto
+#' @return a \code{simpr_define} object to pass onto
 #'   \code{\link{generate}} for the simulation.
 #'   This is also a tibble containing all
 #'   simulation conditions that can be examined or
@@ -58,13 +58,13 @@
 #' @examples
 #' # Simple example of setting a metaparameter
 #' simple_meta = blueprint(x = ~ 1 + rnorm(n)) %>%
-#'   meta(n = c(5, 10)) %>%
+#'   define(n = c(5, 10)) %>%
 #'   generate(1)
 #'
 #' simple_meta # $sim has a 5-row tibble and a 10-row tibble
 #'
 #' multi_meta = blueprint(x = ~ mu + rnorm(n)) %>%
-#'   meta(n = c(5, 10),
+#'   define(n = c(5, 10),
 #'        mu = seq(-1, 1, length.out = 3)) %>%
 #'   generate(1)
 #'
@@ -73,14 +73,14 @@
 #'
 #' # meta can handle lists which can contain multiple matrices, etc.
 #' meta_list_out = blueprint(x = ~ MASS::mvrnorm(n, rep(0, 2), Sigma = S)) %>%
-#'   meta(n = c(10, 20, 30),
+#'   define(n = c(10, 20, 30),
 #'        S = list(independent = diag(2), correlated = diag(2) + 2)) %>%
 #'   generate(1)
 #'
 #' meta_list_out # generates S_index column
 #'
 #' @export
-meta = function(.x = NULL, ..., suffix = "_index") {
+define = function(.x = NULL, ..., suffix = "_index") {
   if(!(is.character(suffix)) || length(suffix) != 1 || nchar(suffix) <= 0)
     stop("suffix must be a string with at least 1 character")
 

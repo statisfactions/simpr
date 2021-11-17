@@ -4,7 +4,7 @@
 #'
 #' Class \code{simpr_spec} is created by
 #' \code{\link{blueprint}} and/or
-#' \code{\link{meta}} to specify the simulation
+#' \code{\link{define}} to specify the simulation
 #' variables, which is produced by
 #' \code{\link{generate}}.
 #'

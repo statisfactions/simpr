@@ -1,7 +1,7 @@
 #' Generate simulated data from specification
 #'
 #' Use specification from \code{\link{blueprint}}
-#' or \code{\link{meta}} to produce simulated
+#' or \code{\link{define}} to produce simulated
 #' data.
 #'
 #' This is the third step in the simulation
@@ -16,10 +16,10 @@
 #'
 #' Errors you get using this function usually have
 #' to do with how you specified the simulation in
-#' \code{\link{blueprint}} and \code{\link{meta}}.
+#' \code{\link{blueprint}} and \code{\link{define}}.
 #'
 #' @param obj a \code{simpr_spec} object generated
-#'   by \code{\link{meta}} or
+#'   by \code{\link{define}} or
 #'   \code{\link{blueprint}}, containing the
 #'   specifications of the simulation
 #' @param reps number of replications to run (a
@@ -47,7 +47,7 @@
 #'   \code{\link[furrr:furrr_options]{furrr_options(seed
 #'    = TRUE)}}.
 #' @seealso \code{\link{blueprint}} and
-#'   \code{\link{meta}} for examples of how these
+#'   \code{\link{define}} for examples of how these
 #'   functions affect the output of
 #'   \code{generate}. See the \code{furrr}
 #'   website for more information on working with
@@ -69,7 +69,7 @@
 #'   each element of the simulation list-column.
 #' @examples
 #' meta_list_out = blueprint(x = ~ MASS::mvrnorm(n, rep(0, 2), Sigma = S)) %>%
-#'   meta(n = c(10, 20, 30),
+#'   define(n = c(10, 20, 30),
 #'        S = list(independent = diag(2), correlated = diag(2) + 2)) %>%
 #'   generate(3)
 #'
@@ -83,7 +83,7 @@
 #'  ## Changing reps will change the number of replications and thus the number of
 #'  ## rows in the output
 #'  meta_list_2 = blueprint(x = ~ MASS::mvrnorm(n, rep(0, 2), Sigma = S)) %>%
-#'   meta(n = c(10, 20, 30),
+#'   define(n = c(10, 20, 30),
 #'        S = list(independent = diag(2), correlated = diag(2) + 2)) %>%
 #'   generate(4)
 #'
@@ -93,7 +93,7 @@
 #'  ## generate.  This can save computation time when doing large
 #'  ## simulations, especially with parallel processing
 #'  meta_list_generate_after = blueprint(x = ~ MASS::mvrnorm(n, rep(0, 2), Sigma = S)) %>%
-#'   meta(n = c(10, 20, 30),
+#'   define(n = c(10, 20, 30),
 #'        S = list(independent = diag(2), correlated = diag(2) + 2)) %>%
 #'   fit(lm = ~ lm(x_2 ~ x_1, data = .)) %>%
 #'   tidy_fits %>%

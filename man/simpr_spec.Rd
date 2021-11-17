@@ -17,7 +17,7 @@ Accessor & display methods for simpr_spec class
 \details{
 Class \code{simpr_spec} is created by
 \code{\link{blueprint}} and/or
-\code{\link{meta}} to specify the simulation
+\code{\link{define}} to specify the simulation
 variables, which is produced by
 \code{\link{generate}}.
 }

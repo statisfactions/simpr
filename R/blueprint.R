@@ -20,14 +20,14 @@
 #' 0), Sigma = diag(2))}.
 #'
 #' @param .x a \code{simpr_spec} object (the output
-#'   of \code{\link{meta}}), or NULL to
+#'   of \code{\link{define}}), or NULL to
 #'   create a new specification
 #' @param ... \code{purrr}-style formula functions used for generating
 #'   simulation variables.
 #' @param sep Specify the separator for auto-generating names.  See
 #'   \emph{Details}.
 #' @return A \code{simpr_blueprint} object which contains the functions needed to
-#'   generate the simulation; to be passed to \code{\link{meta}} for defining
+#'   generate the simulation; to be passed to \code{\link{define}} for defining
 #'   metaparameters or, if there are no metaparameters, directly to
 #'   \code{\link{generate}} for generating the simulation.
 #'
@@ -37,7 +37,7 @@
 #'   x)}.
 #'
 #'   Finally, one can also refer to metaparameters that are to be systematically
-#'   varied in the simulation study.  See \code{\link{meta}} and the examples
+#'   varied in the simulation study.  See \code{\link{define}} and the examples
 #'   for more details.
 #'
 #' @examples
@@ -63,7 +63,7 @@
 #'
 #' # Simple example of setting a metaparameter
 #' simple_meta = blueprint(x = ~ 1 + rnorm(n)) %>%
-#'   meta(n = c(5, 10)) %>% # without this line you would get an error!
+#'   define(n = c(5, 10)) %>% # without this line you would get an error!
 #'   generate(1)
 #'
 #'

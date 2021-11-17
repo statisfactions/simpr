@@ -9,7 +9,7 @@ library(purrr)
 simpr_spec = blueprint(x1 = ~ 2 + rnorm(n),
                        x2 = ~ 3 + 2*x1 + rnorm(n, 0, sd = 0.5),
                        y = ~ 5 + b1*x1 + b2*x2 + g1*x1*x2 + rnorm(n, 0, sd = s)) %>%
-  meta(n = seq(100, 300, by = 20),
+  define(n = seq(100, 300, by = 20),
        b1 = 1,
        b2 = 1,
        g1 = seq(-1, 1, by = 0.5),
@@ -38,7 +38,7 @@ chisq_spec = blueprint(x1 = ~rnorm(n),
                        x2 = ~x1 + rnorm(n, 0, sd = 2),
                        c1 = ~ cut(x1, breaks = b) %>% as.numeric,
                        c2 = ~ cut(x2, breaks = b) %>% as.numeric) %>%
-  meta(n = seq(50, 200, by = 50),
+  define(n = seq(50, 200, by = 50),
        b = 2:10)
 
 chisq_gen = chisq_spec %>%
@@ -63,7 +63,7 @@ all_tidy %>%
 
 ind_t_spec = blueprint(y1 = ~ rnorm(n, mean = m + d*s, sd = s),
                        y2 = ~ rnorm(n, mean = m, sd = s)) %>%
-  meta(n = seq(20, 100, by = 10), # n per grp
+  define(n = seq(20, 100, by = 10), # n per grp
        m = 70, # ctrl grp mean
        d = seq(0, 1, by = .2), # exp - ctrl / sd (cohen's d)
        s = 10) # sd (both grps)
@@ -117,7 +117,7 @@ ind_t_tidy %>%
 
 dep_t_spec = blueprint(y1 = ~ rnorm(n, mean = m, sd = s),
                        y2 = ~ y1 + rnorm(n, mean = d*s, sd = s)) %>%
-  meta(n = seq(20, 100, by = 10), # overall n (2n observations)
+  define(n = seq(20, 100, by = 10), # overall n (2n observations)
        m = 70, # y1 mean
        d = seq(0, 1, by = .2), # exp - ctrl / sd (cohen's d)
        s = 10) # sd (both vars)
@@ -173,7 +173,7 @@ dep_t_tidy %>%
 # to simulate power of dependent designs vs. independent (where applicable)
 t_comp_spec = blueprint(y1 = ~ rnorm(n, mean = m, sd = s),
                    y2 = ~ y1 + rnorm(n, mean = d*s, sd = s)) %>%
-  meta(n = seq(20, 100, by = 10), # overall n (2n observations)
+  define(n = seq(20, 100, by = 10), # overall n (2n observations)
        m = 70, # y1 mean
        d = seq(0, 1, by = .2), # exp - ctrl / sd (cohen's d)
        s = 10) # sd (both vars)
@@ -210,7 +210,7 @@ t_comp_tidy %>%
 # specify a binomial data-generating process
 binom_spec = blueprint(s = ~ rbinom(1, size = n, prob = p), # successes
                        f = ~ n - s) %>% # failures
-  meta(n = seq(20, 200, by = 20), # number of trials
+  define(n = seq(20, 200, by = 20), # number of trials
        p = seq(.5, .75, by = .05)) # probability of success (1)
 
 # generate the data (100 replications)
@@ -272,7 +272,7 @@ rt_spec = blueprint(
                           sdlog = sigma + sig_diff) # scale (sd)
 ) %>%
   # define the meta-parameters
-  meta(n = 100, # number of trials
+  define(n = 100, # number of trials
        mu = c(-.5, 0), # note: exp(mu) is the median RT, so these correspond to .6 and 1 sec, respectively
        sigma = c(.2, .5), # standard deviation (scale) of the log-normal -- corresp. to 1.22 & 1.65 secs
        mu_diff = c(0, .2, .4), # how much mu shifts from Ctrl to Exp -- .2 is a 22% increase, .4 is 49% incr
@@ -325,7 +325,7 @@ rt_spec = blueprint(
                   sdlog = sigma + sig_diff) # scale (sd)
 ) %>%
   # define the meta-parameters
-  meta(n = 100, # number of trials
+  define(n = 100, # number of trials
        mu = c(-.5), # note: exp(mu) is the median RT, so these correspond to .6 and 1 sec, respectively
        sigma = c(.2), # standard deviation (scale) of the log-normal -- corresp. to 1.22 & 1.65 secs
        mu_diff = c(.2), # how much mu shifts from Ctrl to Exp -- .2 is a 22% increase, .4 is 49% incr
