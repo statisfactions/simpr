@@ -2,8 +2,8 @@
 #' simulation
 #'
 #' Allow additional postprocessing steps to be
-#' included in produce_sims(), rather than running
-#' after produce_sims()
+#' included in generate(), rather than running
+#' after generate()
 #'
 #' Often it is more computationally efficient,
 #' especially when parallel processing, to save
@@ -49,7 +49,7 @@ include.simpr_spec = function(obj) {
 
 #' @export
 include.simpr_tibble = function(obj) {
-  stop("`produce_sims()` has already been run on this object. The `include()` function is only run before running `produce_sims()`.")
+  stop("`generate()` has already been run on this object. The `include()` function is only run before running `generate()`.")
 }
 
 # This adds a call (e.g. a simpr verb such as

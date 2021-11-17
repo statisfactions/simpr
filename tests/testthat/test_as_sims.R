@@ -4,7 +4,7 @@ test_that("add_sims works with mutate", {
   set.seed(203)
   lin_test = blueprint(y1 = ~ 2 + rnorm(10),
                        y2 = ~ y1 + rnorm(10)) %>%
-    produce_sims(1) %>%
+    generate(1) %>%
     as_sims %>% mutate(y3 = y1 + y2) %>%
     as_tibble
 
@@ -12,7 +12,7 @@ test_that("add_sims works with mutate", {
   lin_test2 = blueprint(y1 = ~ 2 + rnorm(10),
                        y2 = ~ y1 + rnorm(10),
                        y3 = ~ y1 + y2) %>%
-    produce_sims(1)
+    generate(1)
 
   expect_equivalent(lin_test, lin_test2)
 
@@ -41,7 +41,7 @@ test_that("reshaping works as expected", {
 
   set.seed(101)
   rt_gen = rt_spec %>%
-    produce_sims(1) %>%
+    generate(1) %>%
     as_sims() %>%
     pivot_longer(-id, names_to = "Condition", values_to = "RT")
 
@@ -52,7 +52,7 @@ test_that("reshaping works as expected", {
   rt_gen_delayed = rt_spec %>%
     as_sims() %>%
     pivot_longer(-id, names_to = "Condition", values_to = "RT") %>%
-    produce_all(1)
+    generate(1)
 
   expect_equivalent(rt_gen, rt_gen_delayed)
 

@@ -11,7 +11,7 @@ test_that("Multiple fit functions give different results", {
          b = c(2, 10))
 
   chisq_fit = chisq_spec %>%
-    produce_sims(5) %>%
+    generate(5) %>%
     fit(ChiSq = ~ suppressWarnings(chisq.test(.$c1, .$c2)),
         Unknown_Continuous_Correlation = ~cor.test(.$x1, .$x2))
 

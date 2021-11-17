@@ -21,8 +21,8 @@ a \code{simpr_include} object.  This
 }
 \description{
 Allow additional postprocessing steps to be
-included in produce_sims(), rather than running
-after produce_sims()
+included in generate(), rather than running
+after generate()
 }
 \details{
 Often it is more computationally efficient,

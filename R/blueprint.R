@@ -29,7 +29,7 @@
 #' @return A \code{simpr_blueprint} object which contains the functions needed to
 #'   generate the simulation; to be passed to \code{\link{meta}} for defining
 #'   metaparameters or, if there are no metaparameters, directly to
-#'   \code{\link{produce_sims}} for generating the simulation.
+#'   \code{\link{generate}} for generating the simulation.
 #'
 #'   Also useful is the fact that one can refer to variables in subsequent
 #'   arguments.  So, one could define another variable \code{y} that depends on
@@ -43,28 +43,28 @@
 #' @examples
 #' ## specify a variable and generate it in the simulation
 #' single_var = blueprint(x = ~ 1 + rnorm(5)) %>%
-#'   produce_sims(1) # generate a single repetition of the simulation
+#'   generate(1) # generate a single repetition of the simulation
 #' single_var$sim[[1]] # peek at the simulation
 #'
 #' two_var = blueprint(x = ~ 1 + rnorm(5),
 #'                     y = ~ x + 2) %>%
-#'   produce_sims(1)
+#'   generate(1)
 #' two_var$sim[[1]]
 #'
 #' ## Generates x_01 through x_10
 #' autonumber_var = blueprint(x = ~ MASS::mvrnorm(5, rep(0, 10), Sigma = diag(10))) %>%
-#'   produce_sims(1)
+#'   generate(1)
 #' autonumber_var$sim[[1]]
 #'
 #' # alternatively, you could use a two-sided formula for names
 #' multi_name = blueprint(cbind(x, y, z) ~ MASS::mvrnorm(5, rep(0, 3), Sigma = diag(3))) %>%
-#'   produce_sims(1)
+#'   generate(1)
 #' multi_name$sim[[1]]
 #'
 #' # Simple example of setting a metaparameter
 #' simple_meta = blueprint(x = ~ 1 + rnorm(n)) %>%
 #'   meta(n = c(5, 10)) %>% # without this line you would get an error!
-#'   produce_sims(1)
+#'   generate(1)
 #'
 #'
 #' simple_meta # has two rows now, one for each value of n

@@ -11,7 +11,7 @@ workflow is:
 2.  Specify **parameters** that you want to systematically vary between
     different cells of your simulation design (e.g. *n*, effect size,
     distribution type), with `meta()`
-3.  Generate the simulation data with `produce_sims()`
+3.  Generate the simulation data with `generate()`
 4.  Fit models with your data (e.g. `lm()`), with `fit()`
 5.  Tidy the model output for further processing, such as computing
     power or Type I Error rates, with `tidy_fits`
@@ -41,7 +41,7 @@ simpr_tidy = ## Specify the simulation
        b2 = 1,
        g1 = seq(-1, 1, by = 0.5)) %>% 
   ## Generate the data
-  produce_sims(10) %>% 
+  generate(10) %>% 
   ## Fit models
   fit(lm = ~lm(y ~ x1*x2, data = .)) %>% 
   ## Calculate the output
@@ -93,14 +93,14 @@ simulation, in the `meta()` command. `meta()` also takes named
 arguments, and here we define what those metaparameters are. We can
 specify them either as constants, or as lists or vectors; `simpr` will
 generate all possible combinations of these metaparameters and run the
-simulation for each combination using `produce_sims()`:
+simulation for each combination using `generate()`:
 
 ``` r
 simpr_gen = simpr_spec %>% 
-  produce_sims(10)
+  generate(10)
 ```
 
-`produce_sims` has one argument, the number of repetitions for each
+`generate` has one argument, the number of repetitions for each
 simulation. Here we generate 10 repetitions. This produces a `tibble`
 with one row for each combination of metaparameters and repetition, and
 a list-column with the generated data.

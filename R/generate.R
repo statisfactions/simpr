@@ -1,4 +1,4 @@
-#' Produce simulated data from specification
+#' Generate simulated data from specification
 #'
 #' Use specification from \code{\link{blueprint}}
 #' or \code{\link{meta}} to produce simulated
@@ -6,12 +6,12 @@
 #'
 #' This is the third step in the simulation
 #' process: after specifying the variables and
-#' metaparameters, \code{produce_sims} is the
+#' metaparameters, \code{generate} is the
 #' workhorse function that actually generates the
 #' simulated datasets, one for each replication,
 #' for each combination of metaparameters. You
 #' likely want to use the output of
-#' \code{produce_sims} to fit model(s) with
+#' \code{generate} to fit model(s) with
 #' \code{\link{fit}}.
 #'
 #' Errors you get using this function usually have
@@ -49,7 +49,7 @@
 #' @seealso \code{\link{blueprint}} and
 #'   \code{\link{meta}} for examples of how these
 #'   functions affect the output of
-#'   \code{produce_sims}. See the \code{furrr}
+#'   \code{generate}. See the \code{furrr}
 #'   website for more information on working with
 #'   futures: \url{https://furrr.futureverse.org/}
 #' @return a \code{\link{simpr_sims}} object,
@@ -71,7 +71,7 @@
 #' meta_list_out = blueprint(x = ~ MASS::mvrnorm(n, rep(0, 2), Sigma = S)) %>%
 #'   meta(n = c(10, 20, 30),
 #'        S = list(independent = diag(2), correlated = diag(2) + 2)) %>%
-#'   produce_sims(3)
+#'   generate(3)
 #'
 #'  ## View overall structure of the result and a single simulation output
 #'  meta_list_out
@@ -85,98 +85,33 @@
 #'  meta_list_2 = blueprint(x = ~ MASS::mvrnorm(n, rep(0, 2), Sigma = S)) %>%
 #'   meta(n = c(10, 20, 30),
 #'        S = list(independent = diag(2), correlated = diag(2) + 2)) %>%
-#'   produce_sims(4)
+#'   generate(4)
 #'
 #'  meta_list_2
 #'
 #'  ## Fitting, tidying functions can be included in this step by running those functions and then
-#'  ## produce_all.  This can save computation time when doing large
+#'  ## generate.  This can save computation time when doing large
 #'  ## simulations, especially with parallel processing
-#'  meta_list_produce_all = blueprint(x = ~ MASS::mvrnorm(n, rep(0, 2), Sigma = S)) %>%
+#'  meta_list_generate_after = blueprint(x = ~ MASS::mvrnorm(n, rep(0, 2), Sigma = S)) %>%
 #'   meta(n = c(10, 20, 30),
 #'        S = list(independent = diag(2), correlated = diag(2) + 2)) %>%
 #'   fit(lm = ~ lm(x_2 ~ x_1, data = .)) %>%
 #'   tidy_fits %>%
-#'   produce_all(4)
+#'   generate(4)
 #'
-#'   meta_list_produce_all
+#'   meta_list_generate_after
 #'
 #'   ## This is equivalent, but may be slower / more memory-intensive
-#'   meta_list_produce_sims = meta_list_2 %>%
+#'   meta_list_generate_before = meta_list_2 %>%
 #'   fit(lm = ~ lm(x_2 ~ x_1, data = .)) %>%
 #'   tidy_fits
 #'
 #'
 #' @export
-produce_sims = function(obj, reps, ...,
-                        sim_name = "sim",
-                        quiet = TRUE, warn_on_error = TRUE,
-                        .progress = FALSE,
-                        .options = furrr_options(seed = TRUE)) {
-  UseMethod("produce_sims")
-}
-
-#' @export
-produce_sims.simpr_spec = function(obj, reps, ..., sim_name = "sim",
-                                   quiet = TRUE, warn_on_error = TRUE,
-                                   .progress = FALSE,
-                                   .options = furrr_options(seed = TRUE)) {
- produce(obj = obj, reps = reps, ..., sim_name = sim_name,
-         quiet = quiet,
-         warn_on_error = warn_on_error,
-         .progress = .progress,
-         .options = .options)
-}
-
-#' @export
-produce_sims.simpr_include = function(obj, reps, ..., sim_name = "sim",
-                                      quiet = TRUE, warn_on_error = TRUE,
-                                      .progress = FALSE,
-                                      .options = furrr_options(seed = TRUE)) {
-  warning("Additional post-simulation steps indicated but will be ignored. Did you mean `produce_all`?")
-  ## Delete include calls before running
-  obj$include_calls = NULL
-
-  produce(obj = obj, reps = reps, ...,
-          sim_name = sim_name,
-          quiet = quiet,
-          warn_on_error = warn_on_error,
-          .progress = .progress,
-          .options = .options)
-}
-
-#' @export
-#' @rdname produce_sims
-produce_all = function(obj, reps, ..., sim_name = "sim",
-                       quiet = TRUE, warn_on_error = TRUE,
-                       .progress = FALSE,
-                       .options = furrr_options(seed = TRUE)) {
-  UseMethod("produce_all")
-}
-
-#' @export
-produce_all.simpr_spec = function(obj, reps, ..., sim_name = "sim",
-                                  quiet = TRUE, warn_on_error = TRUE,
-                                  .progress = FALSE,
-                                  .options = furrr_options(seed = TRUE)) {
-  stop("No additional post-simulation steps indicated.  Did you mean `produce_sims`?")
-}
-
-#' @export
-produce_all.simpr_include = function(obj, reps, ..., sim_name = "sim",
-                                     quiet = TRUE, warn_on_error = TRUE,
-                                     .progress = FALSE,
-                                     .options = furrr_options(seed = TRUE)) {
-  produce(obj = obj, reps = reps,  ..., sim_name = sim_name,
-          quiet = quiet, warn_on_error = warn_on_error,
-          .progress = .progress,
-          .options = .options)
-}
-
-produce = function(obj, reps, ..., sim_name,
-                   quiet, warn_on_error,
-                   .progress,
-                   .options) {
+generate = function(obj, reps, ..., sim_name = "sim",
+                    quiet = TRUE, warn_on_error = TRUE,
+                    .progress = FALSE,
+                    .options = furrr_options(seed = TRUE)) {
 
   validate_reps(reps)
 

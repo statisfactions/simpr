@@ -6,7 +6,7 @@ test_that("Calc tidy terms match terms from fit",
             lm_fit = blueprint(x1 = ~ 2 + rnorm(n),
                                y = ~ 5 + 3*x1 + rnorm(n, 0, sd = 0.5)) %>%
               meta(n = 100:101) %>%
-              produce_sims(2) %>%
+              generate(2) %>%
               fit(lm = ~lm(y ~ x1, data = .))
 
             lm_tidy = lm_fit %>%
@@ -52,7 +52,7 @@ test_that("Each iteration of simulation has model terms listed correctly in tidy
          g1 = meta_list$g1)
 
   simpr_gen = simpr_spec %>%
-    produce_sims(meta_list$rep) %>%
+    generate(meta_list$rep) %>%
     fit(lm = ~lm(y ~ x1*x2, data = .))
   simpr_calc = simpr_gen %>%
     tidy_fits

@@ -1,7 +1,7 @@
 #' Fit models to the simulated data
 #'
 #' Takes simulated data from
-#' \code{\link{produce_sims}} and applies
+#' \code{\link{generate}} and applies
 #' functions to it, usually model-fitting
 #' functions.
 #'
@@ -33,7 +33,7 @@
 #'
 #' @param obj a \code{simpr_blueprint} object--the
 #'   simulated data from
-#'   \code{\link{produce_sims}}--or an
+#'   \code{\link{generate}}--or an
 #'   \code{\link{include}} object
 #' @param ... \code{purrr}-style formula functions
 #'   used for computing on the simulated data. See
@@ -50,7 +50,7 @@
 #'   additional list-columns for the output of the
 #'   provided functions (e.g. model outputs). Just
 #'   like the output of
-#'   \code{\link{produce_sims}}, there is one row
+#'   \code{\link{generate}}, there is one row
 #'   per repetition per combination of
 #'   metaparameters, and the columns are the
 #'   repetition number \code{rep}, the
@@ -63,7 +63,7 @@
 #' simple_linear_data = blueprint(x1 = ~ 2 + rnorm(n),
 #'                                y = ~ 5 + 3*x1 + rnorm(n, 0, sd = 0.5)) %>%
 #'   meta(n = 100:101) %>%
-#'   produce_sims(2)
+#'   generate(2)
 #'
 #' ## Fit with a single linear term
 #' linear_fit = simple_linear_data %>%

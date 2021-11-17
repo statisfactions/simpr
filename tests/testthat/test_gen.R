@@ -9,18 +9,18 @@ test_that("Metaparameters are not blocked by objects in calling environment", {
   ## This code should run without being confused by the `n` in the global environment
   expect_silent(out <- blueprint(x1 = ~ 2 + rnorm(n)) %>%
     meta(n = 10) %>%
-    produce_sims(1))
+    generate(1))
 
 })
 
-test_that("produce_sims() doesn't put objects in global environment", {
+test_that("generate() doesn't put objects in global environment", {
 
   if(exists("xyz123", envir = .GlobalEnv))
     rm("xyz123", envir = .GlobalEnv)
 
   out = blueprint(xyz123 = ~ 2 + rnorm(n)) %>%
     meta(n = 10) %>%
-    produce_sims(1)
+    generate(1)
 
   expect_false(exists("xyz123", envir = .GlobalEnv))
 
@@ -30,7 +30,7 @@ test_that("Earlier variables have access to output of later variables", {
  out = blueprint(x1 = ~ 1,
                  x2 = ~ x1 + 1,
                  y = ~ x1 + x2) %>%
-   produce_sims(1)
+   generate(1)
 
  ref <-
    list(structure(list(x1 = 1, x2 = 2, y = 3), class = c("tbl_df",
@@ -44,7 +44,7 @@ test_that("Gen runs without warnings or messages", {
     out = blueprint(x1 = ~ 1,
                     x2 = ~ x1 + 1,
                     y = ~ x1 + x2) %>%
-      produce_sims(1)
+      generate(1)
   })
 
 })
@@ -63,7 +63,7 @@ test_that("meta() can handle lists", {
   meta_list_out <- blueprint(x = ~ MASS::mvrnorm(n, rep(0, 2), Sigma = S)) %>%
     meta(n = 10,
          S = possible_S) %>%
-    produce_sims(1)
+    generate(1)
 
   expect_equivalent(mat_refs, purrr::map(meta_list_out$sim, as.matrix))
 
@@ -85,7 +85,7 @@ test_that("Autonumber when generating multiple columns with named argument", {
   set.seed(100, kind = "L'Ecuyer-CMRG")
   auto_out = blueprint(x = ~ MASS::mvrnorm(30, rep(0, 10), Sigma = diag(10)), sep = "_") %>%
     meta(n = 10) %>%
-    produce_sims(1)
+    generate(1)
 
   expect_identical(auto_out$sim[[1]], as_tibble(mat_1))
 
@@ -99,7 +99,7 @@ test_that("Can refer to autonumbered columns in blueprint()", {
   auto_refer = blueprint(x = ~ MASS::mvrnorm(30, rep(0, 10), Sigma = diag(10)), sep = "_",
                          y = ~ x_01 + x_02) %>%
     meta(n = 10) %>%
-    produce_sims(1)
+    generate(1)
 
   expect_identical(auto_refer$sim[[1]], comp_3)
 })
@@ -108,7 +108,7 @@ test_that("Multiple columns with two-sided formulas and unnamed arguments", {
   set.seed(100)
   cbind_out = blueprint(cbind(a, b, c, d, e, f, g, h, i, j) ~
                           MASS::mvrnorm(30, rep(0, 10), Sigma = diag(10))) %>%
-    produce_sims(1)
+    generate(1)
 
   expect_identical(cbind_out$sim[[1]], as_tibble(mat_2))
 })
@@ -120,30 +120,30 @@ test_that("Can refer to two-sided formula columns as arguments in blueprint()", 
   set.seed(100)
   cbind_refer = blueprint(cbind(a, b, c, d, e, f, g, h, i, j) ~ MASS::mvrnorm(30, rep(0, 10), Sigma = diag(10)),
                           y = ~ a + b) %>%
-    produce_sims(1)
+    generate(1)
 
   expect_identical(cbind_refer$sim[[1]], comp_4)
 })
 
 ## Resimulating just a subset ----------
-test_that("Subsetting in produce_sims or produce_all is equivalent to subsetting afterwards", {
+test_that("Subsetting in generate is equivalent to subsetting afterwards", {
   set.seed(100)
   sim_ref = blueprint(x1 = ~ 2 + rnorm(n)) %>%
     meta(n = 10) %>%
-    produce_sims(10) %>%
+    generate(10) %>%
     fit(dumb_model = ~ lm(x1 ~ 1))
 
   set.seed(100)
   sim_filt = blueprint(x1 = ~ 2 + rnorm(n)) %>%
     meta(n = 10) %>%
-    produce_sims(10, .sim_id == 3) %>%
+    generate(10, .sim_id == 3) %>%
     fit(dumb_model = ~ lm(x1 ~ 1))
 
   set.seed(100)
   sim_filt_delay = blueprint(x1 = ~ 2 + rnorm(n)) %>%
     meta(n = 10) %>%
     fit(dumb_model = ~ lm(x1 ~ 1)) %>%
-    produce_all(10, .sim_id == 3)
+    generate(10, .sim_id == 3)
 
   expect_equivalent(sim_ref[3,], sim_filt)
   expect_equivalent(sim_ref[3,], sim_filt_delay)
