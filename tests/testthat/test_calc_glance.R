@@ -14,7 +14,7 @@ test_that("glance_fits correctly returns broom::glance output", {
 
   ## glance_fits
   set.seed(100, kind = "L'Ecuyer-CMRG")
-  lin_test = blueprint(y1 = ~ 2 + rnorm(10),
+  lin_test = specify(y1 = ~ 2 + rnorm(10),
             y2 = ~ y1 + rnorm(10)) %>%
     generate(1, .options = furrr_options(seed = TRUE)) %>%
     fit(linear = ~ lm(y2 ~ y1, data = .)) %>%

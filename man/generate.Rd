@@ -18,7 +18,7 @@ generate(
 \arguments{
 \item{obj}{a \code{simpr_spec} object generated
 by \code{\link{define}} or
-\code{\link{blueprint}}, containing the
+\code{\link{specify}}, containing the
 specifications of the simulation}
 
 \item{reps}{number of replications to run (a
@@ -70,7 +70,7 @@ a \code{\link{simpr_sims}} object,
   each element of the simulation list-column.
 }
 \description{
-Use specification from \code{\link{blueprint}}
+Use specification from \code{\link{specify}}
 or \code{\link{define}} to produce simulated
 data.
 }
@@ -87,10 +87,10 @@ likely want to use the output of
 
 Errors you get using this function usually have
 to do with how you specified the simulation in
-\code{\link{blueprint}} and \code{\link{define}}.
+\code{\link{specify}} and \code{\link{define}}.
 }
 \examples{
-meta_list_out = blueprint(x = ~ MASS::mvrnorm(n, rep(0, 2), Sigma = S)) \%>\%
+meta_list_out = specify(x = ~ MASS::mvrnorm(n, rep(0, 2), Sigma = S)) \%>\%
   define(n = c(10, 20, 30),
        S = list(independent = diag(2), correlated = diag(2) + 2)) \%>\%
   generate(3)
@@ -104,7 +104,7 @@ meta_list_out = blueprint(x = ~ MASS::mvrnorm(n, rep(0, 2), Sigma = S)) \%>\%
 
  ## Changing reps will change the number of replications and thus the number of
  ## rows in the output
- meta_list_2 = blueprint(x = ~ MASS::mvrnorm(n, rep(0, 2), Sigma = S)) \%>\%
+ meta_list_2 = specify(x = ~ MASS::mvrnorm(n, rep(0, 2), Sigma = S)) \%>\%
   define(n = c(10, 20, 30),
        S = list(independent = diag(2), correlated = diag(2) + 2)) \%>\%
   generate(4)
@@ -114,7 +114,7 @@ meta_list_out = blueprint(x = ~ MASS::mvrnorm(n, rep(0, 2), Sigma = S)) \%>\%
  ## Fitting, tidying functions can be included in this step by running those functions and then
  ## generate.  This can save computation time when doing large
  ## simulations, especially with parallel processing
- meta_list_generate_after = blueprint(x = ~ MASS::mvrnorm(n, rep(0, 2), Sigma = S)) \%>\%
+ meta_list_generate_after = specify(x = ~ MASS::mvrnorm(n, rep(0, 2), Sigma = S)) \%>\%
   define(n = c(10, 20, 30),
        S = list(independent = diag(2), correlated = diag(2) + 2)) \%>\%
   fit(lm = ~ lm(x_2 ~ x_1, data = .)) \%>\%
@@ -131,7 +131,7 @@ meta_list_out = blueprint(x = ~ MASS::mvrnorm(n, rep(0, 2), Sigma = S)) \%>\%
 
 }
 \seealso{
-\code{\link{blueprint}} and
+\code{\link{specify}} and
   \code{\link{define}} for examples of how these
   functions affect the output of
   \code{generate}. See the \code{furrr}

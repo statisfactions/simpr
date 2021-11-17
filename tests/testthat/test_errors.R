@@ -5,7 +5,7 @@ test_that("errors produce new column", {
 
   errgt = function(x) {stopifnot(x < 3); x}
 set.seed(100)
-blue_only = blueprint(x1 = ~ 2 + rnorm(n),
+blue_only = specify(x1 = ~ 2 + rnorm(n),
                       y = ~ 5 + 3*x1 + rnorm(n, 0, sd = 0.5) + errgt(x1))
 spec = blue_only %>%
   define(n = 10)

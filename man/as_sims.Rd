@@ -25,7 +25,7 @@ After producing simulation results (a
 \code{simpr_tibble} object), it is sometimes
 needed to do some data transformation to
 prepare for analysis.  This can always be
-specified in blueprint through custom
+specified in specify through custom
 functions, but \code{as_sims} allows you to
 also easily specify this in your pipeline.
 After running as_sims, you can use the dplyr

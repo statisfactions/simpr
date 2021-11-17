@@ -7,7 +7,7 @@ Status](https://travis-ci.com/statisfactions/simpr.svg?branch=master)](https://t
 and generating simulations, especially for power analysis. The primary
 workflow is:
 
-1.  Specify **variables** for your simulation data, with `blueprint()`
+1.  Specify **variables** for your simulation data, with `specify()`
 2.  Specify **parameters** that you want to systematically vary between
     different cells of your simulation design (e.g. *n*, effect size,
     distribution type), with `define()`
@@ -33,7 +33,7 @@ with a just a few lines of code:
 ``` r
 set.seed(100)
 simpr_tidy = ## Specify the simulation
-  blueprint(x1 = ~ 2 + rnorm(n),
+  specify(x1 = ~ 2 + rnorm(n),
                        x2 = ~ 3 + 2*x1 + rnorm(n, 0, sd = 0.5),
                        y = ~ 5 + b1*x1 + b2*x2 + g1*x1*x2 + 10 * rnorm(n)) %>%
   define(n = seq(100, 300, by = 20),
@@ -71,7 +71,7 @@ simpr_tidy %>%
 First, we specify how we want the data to be generated:
 
 ``` r
-simpr_spec = blueprint(x1 = ~ 2 + rnorm(n),
+simpr_spec = specify(x1 = ~ 2 + rnorm(n),
                        x2 = ~ 3 + 2*x1 + rnorm(n, 0, sd = 0.5),
                        y = ~ 5 + b1*x1 + b2*x2 + g1*x1*x2 + 10 * rnorm(n)) %>%
   define(n = seq(100, 300, by = 20),
@@ -80,7 +80,7 @@ simpr_spec = blueprint(x1 = ~ 2 + rnorm(n),
        g1 = seq(-1, 1, by = 0.5))
 ```
 
-The call to `blueprint()` contains the basics of what we actually want
+The call to `specify()` contains the basics of what we actually want
 simulated. Each argument is a named, one-sided formula that can include
 functions like `rnorm` or whatever else you want, specified similar to
 `purrr` formula functions. Note that these arguments include both
@@ -169,7 +169,7 @@ simpr_gen$sim[[1]]
     ## # … with 90 more rows
 
 Next, we can fit a model on this data using the `fit()` function; this
-uses similar formula syntax to `blueprint()`:
+uses similar formula syntax to `specify()`:
 
 ``` r
 simpr_fit = simpr_gen %>% 

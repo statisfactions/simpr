@@ -8,7 +8,7 @@
 #' The \code{\dots} arguments use an efficient syntax to specify custom
 #' functions needed for generating a simulation, based on the \code{purrr}
 #' package.  When producing one variable, one can provide an expression such as
-#' \code{blueprint(x = ~ 3 + runif(10))} instead of defining a custom function.
+#' \code{specify(x = ~ 3 + runif(10))} instead of defining a custom function.
 #'
 #' If a formula is given as a named argument, the name is used for the name(s)
 #' of the generated variables. For instance, if the argument \code{x} generates
@@ -26,14 +26,14 @@
 #'   simulation variables.
 #' @param sep Specify the separator for auto-generating names.  See
 #'   \emph{Details}.
-#' @return A \code{simpr_blueprint} object which contains the functions needed to
+#' @return A \code{simpr_specify} object which contains the functions needed to
 #'   generate the simulation; to be passed to \code{\link{define}} for defining
 #'   metaparameters or, if there are no metaparameters, directly to
 #'   \code{\link{generate}} for generating the simulation.
 #'
 #'   Also useful is the fact that one can refer to variables in subsequent
 #'   arguments.  So, one could define another variable \code{y} that depends on
-#'   \code{x} very simply, e.g. \code{blueprint(x = ~ 3 + runif(10), y = ~ 2 *
+#'   \code{x} very simply, e.g. \code{specify(x = ~ 3 + runif(10), y = ~ 2 *
 #'   x)}.
 #'
 #'   Finally, one can also refer to metaparameters that are to be systematically
@@ -42,27 +42,27 @@
 #'
 #' @examples
 #' ## specify a variable and generate it in the simulation
-#' single_var = blueprint(x = ~ 1 + rnorm(5)) %>%
+#' single_var = specify(x = ~ 1 + rnorm(5)) %>%
 #'   generate(1) # generate a single repetition of the simulation
 #' single_var$sim[[1]] # peek at the simulation
 #'
-#' two_var = blueprint(x = ~ 1 + rnorm(5),
+#' two_var = specify(x = ~ 1 + rnorm(5),
 #'                     y = ~ x + 2) %>%
 #'   generate(1)
 #' two_var$sim[[1]]
 #'
 #' ## Generates x_01 through x_10
-#' autonumber_var = blueprint(x = ~ MASS::mvrnorm(5, rep(0, 10), Sigma = diag(10))) %>%
+#' autonumber_var = specify(x = ~ MASS::mvrnorm(5, rep(0, 10), Sigma = diag(10))) %>%
 #'   generate(1)
 #' autonumber_var$sim[[1]]
 #'
 #' # alternatively, you could use a two-sided formula for names
-#' multi_name = blueprint(cbind(x, y, z) ~ MASS::mvrnorm(5, rep(0, 3), Sigma = diag(3))) %>%
+#' multi_name = specify(cbind(x, y, z) ~ MASS::mvrnorm(5, rep(0, 3), Sigma = diag(3))) %>%
 #'   generate(1)
 #' multi_name$sim[[1]]
 #'
 #' # Simple example of setting a metaparameter
-#' simple_meta = blueprint(x = ~ 1 + rnorm(n)) %>%
+#' simple_meta = specify(x = ~ 1 + rnorm(n)) %>%
 #'   define(n = c(5, 10)) %>% # without this line you would get an error!
 #'   generate(1)
 #'
@@ -72,7 +72,7 @@
 #' simple_meta$sim[[2]]
 #'
 #' @export
-blueprint = function(.x = NULL, ..., sep = "_") {
+specify = function(.x = NULL, ..., sep = "_") {
 
   vars = list(...)
 
@@ -104,7 +104,7 @@ blueprint = function(.x = NULL, ..., sep = "_") {
   }
 
   # Process formulas to extract and set varnames attribute
-  out$blueprint = purrr::pmap(list(vars, names(vars), named_vars),
+  out$specify = purrr::pmap(list(vars, names(vars), named_vars),
                                      function(x, n, named) {
 
                                        if(!rlang::is_formula(x))

@@ -6,7 +6,7 @@ library(purrr)
 
 ## Regression example --------------
 
-simpr_spec = blueprint(x1 = ~ 2 + rnorm(n),
+simpr_spec = specify(x1 = ~ 2 + rnorm(n),
                        x2 = ~ 3 + 2*x1 + rnorm(n, 0, sd = 0.5),
                        y = ~ 5 + b1*x1 + b2*x2 + g1*x1*x2 + rnorm(n, 0, sd = s)) %>%
   define(n = seq(100, 300, by = 20),
@@ -34,7 +34,7 @@ simpr_calc %>%
 
 ## Chisq example: number of categories, compare fisher and chisq ------------
 
-chisq_spec = blueprint(x1 = ~rnorm(n),
+chisq_spec = specify(x1 = ~rnorm(n),
                        x2 = ~x1 + rnorm(n, 0, sd = 2),
                        c1 = ~ cut(x1, breaks = b) %>% as.numeric,
                        c2 = ~ cut(x2, breaks = b) %>% as.numeric) %>%
@@ -61,7 +61,7 @@ all_tidy %>%
 
 # Independent t-test example ----------------------------------------------
 
-ind_t_spec = blueprint(y1 = ~ rnorm(n, mean = m + d*s, sd = s),
+ind_t_spec = specify(y1 = ~ rnorm(n, mean = m + d*s, sd = s),
                        y2 = ~ rnorm(n, mean = m, sd = s)) %>%
   define(n = seq(20, 100, by = 10), # n per grp
        m = 70, # ctrl grp mean
@@ -115,7 +115,7 @@ ind_t_tidy %>%
 
 # Dependent t-test example ----------------------------------------------
 
-dep_t_spec = blueprint(y1 = ~ rnorm(n, mean = m, sd = s),
+dep_t_spec = specify(y1 = ~ rnorm(n, mean = m, sd = s),
                        y2 = ~ y1 + rnorm(n, mean = d*s, sd = s)) %>%
   define(n = seq(20, 100, by = 10), # overall n (2n observations)
        m = 70, # y1 mean
@@ -171,7 +171,7 @@ dep_t_tidy %>%
 # Let's simulate data to be dependent,
 # and then compare dependent vs. independent t-tests on the same data,
 # to simulate power of dependent designs vs. independent (where applicable)
-t_comp_spec = blueprint(y1 = ~ rnorm(n, mean = m, sd = s),
+t_comp_spec = specify(y1 = ~ rnorm(n, mean = m, sd = s),
                    y2 = ~ y1 + rnorm(n, mean = d*s, sd = s)) %>%
   define(n = seq(20, 100, by = 10), # overall n (2n observations)
        m = 70, # y1 mean
@@ -208,7 +208,7 @@ t_comp_tidy %>%
 # Binomial example --------------------------------------------------------
 
 # specify a binomial data-generating process
-binom_spec = blueprint(s = ~ rbinom(1, size = n, prob = p), # successes
+binom_spec = specify(s = ~ rbinom(1, size = n, prob = p), # successes
                        f = ~ n - s) %>% # failures
   define(n = seq(20, 200, by = 20), # number of trials
        p = seq(.5, .75, by = .05)) # probability of success (1)
@@ -259,7 +259,7 @@ binom_tidy %>%
 # Reaction time power analysis --------------------------------------------
 
 # specify a log-normal data-generating process for 2 conditions (between-ppt)
-rt_spec = blueprint(
+rt_spec = specify(
   # ID numbers for each participant
   id = ~ seq_len(n),
   # control condition RT
@@ -312,7 +312,7 @@ rt_gen_long %>%
 # Reaction time power analysis -- refactor--------------------------------------------
 
 # specify a log-normal data-generating process for 2 conditions (between-ppt)
-rt_spec = blueprint(
+rt_spec = specify(
   # ID numbers for each participant
   id = ~ seq_len(n),
   # control condition RT

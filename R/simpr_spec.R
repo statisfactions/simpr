@@ -3,7 +3,7 @@
 #' Accessor & display methods for simpr_spec class
 #'
 #' Class \code{simpr_spec} is created by
-#' \code{\link{blueprint}} and/or
+#' \code{\link{specify}} and/or
 #' \code{\link{define}} to specify the simulation
 #' variables, which is produced by
 #' \code{\link{generate}}.
@@ -14,7 +14,7 @@
 #' @rdname simpr_spec
 #' @export
 print.simpr_spec = function(x, ...) {
-  print_cats = x[c("blueprint", "conditions", "meta_info", "include_calls")]
+  print_cats = x[c("specify", "conditions", "meta_info", "include_calls")]
  purrr::imap(print_cats, function(y, ynm) {
    if(length(y) == 0 || (ynm == "meta_info" && length(y$indices) == 0))
      return()
@@ -37,7 +37,7 @@ new_simpr_spec = function() {
   x = list(conditions = tibble::tibble(),
            meta_info = list(indices = list(),
                             lookup = list()),
-           blueprint = list(),
+           specify = list(),
            variable_sep = character(),
            include_calls = list())
 

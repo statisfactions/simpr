@@ -1,6 +1,6 @@
 #' Generate simulated data from specification
 #'
-#' Use specification from \code{\link{blueprint}}
+#' Use specification from \code{\link{specify}}
 #' or \code{\link{define}} to produce simulated
 #' data.
 #'
@@ -16,11 +16,11 @@
 #'
 #' Errors you get using this function usually have
 #' to do with how you specified the simulation in
-#' \code{\link{blueprint}} and \code{\link{define}}.
+#' \code{\link{specify}} and \code{\link{define}}.
 #'
 #' @param obj a \code{simpr_spec} object generated
 #'   by \code{\link{define}} or
-#'   \code{\link{blueprint}}, containing the
+#'   \code{\link{specify}}, containing the
 #'   specifications of the simulation
 #' @param reps number of replications to run (a
 #'   whole number greater than 0)
@@ -46,7 +46,7 @@
 #'   to
 #'   \code{\link[furrr:furrr_options]{furrr_options(seed
 #'    = TRUE)}}.
-#' @seealso \code{\link{blueprint}} and
+#' @seealso \code{\link{specify}} and
 #'   \code{\link{define}} for examples of how these
 #'   functions affect the output of
 #'   \code{generate}. See the \code{furrr}
@@ -68,7 +68,7 @@
 #'   \code{tidyr} verbs: the command is applied to
 #'   each element of the simulation list-column.
 #' @examples
-#' meta_list_out = blueprint(x = ~ MASS::mvrnorm(n, rep(0, 2), Sigma = S)) %>%
+#' meta_list_out = specify(x = ~ MASS::mvrnorm(n, rep(0, 2), Sigma = S)) %>%
 #'   define(n = c(10, 20, 30),
 #'        S = list(independent = diag(2), correlated = diag(2) + 2)) %>%
 #'   generate(3)
@@ -82,7 +82,7 @@
 #'
 #'  ## Changing reps will change the number of replications and thus the number of
 #'  ## rows in the output
-#'  meta_list_2 = blueprint(x = ~ MASS::mvrnorm(n, rep(0, 2), Sigma = S)) %>%
+#'  meta_list_2 = specify(x = ~ MASS::mvrnorm(n, rep(0, 2), Sigma = S)) %>%
 #'   define(n = c(10, 20, 30),
 #'        S = list(independent = diag(2), correlated = diag(2) + 2)) %>%
 #'   generate(4)
@@ -92,7 +92,7 @@
 #'  ## Fitting, tidying functions can be included in this step by running those functions and then
 #'  ## generate.  This can save computation time when doing large
 #'  ## simulations, especially with parallel processing
-#'  meta_list_generate_after = blueprint(x = ~ MASS::mvrnorm(n, rep(0, 2), Sigma = S)) %>%
+#'  meta_list_generate_after = specify(x = ~ MASS::mvrnorm(n, rep(0, 2), Sigma = S)) %>%
 #'   define(n = c(10, 20, 30),
 #'        S = list(independent = diag(2), correlated = diag(2) + 2)) %>%
 #'   fit(lm = ~ lm(x_2 ~ x_1, data = .)) %>%
@@ -141,7 +141,7 @@ generate = function(obj, reps, ..., sim_name = "sim",
 
   create_sim_results(specs = specs,
                      x = obj[c("meta_info",
-                               "blueprint",
+                               "specify",
                                "variable_sep",
                                "include_calls")],
                      sim_name = sim_name,
@@ -167,7 +167,7 @@ generate_sim = function(y, eval_environment, variable_sep) {
     assign(varnames, gen, envir = eval_environment)
 
   } else if(length(dim(gen)) > 3) {
-    stop("More than 2 dimensional output in blueprint() not supported")
+    stop("More than 2 dimensional output in specify() not supported")
   } else if(ncol(gen) == 0) {
     stop("variable function returns 0 columns")
   } else if(ncol(gen) == 1) {
@@ -259,7 +259,7 @@ create_sim_results <- function(specs, x, sim_name, quiet, warn_on_error, .progre
   sim_results = specs %>%
     tibble::as_tibble() %>%
     furrr::future_pmap(generate_row,
-                variables = x$blueprint,
+                variables = x$specify,
                 include_calls = x$include_calls,
                 variable_sep = x$variable_sep,
                 meta_indices = names(x$meta_info$indices),

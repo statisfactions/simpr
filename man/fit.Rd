@@ -7,7 +7,7 @@
 fit(obj, ..., .progress = FALSE, .options = furrr_options())
 }
 \arguments{
-\item{obj}{a \code{simpr_blueprint} object--the
+\item{obj}{a \code{simpr_specify} object--the
 simulated data from
 \code{\link{generate}}--or an
 \code{\link{include}} object}
@@ -57,7 +57,7 @@ parameters from the object, based on
 \code{\link[broom]{glance}} from the
 \code{broom} package.
 
-Similar to \code{\link{blueprint}}, the
+Similar to \code{\link{specify}}, the
 \code{\dots} arguments uses \code{purrr}-style
 formula functions to specify fitting models to
 the data. The functions are computed within
@@ -70,11 +70,11 @@ the full dataset, use \code{.}, e.g.
 \code{fit(linear_model = ~lm(y ~ x + z, data =
 .)}. These equivalent specifications would compute linear models on each
 simulation cell if there are variables x, y,
-and z specified in \code{blueprint}.
+and z specified in \code{specify}.
 }
 \examples{
 ## Generate data to fit models
-simple_linear_data = blueprint(x1 = ~ 2 + rnorm(n),
+simple_linear_data = specify(x1 = ~ 2 + rnorm(n),
                                y = ~ 5 + 3*x1 + rnorm(n, 0, sd = 0.5)) \%>\%
   define(n = 100:101) \%>\%
   generate(2)

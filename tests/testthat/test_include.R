@@ -2,21 +2,21 @@ context("simpr::include")
 library(dplyr)
 
 
-blue_only = blueprint(x1 = ~ 2 + rnorm(n),
+blue_only = specify(x1 = ~ 2 + rnorm(n),
                  y = ~ 5 + 3*x1 + rnorm(n, 0, sd = 0.5))
 spec = blue_only %>%
   define(n = 100:101)
 
 test_that("delayed fit() with generate() give same results as generate()", {
   set.seed(100)
-  lm_fit = blueprint(x1 = ~ 2 + rnorm(n),
+  lm_fit = specify(x1 = ~ 2 + rnorm(n),
                      y = ~ 5 + 3*x1 + rnorm(n, 0, sd = 0.5)) %>%
     define(n = 100:101) %>%
     generate(2) %>%
     fit(lm = ~lm(y ~ x1, data = .))
 
   set.seed(100)
-  lm_fit_include = blueprint(x1 = ~ 2 + rnorm(n),
+  lm_fit_include = specify(x1 = ~ 2 + rnorm(n),
                      y = ~ 5 + 3*x1 + rnorm(n, 0, sd = 0.5)) %>%
     define(n = 100:101) %>%
     fit(lm = ~lm(y ~ x1, data = .)) %>%
@@ -24,7 +24,7 @@ test_that("delayed fit() with generate() give same results as generate()", {
 
   set.seed(100)
   lm_include_tricky = fit(lm =  ~lm(y ~ x1, data = .),
-                          obj = blueprint(x1 = ~ 2 + rnorm(n),
+                          obj = specify(x1 = ~ 2 + rnorm(n),
                                 y = ~ 5 + 3*x1 + rnorm(n, 0, sd = 0.5)) %>%
     define(n = 100:101)) %>%
     generate(2)

@@ -1,12 +1,12 @@
 #' Define metaparameters to vary in simulation
 #'
-#' Takes the output of \code{\link{blueprint}} (a
-#' \code{simpr_blueprint} object) and defines the
+#' Takes the output of \code{\link{specify}} (a
+#' \code{simpr_specify} object) and defines the
 #' metaparameters for simulation.
 #'
 #' This is the second step in the simulation
 #' process, after specifying the simulated data
-#' using \code{\link{blueprint}}.  The output of
+#' using \code{\link{specify}}.  The output of
 #' \code{\link{define}} is then passed to
 #' \code{\link{generate}} to actually generate the
 #' simulation.
@@ -18,7 +18,7 @@
 #' systematically varied as a part of the
 #' simulation design. Any metaparameter would also
 #' appear in the formulas of
-#' \code{\link{blueprint}}, and thus the
+#' \code{\link{specify}}, and thus the
 #' simulation changes depending on the value of
 #' the metaparameter.
 #'
@@ -39,7 +39,7 @@
 #' \code{"b"}.
 #'
 #' @param .x a \code{simpr_spec} object (the output
-#'   of \code{\link{blueprint}}), or NULL to
+#'   of \code{\link{specify}}), or NULL to
 #'   create a new specification
 #' @param ... metaparameters: named arguments
 #'   containing vectors or unidimensional lists of
@@ -57,13 +57,13 @@
 #'
 #' @examples
 #' # Simple example of setting a metaparameter
-#' simple_meta = blueprint(x = ~ 1 + rnorm(n)) %>%
+#' simple_meta = specify(x = ~ 1 + rnorm(n)) %>%
 #'   define(n = c(5, 10)) %>%
 #'   generate(1)
 #'
 #' simple_meta # $sim has a 5-row tibble and a 10-row tibble
 #'
-#' multi_meta = blueprint(x = ~ mu + rnorm(n)) %>%
+#' multi_meta = specify(x = ~ mu + rnorm(n)) %>%
 #'   define(n = c(5, 10),
 #'        mu = seq(-1, 1, length.out = 3)) %>%
 #'   generate(1)
@@ -72,7 +72,7 @@
 #'
 #'
 #' # meta can handle lists which can contain multiple matrices, etc.
-#' meta_list_out = blueprint(x = ~ MASS::mvrnorm(n, rep(0, 2), Sigma = S)) %>%
+#' meta_list_out = specify(x = ~ MASS::mvrnorm(n, rep(0, 2), Sigma = S)) %>%
 #'   define(n = c(10, 20, 30),
 #'        S = list(independent = diag(2), correlated = diag(2) + 2)) %>%
 #'   generate(1)

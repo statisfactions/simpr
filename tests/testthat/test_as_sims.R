@@ -2,14 +2,14 @@ context("simpr::as_sims")
 
 test_that("add_sims works with mutate", {
   set.seed(203)
-  lin_test = blueprint(y1 = ~ 2 + rnorm(10),
+  lin_test = specify(y1 = ~ 2 + rnorm(10),
                        y2 = ~ y1 + rnorm(10)) %>%
     generate(1) %>%
     as_sims %>% mutate(y3 = y1 + y2) %>%
     as_tibble
 
   set.seed(203)
-  lin_test2 = blueprint(y1 = ~ 2 + rnorm(10),
+  lin_test2 = specify(y1 = ~ 2 + rnorm(10),
                        y2 = ~ y1 + rnorm(10),
                        y3 = ~ y1 + y2) %>%
     generate(1)
@@ -19,7 +19,7 @@ test_that("add_sims works with mutate", {
 })
 
 test_that("reshaping works as expected", {
-  rt_spec = blueprint(
+  rt_spec = specify(
     # ID numbers for each participant
     id = ~ seq_len(n),
     # control condition RT
