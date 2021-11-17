@@ -5,6 +5,9 @@ output:
 ---
 
 [![Build Status](https://travis-ci.com/statisfactions/simpr.svg?branch=master)](https://travis-ci.com/statisfactions/simpr)
+```{r include = FALSE}
+library(simpr)
+```
 
 # simpr
 
@@ -16,20 +19,19 @@ output:
   4. Fit models with your data (e.g. `lm()`), with `fit()`
   5. Tidy the model output for further processing, such as computing power or Type I Error rates, with `tidy_fits`
   
-## Installation
+## Installation and loading
 
 ```{r eval = FALSE}
 remotes::install_github("statisfactions/simpr")
 
+library(simpr)
 ```
 
 
 ## Introductory example: regression with three variables
 
 Let's say we want to see our power to detect an interaction in a linear model.   We can completely run the simulation and calculate *p* values with a just a few lines of code:
-```{r}
-library(simpr)
-
+```{r messages = FALSE}
 set.seed(100)
 simpr_tidy = ## Specify the simulation
   blueprint(x1 = ~ 2 + rnorm(n),
@@ -87,7 +89,7 @@ simpr_gen = simpr_spec %>%
   produce_sims(10)
 ```
 
-`gen` has one argument, the number of repetitions for each simulation.  Here we generate 10 repetitions. This produces a `tibble` with one row for each combination of metaparameters and repetition, and a list-column with the generated data.
+`produce_sims` has one argument, the number of repetitions for each simulation.  Here we generate 10 repetitions. This produces a `tibble` with one row for each combination of metaparameters and repetition, and a list-column with the generated data.
 
 ```{r}
 simpr_gen
