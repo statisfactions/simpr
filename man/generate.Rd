@@ -24,8 +24,8 @@ specifications of the simulation}
 \item{reps}{number of replications to run (a
 whole number greater than 0)}
 
-\item{\dots}{filtering criteria for which rows to
-simulate, passed to
+\item{\dots}{filtering criteria for which rows
+to simulate, passed to
 \code{\link[dplyr]{filter}}.  This is useful
 for reproducing just a few selected rows of a
 simulation without needing to redo the entire
@@ -43,7 +43,7 @@ when simulation errors occur?}
 
 \item{.progress}{A logical, for whether or not
 to print a progress bar for multiprocess,
-multisession, and multicore plans .}
+multisession, and multicore plans.}
 
 \item{.options}{The \code{future} specific
 options to use with the workers when using
@@ -70,19 +70,18 @@ a \code{\link{simpr_sims}} object,
   each element of the simulation list-column.
 }
 \description{
-Use specification from \code{\link{specify}}
-or \code{\link{define}} to produce simulated
-data.
+Use specification from \code{\link{specify}} or
+\code{\link{define}} to produce simulated data.
 }
 \details{
 This is the third step in the simulation
-process: after specifying the variables and
-metaparameters, \code{generate} is the
-workhorse function that actually generates the
-simulated datasets, one for each replication,
-for each combination of metaparameters. You
-likely want to use the output of
-\code{generate} to fit model(s) with
+process: after specifying the population model
+and defining the metaparameters,
+\code{generate} is the workhorse function that
+actually generates the simulated datasets, one
+for each replication, for each combination of
+metaparameters. You likely want to use the
+output of \code{generate} to fit model(s) with
 \code{\link{fit}}.
 
 Errors you get using this function usually have
@@ -132,9 +131,9 @@ meta_list_out = specify(x = ~ MASS::mvrnorm(n, rep(0, 2), Sigma = S)) \%>\%
 }
 \seealso{
 \code{\link{specify}} and
-  \code{\link{define}} for examples of how these
-  functions affect the output of
-  \code{generate}. See the \code{furrr}
-  website for more information on working with
-  futures: \url{https://furrr.futureverse.org/}
+  \code{\link{define}} for examples of how
+  these functions affect the output of
+  \code{generate}. See the \code{furrr} website
+  for more information on working with futures:
+  \url{https://furrr.futureverse.org/}
 }
