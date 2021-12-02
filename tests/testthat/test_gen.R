@@ -125,6 +125,26 @@ test_that("Can refer to two-sided formula columns as arguments in specify()", {
   expect_identical(cbind_refer$sim[[1]], comp_4)
 })
 
+test_that("Can use names from DGP", {
+  out1 = specify(x13 = ~ MASS::mvrnorm(10, mu = rep(0, 5), Sigma = diag(rep(1, 5))) %>%
+                  data.frame %>%
+                  setNames(letters[1:5])) %>%
+    generate(1)
+
+  expect_equal(names(out1$sim[[1]]), letters[1:5])
+
+
+  out2 = specify(x13 = ~ MASS::mvrnorm(10, mu = rep(0, 5), Sigma = diag(rep(1, 5))) %>%
+                  data.frame %>%
+                  setNames(letters[1:5]),
+                use_names = FALSE,
+                sep = "...") %>%
+    generate(1)
+
+  expect_equal(names(out2$sim[[1]]), paste("x13", 1:5, sep = "..."))
+
+})
+
 ## Resimulating just a subset ----------
 test_that("Subsetting in generate is equivalent to subsetting afterwards", {
   set.seed(100)

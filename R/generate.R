@@ -142,6 +142,7 @@ generate = function(obj, reps, ..., sim_name = "sim",
                      x = obj[c("meta_info",
                                "specify",
                                "variable_sep",
+                               "use_names",
                                "include_calls")],
                      sim_name = sim_name,
                      quiet = quiet,
@@ -152,7 +153,7 @@ generate = function(obj, reps, ..., sim_name = "sim",
 }
 
 
-generate_sim = function(y, eval_environment, variable_sep) {
+generate_sim = function(y, eval_environment, variable_sep, use_names) {
   eval_fun = purrr::as_mapper(y)
   environment(eval_fun) <- eval_environment
 
@@ -169,33 +170,40 @@ generate_sim = function(y, eval_environment, variable_sep) {
     stop("More than 2 dimensional output in specify() not supported")
   } else if(ncol(gen) == 0) {
     stop("variable function returns 0 columns")
-  } else if(ncol(gen) == 1) {
-    names(gen) = attr(y, "varnames")
-    assign(varnames, gen[[1]], envir = eval_environment)
-  } else if(ncol(gen) > 1) {
-    gen_df = tibble::as_tibble(gen, .name_repair = "minimal")
-
-    # rename gen_df
-    ## if multiple varnames given via formula lhs, use those
-    if(length(varnames) > 1) {
-      names(gen_df) = varnames
-    } else {
-      # Otherwise, use auto-numbering
-      names(gen_df) = sprintf(paste0("%s%s%0", nchar(trunc(ncol(gen))), ".0f"),
-                              varnames,
-                              variable_sep,
-                              1:ncol(gen))
-      ## assign names to the eval_environmnent
+  } else if(ncol(gen) >= 1) {
+    if(use_names && !is.null(colnames(gen))) {
+      varnames = colnames(gen)
     }
-    purrr::iwalk(gen_df, ~ assign(.y, .x, envir = eval_environment))
+
+    if(ncol(gen) == 1) {
+      names(gen) = attr(y, "varnames")
+      assign(varnames, gen[[1]], envir = eval_environment)
+    } else {
+      gen_df = tibble::as_tibble(gen, .name_repair = "minimal")
+
+      #rename gen_df # if multiple varnames given
+      #via formula lhs or from the dataset itself,
+      #use those
+      if(length(varnames) > 1) {
+        names(gen_df) = varnames
+      } else {
+        # Otherwise, use auto-numbering
+        names(gen_df) = sprintf(paste0("%s%s%0", nchar(trunc(ncol(gen))), ".0f"),
+                                varnames,
+                                variable_sep,
+                                1:ncol(gen))
+        ## assign names to the eval_environmnent
+      }
+      purrr::iwalk(gen_df, ~ assign(.y, .x, envir = eval_environment))
 
 
+    }
   }
 
   gen_df
 }
 
-generate_row = function(variables, ..., variable_sep,
+generate_row = function(variables, ..., variable_sep, use_names,
                              include_calls, meta_indices, sim_name, quiet,
                         excluded_sim_ids) {
 
@@ -209,7 +217,8 @@ generate_row = function(variables, ..., variable_sep,
 
   sim_list = purrr::safely(purrr::map_dfc, otherwise = NULL, quiet = quiet)(variables, generate_sim,
                                                                      eval_environment = eval_environment,
-                                                                     variable_sep = variable_sep)
+                                                                     variable_sep = variable_sep,
+                                                                     use_names = use_names)
 
   ## Create a 1-row tibble with meta values and the simulation cell
   df_full = purrr::map(meta_values, ~ if(length(.) == 1) return(.) else return(list(.))) %>%
@@ -261,6 +270,7 @@ create_sim_results <- function(specs, x, sim_name, quiet, warn_on_error, .progre
                 variables = x$specify,
                 include_calls = x$include_calls,
                 variable_sep = x$variable_sep,
+                use_names = x$use_names,
                 meta_indices = names(x$meta_info$indices),
                 sim_name = sim_name,
                 quiet = quiet,

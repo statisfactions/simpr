@@ -1,44 +1,87 @@
-#' Specify functions to generate variables
+#' Specify data-generating mechanisms
 #'
-#' Specify functions for computing each variable in the simulation.
+#' Specify the data-generating mechanisms for the
+#' simulation using purrr-style lambda functions.
 #'
-#' This is always the first command in the simulation process, to specify the
-#' actual simulated variables.
+#' This is always the first command in the
+#' simulation process, to specify the actual
+#' simulated variables.
 #'
-#' The \code{\dots} arguments use an efficient syntax to specify custom
-#' functions needed for generating a simulation, based on the \code{purrr}
-#' package.  When producing one variable, one can provide an expression such as
-#' \code{specify(x = ~ 3 + runif(10))} instead of defining a custom function.
+#' The \code{\dots} arguments use an efficient
+#' syntax to specify custom functions needed for
+#' generating a simulation, based on the
+#' \code{purrr} package.  When producing one
+#' variable, one can provide an expression such as
+#' \code{specify(x = ~ 3 + runif(10))} instead of
+#' defining a custom function.
 #'
-#' If a formula is given as a named argument, the name is used for the name(s)
-#' of the generated variables. For instance, if the argument \code{x} generates
-#' a two-column matrix and \code{sep = "_"} (the default) the variables will be
-#' named \code{x_1} and \code{x_2}. Double-sided formulas specify names for
-#' multiple columns produced by the function, and can be specified using
-#' \code{\link{cbind}(name1, name2, etc)}, similar to multivariate
-#' specifications elsewhere in R, e.g. \code{cbind(x, y) ~ MASS::mvrnorm(5, c(0,
-#' 0), Sigma = diag(2))}.
+#' The results of these functions are brought
+#' together into a single tibble, so all functions
+#' should produce the same number of rows.
+#' However, a function can certainly produce
+#' multiple columns as well.
 #'
-#' @param .x a \code{simpr_spec} object (the output
-#'   of \code{\link{define}}), or NULL to
+#' @section Column naming:
+#'
+#'   Because functions can produce different
+#'   numbers of columns, some decisions need to be
+#'   made regarding the names of those columns. If
+#'   a provided lambda function produces a single
+#'   column, the name given to the argument
+#'   becomes the name of the column.  If the
+#'   function already produces column names, then
+#'   the output will use these names if
+#'   \code{use_names = TRUE}, the default.
+#'   Otherwise, simpr uses the argument name as a
+#'   base and auto-numbers the columns. For
+#'   instance, if the argument \code{x} generates
+#'   a two-column matrix and \code{sep = "_"} (the
+#'   default) the columns will be named
+#'   \code{x_1}and \code{x_2}.
+#'
+#'   Custom names can also be directly provided by
+#'   provide a double-sided formulas to provide
+#'   names for multiple columns produced by the
+#'   function. Double-sided formulas should not be
+#'   named, since the left-hand side is already
+#'   providing names. Multiple names can be
+#'   provided on the left-hand side are provided
+#'   using \code{cbind}, similar to multivariate
+#'   specifications elsewhere in R, e.g.
+#'   \code{specify(cbind(x, y) ~ MASS::mvrnorm(5,
+#'   c(0, 0), Sigma = diag(2)))}.
+#'
+#' @param .x a \code{simpr_spec} object (the
+#'   output of \code{\link{define}}), or NULL to
 #'   create a new specification
-#' @param ... \code{purrr}-style formula functions used for generating
-#'   simulation variables.
-#' @param sep Specify the separator for auto-generating names.  See
-#'   \emph{Details}.
-#' @return A \code{simpr_specify} object which contains the functions needed to
-#'   generate the simulation; to be passed to \code{\link{define}} for defining
-#'   metaparameters or, if there are no metaparameters, directly to
-#'   \code{\link{generate}} for generating the simulation.
+#' @param ... \code{purrr}-style formula functions
+#'   used for generating simulation variables.
+#' @param sep Specify the separator for
+#'   auto-generating names.  See \emph{Column
+#'   naming}.
+#' @param use_names Whether to use names generated
+#'   by the lambda function (TRUE, the default), or to
+#'   overwrite them with supplied names.
+#' @return A \code{simpr_specify} object which
+#'   contains the functions needed to generate the
+#'   simulation; to be passed to
+#'   \code{\link{define}} for defining
+#'   metaparameters or, if there are no
+#'   metaparameters, directly to
+#'   \code{\link{generate}} for generating the
+#'   simulation.
 #'
-#'   Also useful is the fact that one can refer to variables in subsequent
-#'   arguments.  So, one could define another variable \code{y} that depends on
-#'   \code{x} very simply, e.g. \code{specify(x = ~ 3 + runif(10), y = ~ 2 *
+#'   Also useful is the fact that one can refer to
+#'   variables in subsequent arguments.  So, one
+#'   could define another variable \code{y} that
+#'   depends on \code{x} very simply, e.g.
+#'   \code{specify(x = ~ 3 + runif(10), y = ~ 2 *
 #'   x)}.
 #'
-#'   Finally, one can also refer to metaparameters that are to be systematically
-#'   varied in the simulation study.  See \code{\link{define}} and the examples
-#'   for more details.
+#'   Finally, one can also refer to metaparameters
+#'   that are to be systematically varied in the
+#'   simulation study.  See \code{\link{define}}
+#'   and the examples for more details.
 #'
 #' @examples
 #' ## specify a variable and generate it in the simulation
@@ -72,7 +115,7 @@
 #' simple_meta$sim[[2]]
 #'
 #' @export
-specify = function(.x = NULL, ..., sep = "_") {
+specify = function(.x = NULL, ..., use_names = TRUE, sep = "_") {
 
   vars = list(...)
 
@@ -141,8 +184,9 @@ specify = function(.x = NULL, ..., sep = "_") {
                                      })
 
 
-  # set attribute of "sep" for auto-numbering variables with multiple outputs
+  # set attributes of "use_names" and "sep" for auto-numbering variables with multiple outputs
   out$variable_sep = sep
+  out$use_names = use_names
 
   out
 }
