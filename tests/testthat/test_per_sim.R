@@ -1,11 +1,11 @@
-context("simpr::as_sims")
+context("simpr::per_sim")
 
-test_that("add_sims works with mutate", {
+test_that("per_sim works with mutate", {
   set.seed(203)
   lin_test = specify(y1 = ~ 2 + rnorm(10),
                        y2 = ~ y1 + rnorm(10)) %>%
     generate(1) %>%
-    as_sims %>% mutate(y3 = y1 + y2) %>%
+    per_sim %>% mutate(y3 = y1 + y2) %>%
     as_tibble
 
   set.seed(203)
@@ -18,7 +18,7 @@ test_that("add_sims works with mutate", {
 
 })
 
-test_that("reshaping works as expected", {
+test_that("reshaping works as expected with per_sim", {
   rt_spec = specify(
     # ID numbers for each participant
     id = ~ seq_len(n),
@@ -42,7 +42,7 @@ test_that("reshaping works as expected", {
   set.seed(101)
   rt_gen = rt_spec %>%
     generate(1) %>%
-    as_sims() %>%
+    per_sim() %>%
     pivot_longer(-id, names_to = "Condition", values_to = "RT")
 
   expect_equal(names(rt_gen$sim[[1]]), c("id", "Condition", "RT"))
@@ -50,7 +50,7 @@ test_that("reshaping works as expected", {
   ## Delayed
   set.seed(101)
   rt_gen_delayed = rt_spec %>%
-    as_sims() %>%
+    per_sim() %>%
     pivot_longer(-id, names_to = "Condition", values_to = "RT") %>%
     generate(1)
 

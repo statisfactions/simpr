@@ -338,7 +338,7 @@ rt_gen = rt_spec %>%
 
 # wrangle sim data (inside sim) from wide to long for modeling
 rt_gen2 <- rt_gen %>%
-  as_sims() %>%
+  per_sim() %>%
   pivot_longer(-id, names_to = "Condition", values_to = "RT")
 
 map(spir, ~ eval(call("mutate", .x, y = 1)), envir = parent.frame(-1))

@@ -6,7 +6,7 @@
 #' list-column.
 #'
 #' This function is the inverse of
-#' \code{\link{as_sims}}.  This enables
+#' \code{\link{per_sim}}.  This enables
 #' tidyverse verbs to act on the full table as
 #' opposed to the default behavior of acting
 #' elementwise on the simulation results. If
