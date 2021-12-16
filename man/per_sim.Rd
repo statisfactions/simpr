@@ -37,5 +37,5 @@ If, after running \code{per_sim}, you wish to
 return to the default behavior to access
 \code{simpr_tibble} results as a tibble with a
 list_column for simulation results again, run
-\code{as_tibble()}.
+\code{\link{whole_tibble}}.
 }

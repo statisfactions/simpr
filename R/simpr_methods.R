@@ -13,7 +13,7 @@ print.simpr_tibble = function(x, ...) {
   }
 
   if(!is.null(fit_names) && all(fit_names %in% names(x))) {
-    fit_cols = x %>% as_tibble(bare_tibble = TRUE) %>%
+    fit_cols = x %>% as.data.frame %>% tibble::as_tibble() %>%
     dplyr::select(tidyselect::one_of(c(attr(x, "fits")))) %>%
       purrr::map(1)
     names(fit_cols) = paste0(names(fit_cols), "[[1]]")
@@ -22,7 +22,7 @@ print.simpr_tibble = function(x, ...) {
   purrr::imap(y, function(z, znm) {
     cat(znm, "\n--------------------------\n", sep = "")
     if(is.data.frame(z))
-      print(as_tibble(z, ..., bare_tibble = TRUE))
+      print(tibble::as_tibble(as.data.frame(z), ..., bare_tibble = TRUE))
     else
       print(z)
     cat("\n", sep = "")

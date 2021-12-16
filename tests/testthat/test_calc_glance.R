@@ -1,4 +1,5 @@
 context("glance_fits")
+library(tibble)
 
 test_that("glance_fits correctly returns broom::glance output", {
   ## Reference

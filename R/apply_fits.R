@@ -34,8 +34,8 @@ apply_fits.simpr_spec = function(obj, .f, ..., .progress = FALSE,
 apply_fits.simpr_tibble = function(obj, .f, ..., .progress = FALSE,
                                    .options = furrr_options()) {
 
-  obj = as_tibble(obj, bare_tibble = TRUE)
-  fn_map = function(...) dplyr::as_tibble(purrr::as_mapper(.f)(...))
+  obj = tibble::as_tibble(as.data.frame(obj)) ## strip attributes
+  fn_map = function(...) tibble::as_tibble(purrr::as_mapper(.f)(...))
   ## Create reference meta df for merging
   simpr_meta = obj %>%
     dplyr::select(tidyselect::one_of(c(".sim_id", attr(obj, "meta"), "rep")))

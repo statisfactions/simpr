@@ -1,4 +1,5 @@
 context("simpr::per_sim")
+library(tibble)
 
 test_that("per_sim works with mutate", {
   set.seed(203)

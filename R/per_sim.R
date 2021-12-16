@@ -22,7 +22,7 @@
 #' return to the default behavior to access
 #' \code{simpr_tibble} results as a tibble with a
 #' list_column for simulation results again, run
-#' \code{as_tibble()}.
+#' \code{\link{whole_tibble}}.
 #'
 #' @param obj A \code{simpr_tibble} or \code{simpr_spec} object.
 #' @return A \code{simpr_sims} object for use with dplyr and tidyr verbs.

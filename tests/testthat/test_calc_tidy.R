@@ -1,4 +1,5 @@
 context("simpr::tidy_fits")
+library(tibble)
 
 test_that("Calc tidy terms match terms from fit",
           {
@@ -18,7 +19,7 @@ test_that("Calc tidy terms match terms from fit",
 
             lm_fit_coef = purrr::map_df(lm_fit$lm, ~ coef(.) %>% t %>%
                   as.data.frame(check.names = F)) %>%
-              dplyr::bind_cols(lm_fit %>% as_tibble %>% select(.sim_id, n, rep), .) %>%
+              dplyr::bind_cols(lm_fit %>% tibble::as_tibble() %>% select(.sim_id, n, rep), .) %>%
               dplyr::arrange(n, rep)
 
             lm_tidy_coef = lm_tidy %>%

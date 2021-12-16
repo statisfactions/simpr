@@ -1,4 +1,5 @@
 context("simpr::gen")
+library(tibble)
 
 ## Metaparameters and the global environment --------------
 
