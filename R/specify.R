@@ -51,7 +51,7 @@
 #'   \code{specify(cbind(x, y) ~ MASS::mvrnorm(5,
 #'   c(0, 0), Sigma = diag(2)))}.
 #'
-#' @param .x a \code{simpr_spec} object (the
+#' @param x a \code{simpr_spec} object (the
 #'   output of \code{\link{define}}), or NULL to
 #'   create a new specification
 #' @param ... \code{purrr}-style formula functions
@@ -115,78 +115,131 @@
 #' simple_meta$sim[[2]]
 #'
 #' @export
-specify = function(.x = NULL, ..., use_names = TRUE, sep = "_") {
+specify.formula = function(x = NULL, ..., use_names = TRUE, sep = "_") {
+  ## Method for creating a new simpr_spec object,
+  ## which means that first argument must be a formula
+
+  ## Note that this method uses S3 dispatch in a
+  ## tricky way; usually the user will not
+  ## actually specify anything called "x", but
+  ## still this method is dispatched.  This is
+  ## written to work more gracefully with the way
+  ## that generics::specify is written
 
   vars = list(...)
 
-  if(!is.null(.x) && is.simpr_spec(.x)) {
-    out = .x
-  } else {
-    out = new_simpr_spec()
-    if(!is.null(.x)) {
-      ## If not a simpr_spec, treat as an unnamed
-      ## argument for the two-sided formula
-      ## interface
-      vars = c(.x, vars)
+  ## Normally x is ignored, but if the user does
+  ## provide a variable called "x" we need to
+  ## include that as well
+  if(!is.null(x)) {
+    message("Formula specification for 'x' detected. ",
+    "Assuming 'x' is the first formula. ",
+    "To hide this message, or to avoid moving this formula first, ",
+    "use a different variable name.")
+
+    vars = c(list(x = x), vars)
+
+    ## In unusual case where user passes in output
+    ## of define() AND has a variable called x, add
+    ## that onto the specification as well
+    if(length(vars) > 1 && is.simpr_spec(vars[[2]])) {
+      return(add_specification(vars[[2]],
+                               vars[-2],
+                               sep = sep,
+                               use_names = use_names))
     }
 
   }
 
+  add_specification(new_simpr_spec(),
+                    varlist = vars,
+                    sep = sep,
+                    use_names = use_names)
+
+}
+
+#' @export
+#' @rdname specify.formula
+specify.simpr_spec = function(x, ..., use_names = TRUE, sep = "_") {
+  ## Method for existing simpr_spec objects (if
+  ## define() is run first)
+
+  vars = list(...)
+
+  out = add_specification(x, vars, sep = sep, use_names = use_names)
+
+}
 
 
-  if(length(vars) == 0)
+add_specification = function(spec, varlist, sep, use_names) {
+
+  if(length(varlist) == 0)
     stop("No variables defined")
 
+  if(!all(purrr::map_lgl(varlist, purrr::is_formula))) {
+    stop("All specifications should be purr-style formula functions")
+  }
+
   ## Identify named arguments
-  if(is.null(names(vars))) {
-    named_vars = rep(FALSE, length(vars))
-    names(vars) = paste0(".unnamed_",1:length(vars))
+  if(is.null(names(varlist))) {
+    named_varlist = rep(FALSE, length(varlist))
+    names(varlist) = paste0(".unnamed_",1:length(varlist))
   } else {
-    named_vars =  names(vars) != "" # empty names become "" when there are both named and unnamed args
-    names(vars)[!named_vars] =  paste0(".unnamed_", names(vars)[!named_vars])
+    named_varlist =  names(varlist) != "" # empty names become "" when there are both named and unnamed args
+    names(varlist)[!named_varlist] =  paste0(".unnamed_", names(varlist)[!named_varlist])
   }
 
   # Process formulas to extract and set varnames attribute
-  out$specify = purrr::pmap(list(vars, names(vars), named_vars),
-                                     function(x, n, named) {
+  spec$specify = purrr::pmap(list(varlist, names(varlist), named_varlist),
+                            function(x, n, named) {
 
-                                       if(!rlang::is_formula(x))
-                                         stop("Argument is not formula")
-                                       else {
-                                         ## Double-sided formula
-                                         if(length(x) == 3) {
-                                           if(named)
-                                             warning("Two-sided formula given as named argument but will be ignored")
+                              if(!rlang::is_formula(x))
+                                stop("Argument is not formula")
+                              else {
+                                ## Double-sided formula
+                                if(length(x) == 3) {
+                                  if(named)
+                                    warning("Two-sided formula given as named argument but will be ignored")
 
-                                           ## Get names from left-hand side of formula
-                                           attr(x, "varnames") = x[[2]][-1] %>% purrr::map_chr(deparse)
+                                  ## Get names from left-hand side of formula
+                                  attr(x, "varnames") = x[[2]][-1] %>% purrr::map_chr(deparse)
 
-                                           ## delete left-hand side of formula and return right-handed formula
-                                           x_out = x
+                                  ## delete left-hand side of formula and return right-handed formula
+                                  x_out = x
 
-                                           x_out[[2]] = NULL
-                                           x_out
-                                         } else {
-                                           ## Single-sided formula
-                                           if(length(x) == 2) {
-                                             if(!named)
-                                               stop("Right-hand formulas must be named.")
+                                  x_out[[2]] = NULL
+                                  x_out
+                                } else {
+                                  ## Single-sided formula
+                                  if(length(x) == 2) {
+                                    if(!named)
+                                      stop("Right-hand formulas must be named.")
 
-                                             x_out = x
-                                             attr(x_out, "varnames") = n
-                                             x_out
+                                    x_out = x
+                                    attr(x_out, "varnames") = n
+                                    x_out
 
-                                           }
+                                  }
 
-                                         }
+                                }
 
-                                       }
-                                     })
+                              }
+                            })
 
 
   # set attributes of "use_names" and "sep" for auto-numbering variables with multiple outputs
-  out$variable_sep = sep
-  out$use_names = use_names
+  spec$variable_sep = sep
+  spec$use_names = use_names
 
-  out
+  spec
 }
+
+#' @importFrom generics specify
+#' @export
+generics::specify
+
+
+
+
+
+

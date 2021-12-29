@@ -40,8 +40,8 @@ test_that("Can refer to autonumbered columns in specify()", {
     dplyr::mutate(y = x_01 + x_02)
 
   set.seed(100)
-  auto_refer = specify(x = ~ MASS::mvrnorm(30, rep(0, 10), Sigma = diag(10)), sep = "_",
-                       y = ~ x_01 + x_02) %>%
+  auto_refer = specify(x = ~ MASS::mvrnorm(30, rep(0, 10), Sigma = diag(10)),
+                       y = ~ x_01 + x_02, sep = "_") %>%
     define(n = 10) %>%
     generate(1)
 
