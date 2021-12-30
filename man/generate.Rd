@@ -11,6 +11,7 @@ generate(
   sim_name = "sim",
   quiet = TRUE,
   warn_on_error = TRUE,
+  debug = FALSE,
   .progress = FALSE,
   .options = furrr_options(seed = TRUE)
 )
@@ -40,6 +41,10 @@ broadcast to the user as they occur?}
 
 \item{warn_on_error}{Should there be a warning
 when simulation errors occur?}
+
+\item{debug}{Run simulation in debug mode,
+allowing objects, etc. to be explored for
+each generated variable specification.}
 
 \item{.progress}{A logical, for whether or not
 to print a progress bar for multiprocess,

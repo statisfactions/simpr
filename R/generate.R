@@ -36,6 +36,9 @@
 #'   broadcast to the user as they occur?
 #' @param warn_on_error Should there be a warning
 #'   when simulation errors occur?
+#' @param debug Run simulation in debug mode,
+#'   allowing objects, etc. to be explored for
+#'   each generated variable specification.
 #' @param .progress	A logical, for whether or not
 #'   to print a progress bar for multiprocess,
 #'   multisession, and multicore plans.
@@ -109,6 +112,7 @@
 #' @export
 generate = function(obj, reps, ..., sim_name = "sim",
                     quiet = TRUE, warn_on_error = TRUE,
+                    debug = FALSE,
                     .progress = FALSE,
                     .options = furrr_options(seed = TRUE)) {
 
@@ -146,6 +150,7 @@ generate = function(obj, reps, ..., sim_name = "sim",
                                "include_calls")],
                      sim_name = sim_name,
                      quiet = quiet,
+                     debug = debug,
                      warn_on_error = warn_on_error,
                      .progress = .progress,
                      .options = .options,
@@ -153,11 +158,16 @@ generate = function(obj, reps, ..., sim_name = "sim",
 }
 
 
-generate_sim = function(y, eval_environment, variable_sep, use_names) {
+generate_sim = function(y, eval_environment, variable_sep, use_names, debug) {
   eval_fun = purrr::as_mapper(y)
   environment(eval_fun) <- eval_environment
 
+  if(debug)
+    debug(eval_fun)
+
   gen = eval_fun()
+
+
 
   varnames = attr(y, "varnames")
 
@@ -205,6 +215,7 @@ generate_sim = function(y, eval_environment, variable_sep, use_names) {
 
 generate_row = function(variables, ..., variable_sep, use_names,
                              include_calls, meta_indices, sim_name, quiet,
+                        debug,
                         excluded_sim_ids) {
 
   meta_values = list(...)
@@ -218,6 +229,7 @@ generate_row = function(variables, ..., variable_sep, use_names,
   sim_list = purrr::safely(purrr::map_dfc, otherwise = NULL, quiet = quiet)(variables, generate_sim,
                                                                      eval_environment = eval_environment,
                                                                      variable_sep = variable_sep,
+                                                                     debug = debug,
                                                                      use_names = use_names)
 
   ## Create a 1-row tibble with meta values and the simulation cell
@@ -257,6 +269,7 @@ eval_pipe = function(lhs, rhs) {
 }
 
 create_sim_results <- function(specs, x, sim_name, quiet, warn_on_error, .progress, .options,
+                               debug,
                                excluded_sim_ids) {
   ## Create simulation results from specification
 
@@ -272,6 +285,7 @@ create_sim_results <- function(specs, x, sim_name, quiet, warn_on_error, .progre
                 variable_sep = x$variable_sep,
                 use_names = x$use_names,
                 meta_indices = names(x$meta_info$indices),
+                debug = debug,
                 sim_name = sim_name,
                 quiet = quiet,
                 .progress = .progress,
