@@ -198,9 +198,6 @@ add_specification = function(spec, varlist, sep, use_names) {
                               else {
                                 ## Double-sided formula
                                 if(length(x) == 3) {
-                                  if(named)
-                                    warning("Two-sided formula given as named argument but will be ignored")
-
                                   ## Get names from left-hand side of formula
                                   attr(x, "varnames") = x[[2]][-1] %>% purrr::map_chr(deparse)
 
