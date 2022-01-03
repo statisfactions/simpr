@@ -1,7 +1,28 @@
 context("simpr::generate")
 library(tibble)
 
-## Global environment --------------
+
+# Error options ------------
+test_that("quiet, warn_on_error, stop_on_error options work as expected", {
+  buggy_spec = specify(y = ~ rnorm(n)) %>%
+    define(n = c(-10, 10))
+
+  message = "invalid arguments"
+
+
+  expect_warning(generate(buggy_spec, 1), "Simulation produced errors")
+
+  expect_silent(generate(buggy_spec, 1, warn_on_error = FALSE))
+
+  expect_message(generate(buggy_spec, 1, warn_on_error = FALSE, quiet = FALSE),
+                 message)
+
+  expect_error(generate(buggy_spec, 1, stop_on_error = TRUE),
+                 message)
+})
+
+
+# Global environment --------------
 test_that("Metaparameters are not blocked by objects in calling environment", {
 
   n = "barf"
@@ -40,7 +61,7 @@ test_that("Gen runs without warnings or messages", {
 
 
 
-## Resimulating just a subset ----------
+# Resimulating just a subset ----------
 test_that("Subsetting in generate is equivalent to subsetting afterwards", {
   set.seed(100)
   sim_ref = specify(x1 = ~ 2 + rnorm(n)) %>%

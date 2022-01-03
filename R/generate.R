@@ -36,6 +36,8 @@
 #'   broadcast to the user as they occur?
 #' @param warn_on_error Should there be a warning
 #'   when simulation errors occur?
+#' @param stop_on_error Should the simulation stop
+#'   immediately when simulation errors occur?
 #' @param debug Run simulation in debug mode,
 #'   allowing objects, etc. to be explored for
 #'   each generated variable specification.
@@ -112,6 +114,7 @@
 #' @export
 generate = function(obj, reps, ..., sim_name = "sim",
                     quiet = TRUE, warn_on_error = TRUE,
+                    stop_on_error = FALSE,
                     debug = FALSE,
                     .progress = FALSE,
                     .options = furrr_options(seed = TRUE)) {
@@ -152,13 +155,14 @@ generate = function(obj, reps, ..., sim_name = "sim",
                      quiet = quiet,
                      debug = debug,
                      warn_on_error = warn_on_error,
+                     stop_on_error = stop_on_error,
                      .progress = .progress,
                      .options = .options,
                      excluded_sim_ids = excluded_sim_ids)
 }
 
 
-generate_sim = function(y, eval_environment, variable_sep, use_names, debug) {
+generate_sim = function(y, eval_environment, variable_sep, use_names, debug, stop_on_error) {
   eval_fun = purrr::as_mapper(y)
   environment(eval_fun) <- eval_environment
 
@@ -215,7 +219,7 @@ generate_sim = function(y, eval_environment, variable_sep, use_names, debug) {
 
 generate_row = function(variables, ..., variable_sep, use_names,
                              include_calls, meta_indices, sim_name, quiet,
-                        debug,
+                        debug, stop_on_error,
                         excluded_sim_ids) {
 
   meta_values = list(...)
@@ -226,11 +230,18 @@ generate_row = function(variables, ..., variable_sep, use_names,
 
   eval_environment = rlang::as_environment(meta_values, parent = parent.frame())
 
-  sim_list = purrr::safely(purrr::map_dfc, otherwise = NULL, quiet = quiet)(variables, generate_sim,
-                                                                     eval_environment = eval_environment,
-                                                                     variable_sep = variable_sep,
-                                                                     debug = debug,
-                                                                     use_names = use_names)
+  if(stop_on_error)
+    sim_list = purrr::map_dfc(variables, generate_sim,
+                              eval_environment = eval_environment,
+                              variable_sep = variable_sep,
+                              debug = debug,
+                              use_names = use_names)
+  else
+    sim_list = purrr::safely(purrr::map_dfc, otherwise = NULL, quiet = quiet)(variables, generate_sim,
+                                                                              eval_environment = eval_environment,
+                                                                              variable_sep = variable_sep,
+                                                                              debug = debug,
+                                                                              use_names = use_names)
 
   ## Create a 1-row tibble with meta values and the simulation cell
   df_full = purrr::map(meta_values, ~ if(length(.) == 1) return(.) else return(list(.))) %>%
@@ -269,7 +280,7 @@ eval_pipe = function(lhs, rhs) {
 }
 
 create_sim_results <- function(specs, x, sim_name, quiet, warn_on_error, .progress, .options,
-                               debug,
+                               debug, stop_on_error,
                                excluded_sim_ids) {
   ## Create simulation results from specification
 
@@ -286,6 +297,7 @@ create_sim_results <- function(specs, x, sim_name, quiet, warn_on_error, .progre
                 use_names = x$use_names,
                 meta_indices = names(x$meta_info$indices),
                 debug = debug,
+                stop_on_error = stop_on_error,
                 sim_name = sim_name,
                 quiet = quiet,
                 .progress = .progress,
