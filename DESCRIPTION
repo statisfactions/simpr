@@ -25,4 +25,7 @@ RoxygenNote: 7.1.2
 Suggests: 
     MASS,
     testthat,
-    ggplot2
+    ggplot2,
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr

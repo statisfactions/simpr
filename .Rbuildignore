@@ -5,3 +5,6 @@
 ^\..*$
 ^example.R$
 ^make.R$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$

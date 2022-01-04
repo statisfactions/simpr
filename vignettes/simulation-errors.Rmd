@@ -1,0 +1,226 @@
+---
+title: "Exploring and Debugging Simulation Errors"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{simulation-errors}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup, message = FALSE}
+library(simpr)
+```
+
+Quite often, errors will arise in the course of simulating or fitting models.  These errors can be tricky to debug because they may happen within a simulation function and only in certain cases.  Consider the following example:
+
+```{r buggy_spec}
+buggy_spec = specify(y = ~ rnorm(size)) %>%
+  define(size = c(-10, 10))
+
+```
+
+We'd expect this to produce an error when `n` is negative, since that's not a valid sample size.
+
+## Error handling options
+
+The primary place where errors occur in the simulation is in generating the data and fitting models.  Both `generate()` and `fit()` have the same primary error handling options:
+
+   - `warn_on_error`. When `TRUE`, the default, a warning is given when the simulation returned errors.  If you expect errors or have other ways of checking on them, you can make this `FALSE`.
+  - `stop_on_error`. When `TRUE`, the simulation stops as soon as an error is encountered.  This is useful when running interactively and when errors are unexpected. Default is `FALSE`.
+  
+The default behavior is to warn when there are errors, and storing those error messages in a separate directory.  This gives you the flexibility to continue with the simulation or model-fitting process even if one particular simulation hit an error.
+
+### `generate()` 
+
+What happens when we try to generate data based on the buggy specification?
+
+```{r generate_default, warning = TRUE, purl = FALSE}
+set.seed(100)
+generate_default = buggy_spec %>% 
+  generate(1)
+
+```
+
+The default is for R to produce a warning, but to still return the object.  This lets us know that `simpr` hit some issues.  We can follow the advice given and take a look at the returned object.
+
+```{r generate_default_output, purl = FALSE}
+generate_default
+```
+
+The first simulation had an error and thus did not return any simulation data. We can see the error message given directly in the `.sim_error` column.
+
+We would get the same output without a warning if we set `warn_on_error = FALSE`:
+
+```{r generate_no_warn}
+set.seed(100)
+generate_no_warn = buggy_spec %>% 
+  generate(1, warn_on_error = FALSE)
+
+generate_no_warn
+```
+
+Alternatively, we can set `stop_on_error = TRUE` to simply stop the simulation and immediately produce the error.  This is often useful during initial development of the simulation, when an error often means that something is misspecified:
+
+```{r generate_error, error = TRUE, purl = FALSE}
+generate_error = buggy_spec %>% 
+  generate(1, stop_on_error = TRUE)
+```
+
+### `fit()`
+
+If there is already an error in the simulation, this will usually propagate to any model-fitting as well. Recall the output above:
+
+```{r generate_no_warn_output}
+generate_no_warn
+```
+
+Since the simulation with `size = -10` has `NULL` for the generated data, any model-fitting will usually produce errors as well.
+
+```{r fit_propagate, warning = TRUE, purl = FALSE}
+fit_propagate = generate_no_warn %>% 
+  fit(t_test = ~ t.test(y))
+```
+
+```{r fit_propagate_out, purl = FALSE}
+fit_propagate
+```
+
+Now, there are new columns, one for errors on each fit attempted.  We can see a situation where we have multiple errors:
+
+```{r fit_multi_error, warning = TRUE, purl = FALSE}
+fit_multi_error = generate_no_warn %>% 
+  fit(t_test = ~ t.test(y),
+      chisq = ~ chisq.test(y))
+
+```
+
+The first fit `t_test` failed on just the first row, with `size = -10`, but the second fit `chisq` was nonsensical either way and so two `.fit_error` columns are produced.
+
+```{r fit_multi_error_out, purl = FALSE}
+fit_multi_error
+```
+
+Even in this degenerate case, `tidy_fits` still gathers together whatever valid fits it can find, and ignores the rest:
+
+```{r tidy_multi_error, purl = FALSE}
+fit_multi_error %>% 
+  tidy_fits
+
+```
+
+## Debugging simulations
+
+Sometimes it is difficult to tell what went wrong in a simulation just from the error message.  In this case it is useful to use R's powerful debugging features.  See `?browser` and the (debugging chapter)[https://adv-r.hadley.nz/debugging.html#browser] from (Advanced R)[https://adv-r.hadley.nz/index.html] for general information on using R's debugging.
+
+Both `generate()` and `fit()` allow you to set `debug = TRUE` to look interactively at what is coming in to R.  This allows you to see how the data is coming in and to figure out what is causing the error.
+
+Let's use the same example as above:
+```{r generate_debug, eval = FALSE, purl = FALSE}
+specify(y = ~ rnorm(size)) %>%
+  define(size = c(-10, 10)) %>% 
+  generate(1, debug = TRUE)
+
+```
+
+If we run this in Rstudio, we'll see this in the debugger view:
+
+```r
+function (..., .x = ..1, .y = ..2, . = ..1) 
+rnorm(size)
+```
+
+This is a behind-the-scenes function created by `simpr` based on the specification of `y`, but we can see the `rnorm(n)` that was originally in the specification.
+
+And this in the console:
+
+```r
+Browse[2]> 
+```
+
+What's nice is that we can see what the incoming data look like, so we can for instance type `n` at the console to see what's coming in:
+
+```r
+Browse[2]> size
+[1] -10
+Warning messages:
+1: In get(object, envir = currentEnv, inherits = TRUE) :
+  restarting interrupted promise evaluation
+2: In get(object, envir = currentEnv, inherits = TRUE) :
+  restarting interrupted promise evaluation
+3: In get(object, envir = currentEnv, inherits = TRUE) :
+  restarting interrupted promise evaluation
+```
+
+We can type `"Q"` to exit debugging or `"n"` to move to the next debug step.  (If we have a variable called `n`, we would need to use `print(n)` to see its value.)
+
+If you aren't seeing any output when you type commands in the debugger, try running the command `sink()`, which seems to allow the output to show up in some cases.
+
+This same mechanism is used by `fit()`:
+
+```{r eval = FALSE, purl = FALSE}
+set.seed(100)
+specify(y1 = ~ rnorm(10),
+        y2 = ~ rnorm(10)) %>%
+  generate(2) %>% 
+  fit(t_test = ~ t.test(y1, y2),
+      debug = TRUE)
+```
+
+The function displays a bit differently:
+
+```r
+function (..., .x = ..1, .y = ..2, . = ..1) 
+with(data = ., expr = t.test(y1, y2))
+```
+
+Our input, `t.test(y)` is still present, but it is within the call for `with`.  The input simulation data is stored in the special variable `.`:
+
+```r
+Browse[2]> .
+# A tibble: 10 × 2
+        y1      y2
+     <dbl>   <dbl>
+ 1  0.922  -0.559 
+ 2  0.0958  0.827 
+ 3 -0.866   0.486 
+ 4  0.922  -0.717 
+ 5  1.15   -0.375 
+ 6  1.71   -0.0771
+ 7  1.44    0.508 
+ 8 -0.244  -1.59  
+ 9  0.153   0.386 
+10 -0.294   1.18  
+```
+
+We can perform whatever test calculations on this sample data to diagnose issues that are coming up.
+
+We can type `n` to move to the next simulation, which has different data:
+
+```r
+Browse[2]> n
+exiting from: ...furrr_fn(...)
+debugging in: ...furrr_fn(...)
+debug: with(data = ., expr = t.test(y1, y2))
+Browse[2]> .
+# A tibble: 10 × 2
+        y1      y2
+     <dbl>   <dbl>
+ 1 -0.335   0.212 
+ 2  1.23   -0.834 
+ 3 -0.821  -0.668 
+ 4 -0.0373  0.246 
+ 5  0.436  -0.0761
+ 6 -1.83   -0.704 
+ 7  0.765   0.507 
+ 8  0.825   1.07  
+ 9 -2.49    2.61  
+10  1.13    0.261 
+```
+
