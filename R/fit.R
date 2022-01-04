@@ -38,6 +38,15 @@
 #' @param ... \code{purrr}-style formula functions
 #'   used for computing on the simulated data. See
 #'   \emph{Details} and \emph{Examples}.
+#' @param quiet Should simulation errors be
+#'   broadcast to the user as they occur?
+#' @param warn_on_error Should there be a warning
+#'   when simulation errors occur?
+#' @param stop_on_error Should the simulation stop
+#'   immediately when simulation errors occur?
+#' @param debug Run simulation in debug mode,
+#'   allowing objects, etc. to be explored for
+#'   each generated variable specification.
 #' @param .progress	A logical, for whether or not
 #'   to print a progress bar for multiprocess,
 #'   multisession, and multicore plans .
@@ -102,39 +111,77 @@
 #' add_five_data
 #'
 #' @export
-fit = function(obj, ..., .progress = FALSE,
+fit = function(obj, ..., quiet = TRUE, warn_on_error = TRUE,
+               stop_on_error = FALSE,
+               debug = FALSE, .progress = FALSE,
                .options = furrr_options()) {
   UseMethod("fit")
 }
 
 #' @export
-fit.simpr_tibble = function(obj, ..., .progress = FALSE,
+fit.simpr_tibble = function(obj, ...,
+                            quiet = TRUE, warn_on_error = TRUE,
+                            stop_on_error = FALSE,
+                            debug = FALSE, .progress = FALSE,
                             .options = furrr_options()) {
 
-  to_fit_fn = function(formula) {
+  to_fit_fn = function(formula, debug, stop_on_error, quiet) {
     stopifnot(rlang::is_formula(formula))
     afl = rlang::as_function(formula) %>% as.list
     afl[[5]] = call("with", data = quote(.), expr = afl[[5]])
     alt_fn = as.function(afl)
+
+    if(!stop_on_error)
+      alt_fn = purrr::safely(alt_fn, quiet = quiet)
+
+    if(debug)
+      debug(alt_fn)
+
+    return(alt_fn)
+
   }
 
   fit_formulas = list(...)
   sim_name = get_sim_name(obj)
 
-  for(i in names(fit_formulas))
-    obj[[i]] = furrr::future_map(obj[[sim_name]], to_fit_fn(fit_formulas[[i]]),
-                                 .progress = .progress,
-                                 .options = .options)
+  fit_out = purrr::imap(fit_formulas, ~ furrr::future_map(obj[[sim_name]],
+                                               to_fit_fn(.x, debug = debug,
+                                                         stop_on_error = stop_on_error,
+                                                         quiet = quiet),
+                                               .progress = .progress,
+                                               .options = .options))
+
+  any_fit_error = FALSE
+  for(i in names(fit_out)) {
+    obj[[i]] = purrr::map(fit_out[[i]], "result")
+
+    errors = purrr::map(fit_out[[i]], "error")
+
+    if(!all(purrr::map_lgl(errors, is.null))) {
+      any_fit_error = TRUE
+      obj[[paste0(".fit_error_", i)]] = purrr::map(errors,
+                                                   ~ ifelse(is.null(.x),
+                                                            NA_character_,
+                                                            as.character(.x))) %>%
+        unlist
+    }
+  }
 
   # attr(simpr_mod, "meta") = attr(obj, "meta")
   # attr(simpr_mod, "variables") = attr(obj, "variables")
   attr(obj, "fits") = c(attr(obj, "fits"), names(fit_formulas))
 
+  ## Give warning if errors occured
+  if(warn_on_error && any_fit_error)
+    warning("fit() produced errors.  See '.fit_error_*' column(s).")
+
   obj
 }
 
 #' @export
-fit.simpr_spec = function(obj, ..., .progress = FALSE,
+fit.simpr_spec = function(obj, ...,  quiet = TRUE, warn_on_error = TRUE,
+                          stop_on_error = FALSE,
+                          debug = FALSE, .progress = FALSE,
                           .options = furrr_options()) {
   mc = match.call()
 

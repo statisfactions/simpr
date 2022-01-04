@@ -21,3 +21,31 @@ test_that("Multiple fit functions give different results", {
   expect_false(identical(chisq_fit$ChiSq, chisq_fit$Unknown_Continuous_Correlation))
 
 })
+
+## Error handling -----------
+
+test_that("error options work for fit()", {
+  set.seed(100)
+  char = specify(x0 = ~ rnorm(20),
+                           y = ~ if(constant) 10 else x0) %>%
+    define(constant = c(FALSE, TRUE)) %>%
+    generate(1)
+
+  char %>%
+    fit(t_test = ~ t.test(y)) %>%
+    expect_warning("produced errors.")
+
+  char %>%
+    fit(t_test = ~ t.test(y), stop_on_error = TRUE) %>%
+    expect_error("data are essentially constant")
+
+  char %>%
+    fit(t_test = ~ t.test(y), warn_on_error = FALSE, quiet = FALSE) %>%
+    expect_message("data are essentially constant")
+
+  char %>%
+    fit(t_test = ~ t.test(y), warn_on_error = FALSE) %>%
+    expect_silent()
+
+})
+
