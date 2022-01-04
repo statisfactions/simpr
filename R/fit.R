@@ -131,7 +131,7 @@ fit.simpr_tibble = function(obj, ...,
     afl[[5]] = call("with", data = quote(.), expr = afl[[5]])
     alt_fn = as.function(afl)
 
-    if(!stop_on_error)
+    if(!stop_on_error && !debug)
       alt_fn = purrr::safely(alt_fn, quiet = quiet)
 
     if(debug)
