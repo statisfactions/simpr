@@ -78,11 +78,10 @@
 <a href="#simpr" class="anchor"></a>simpr</h1></div>
 <p><code>simpr</code> provides a general, simple, and tidyverse-friendly framework for specifying and generating simulations in R. It’s useful for power analysis and other types of design analysis, as well as for generating pedagogical examples of data. The philosophy of <code>simpr</code> is to <strong>keep simulations simple</strong>. This means:</p>
 <ul>
-<li><p><strong>Take care of the housekeeping.</strong> <code>simpr</code> takes care of all the details of generating your simulation across varying parameters, without the need for nested <code>for</code> loops or the <code>lapply</code> family of functions.</p></li>
-<li><p><strong>Specify the data generating mechanism inline.</strong> You can specify simulations in a few lines, including referring to other simulation variables and to simulation parameters that you’re varying (such as sample size).</p></li>
+<li><p><strong>Readable simulation specifications.</strong> You can specify simulations in a few lines, including referring to other simulation variables and to simulation parameters that you’re varying (such as sample size). <code>simpr</code> takes care of all the details of generating your simulation across varying parameters, without the need for nested <code>for</code> loops or custom functions.</p></li>
 <li><p><strong>Sensibly handle errors.</strong> <code>simpr</code> has various options to keep going even when simulation or model-fitting hits errors, so that you don’t need to start over if a single iteration hits fatal numerical issues.</p></li>
-<li><p><strong>Easy-to-use parallel processing.</strong> Building on <code>furrr</code>, parallel processing for <code>simpr</code> can be turned on with a couple lines of code.</p></li>
 <li><p><strong>Reproducible workflows.</strong> Individual simulations can be reproduced exactly without needed to perform the whole simulation again.</p></li>
+<li><p><strong>Easy-to-use parallel processing.</strong> Building on <code>furrr</code>, parallel processing for <code>simpr</code> can be turned on with a couple lines of code.</p></li>
 </ul>
 <p>The <code>simpr</code> workflow:</p>
 <ol>

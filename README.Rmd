@@ -13,15 +13,13 @@ library(simpr)
 
 `simpr` provides a general, simple, and tidyverse-friendly framework for specifying and generating simulations in R. It's useful for power analysis and other types of design analysis, as well as for generating pedagogical examples of data. The philosophy of `simpr` is to **keep simulations simple**.  This means:
 
-  - **Take care of the housekeeping.** `simpr` takes care of all the details of generating your simulation across varying parameters, without the need for nested `for` loops or the `lapply` family of functions.
-  
-  - **Specify the data generating mechanism inline.** You can specify simulations in a few lines, including referring to other simulation variables and to simulation parameters that you're varying (such as sample size).
-  
+  - **Readable simulation specifications.** You can specify simulations in a few lines, including referring to other simulation variables and to simulation parameters that you're varying (such as sample size). `simpr` takes care of all the details of generating your simulation across varying parameters, without the need for nested `for` loops or custom functions.
+
   - **Sensibly handle errors.** `simpr` has various options to keep going even when simulation or model-fitting hits errors, so that you don't need to start over if a single iteration hits fatal numerical issues.
   
-  - **Easy-to-use parallel processing.** Building on `furrr`, parallel processing for `simpr` can be turned on with a couple lines of code.
-  
   - **Reproducible workflows.** Individual simulations can be reproduced exactly without needed to perform the whole simulation again.
+
+  - **Easy-to-use parallel processing.** Building on `furrr`, parallel processing for `simpr` can be turned on with a couple lines of code.
 
 The `simpr` workflow:
 
