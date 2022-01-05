@@ -20,3 +20,25 @@ test_that("define() can handle lists", {
   expect_equivalent(mat_refs, purrr::map(meta_list_out$sim, as.matrix))
 
 })
+
+## Define can handle functions as elements in a list
+## ... but for some reason I can't figure out
+debug_random_seed(ignore = NULL)
+test_that("define can handle functions", {
+
+  function_list = list(normal = rnorm,
+                       lognormal = rlnorm)
+
+  set.seed(100, kind = "L'Ecuyer-CMRG")
+  out = specify(y = ~ myfun(10)) %>%
+    define(myfun = function_list) %>%
+    generate(1)
+
+  set.seed(100, kind = "L'Ecuyer-CMRG")
+  fun_refs = furrr::future_map(function_list, ~ .(10),
+                               .options = furrr::furrr_options(seed = TRUE))
+
+  expect_equivalent(fun_refs$normal, out$sim[[1]]$y)
+  expect_equivalent(fun_refs$lognormal, out$sim[[2]]$y)
+
+})
