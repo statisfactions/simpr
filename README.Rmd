@@ -5,61 +5,89 @@ output:
 ---
 
 [![Build Status](https://travis-ci.com/statisfactions/simpr.svg?branch=master)](https://travis-ci.com/statisfactions/simpr)
-```{r include = FALSE}
+```{r setup, include = FALSE}
 library(simpr)
 ```
 
 # simpr
 
-`simpr` provides a simple and tidyverse-friendly syntax for specifying and generating simulations, especially for power analysis.  The primary workflow is:
+`simpr` provides a general, simple, and tidyverse-friendly framework for specifying and generating simulations in R. It's useful for power analysis and other types of design analysis, as well as for generating pedagogical examples of data. The philosophy of `simpr` is to **keep simulations simple**.  This means:
 
-  1. Specify **variables** for your simulation data, with `specify()`
-  2. Specify **parameters** that you want to systematically vary between different cells of your simulation design (e.g. *n*, effect size, distribution type), with `define()`
+  - **Take care of the housekeeping.** `simpr` takes care of all the details of generating your simulation across varying parameters, without the need for nested `for` loops or the `lapply` family of functions.
+  
+  - **Specify the data generating mechanism inline.** You can specify simulations in a few lines, including referring to other simulation variables and to simulation parameters that you're varying (such as sample size).
+  
+  - **Sensibly handle errors.** `simpr` has various options to keep going even when simulation or model-fitting hits errors, so that you don't need to start over if a single iteration hits fatal numerical issues.
+  
+  - **Easy-to-use parallel processing.** Building on `furrr`, parallel processing for `simpr` can be turned on with a couple lines of code.
+  
+  - **Reproducible workflows.** Individual simulations can be reproduced exactly without needed to perform the whole simulation again.
+
+The `simpr` workflow:
+
+  1. Specify your data-generating process for each of your variables with `specify()`
+  2. Define parameters that you want to systematically vary between different cells of your simulation design (e.g. *n*, effect size), with `define()`
   3. Generate the simulation data with `generate()`
   4. Fit models with your data (e.g. `lm()`), with `fit()`
   5. Tidy the model output for further processing, such as computing power or Type I Error rates, with `tidy_fits`
   
 ## Installation and loading
 
-```{r eval = FALSE}
+```{r installation, eval = FALSE}
 remotes::install_github("statisfactions/simpr")
 
 library(simpr)
 ```
 
 
-## Introductory example: regression with three variables
+## A simple example
 
-Let's say we want to see our power to detect an interaction in a linear model.   We can completely run the simulation and calculate *p* values with a just a few lines of code:
-```{r messages = FALSE}
+What's our power to detect an interaction in a linear model?   The entire simulation and tidying happens in just a few lines of code:
+
+```{r simpr_tidy, messages = FALSE}
 set.seed(100)
 simpr_tidy = ## Specify the simulation
   specify(x1 = ~ 2 + rnorm(n),
                        x2 = ~ 3 + 2*x1 + rnorm(n, 0, sd = 0.5),
-                       y = ~ 5 + b1*x1 + b2*x2 + g1*x1*x2 + 10 * rnorm(n)) %>%
-  define(n = seq(100, 300, by = 20),
-       b1 = 1,
-       b2 = 1,
+                       y = ~ 5 + x1 + x2 + g1*x1*x2 + 10 * rnorm(n)) %>%
+  ## Define varying parameters: here, sample size and effect size
+  define(n = seq(100, 300, by = 50),
        g1 = seq(-1, 1, by = 0.5)) %>% 
-  ## Generate the data
+  ## Generate 10 repetitions
   generate(10) %>% 
   ## Fit models
-  fit(lm = ~lm(y ~ x1*x2, data = .)) %>% 
-  ## Calculate the output
+  fit(lm = ~lm(y ~ x1*x2))%>% 
+  ## Tidy each simulation using broom::tidy and
+  ## bind together
   tidy_fits
 
 ```
 
-This gives a tibble with slope estimates and *p* values which we can use to plot the power curves:
+This gives a `tibble` with slope estimates and *p* values for all parameters in the model.
 
-```{r message = FALSE, warning = FALSE}
-library(ggplot2)
+```{r simpr_tidy_print}
+simpr_tidy
+```
+
+We can easily filter this and compute power for each condition using `dplyr`:
+
+```{r condition_power}
 library(dplyr)
 
-simpr_tidy %>%
+condition_power = simpr_tidy %>%
   filter(term %in% "x1:x2") %>%
   group_by(n, g1) %>%
-  summarize(power = mean(p.value < 0.05)) %>%
+  summarize(power = mean(p.value < 0.05)) 
+
+condition_power
+```
+
+This can be easily plotted:
+
+```{r power_plot, message = FALSE, warning = FALSE}
+library(ggplot2)
+
+condition_power %>% 
   ggplot(aes(n, power)) +
   geom_line() +
   facet_grid(~g1)
@@ -69,60 +97,57 @@ simpr_tidy %>%
 
 First, we specify how we want the data to be generated:
 
-```{r}
-
-simpr_spec = specify(x1 = ~ 2 + rnorm(n),
+```{r simpr_spec}
+simpr_spec = ## Specify the simulation
+  specify(x1 = ~ 2 + rnorm(n),
                        x2 = ~ 3 + 2*x1 + rnorm(n, 0, sd = 0.5),
-                       y = ~ 5 + b1*x1 + b2*x2 + g1*x1*x2 + 10 * rnorm(n)) %>%
-  define(n = seq(100, 300, by = 20),
-       b1 = 1,
-       b2 = 1,
-       g1 = seq(-1, 1, by = 0.5))
+                       y = ~ 5 + x1 + x2 + g1*x1*x2 + 10 * rnorm(n)) %>%
+  ## Define varying parameters: here, sample size and effect size
+  define(n = seq(100, 300, by = 50),
+       g1 = seq(-1, 1, by = 0.5)) 
 ```
 
-The call to `specify()` contains the basics of what we actually want simulated.  Each argument is a named, one-sided formula that can include functions like `rnorm` or whatever else you want, specified similar to `purrr` formula functions.  Note that these arguments include both references to previously defined variables (`x1` and `x2`), and to some other variables not yet defined (`n`, the sample size; `b1`, the slope of `x1`; `b2`, the slope of `x2`; `g1`, the interaction slope).
+The call to `specify()` contains the basics of what we actually want simulated.  Each argument is a named, one-sided formula that can include functions like `rnorm` or whatever else you want, specified similar to `purrr` formula functions.  Note that these arguments include both references to previously defined variables (`x1` and `x2`), and to some other variables not yet defined (`n`, the sample size;and `g1`, the interaction slope).
 
-We can define these variables, which we call *metaparameters* of the simulation, in the `define()` command.  `define()` also takes named arguments, and here we define what those metaparameters are.  We can specify them either as constants, or as lists or vectors; `simpr` will generate all possible combinations of these metaparameters and run the simulation for each combination using `generate()`:
+We can define these variables, which we call *metaparameters* of the simulation, in the `define()` command.  `define()` also takes named arguments, and here we define what those metaparameters are.  We can specify them either as constants, or as lists or vectors; `simpr` will generate all possible combinations of these metaparameters.  We can view the specification before actually running the simulation:
 
-```{r}
+```{r simpr_spec_print}
+simpr_spec
+```
+
+Above we can see the code for the data-generating process and all the possible conditions.  Now, we can run the simulation for each combination using `generate()`:
+
+```{r simpr_gen}
 simpr_gen = simpr_spec %>% 
-  generate(10)
+  generate(2)
+
+simpr_gen
 ```
 
 `generate` has one argument, the number of repetitions for each simulation.  Here we generate 10 repetitions. This produces a `tibble` with one row for each combination of metaparameters and repetition, and a list-column with the generated data.
 
-```{r}
-simpr_gen
-```
-
-Note the first 5 rows have everything the same with the column `n`, but `g1` varies, and each element of `sim` is a tibble with 100 rows; then on the sixth row, we have the next value of `n`, 120, and a tibble with 120 rows, and so on. Each element of  `sim` contains the generated `x1`, `x2`, and `y`, e.g.
-
-```{r}
-simpr_gen$sim[[1]]
-```
+Note that `g1` is the same across the first 5 rows, but `n` varies, and each element of `sim` is a tibble with the same number of rows as `n`. Then, on the sixth row, we have the next value of `g1`, 0.5, and so on. Each element of the column `sim` contains the generated `x1`, `x2`, and `y`, and we already see the preview of `simpr_gen$sim[[1]]` in the output above.
 
 Next, we can fit a model on this data using the `fit()` function; this uses similar formula syntax to `specify()`:
 
-```{r}
+```{r simpr_fit}
 simpr_fit = simpr_gen %>% 
-  fit(lm = ~lm(y ~ x1*x2, data = .))
-```
+  fit(lm = ~lm(y ~ x1*x2))
 
-Using `purrr` syntax, we refer to each simulated dataset that we want to fit the model to as `.`.
-
-This just adds a list-column onto `simpr_gen` with the model fit for each rep and metaparameter combination:
-
-```{r}
 simpr_fit
 ```
 
-But we can simplify this a lot more for the purposes of power analysis by using `tidy_fits()`, which runs `broom::tidy()` on each of the `lm` objects and brings everything together into one data frame:
+We don't need to specify the dataset, because `fit` already computes within the dataset. (We can specify it if needed using `.`.)
 
-```{r}
+This just adds a list-column onto `simpr_gen` with the model fit for each rep and metaparameter combination, and we see a preview of `simpr_fit$lm[[1]]` in the output above now as well.
+
+We can simplify this a lot more for power or design analysis by using `tidy_fits()`, which runs `broom::tidy()` on each of the `lm` objects and brings everything together into one data frame:
+
+```{r simpr_tidy_reprise}
 simpr_tidy = simpr_fit %>% 
   tidy_fits
 
 simpr_tidy
 ```
 
-This gives a data frame with one row for each term for each combination of metaparameters.  We can easily plot power to detect the interaction term using `dplyr` and `ggplot2`, as noted above, and these commands can be easily chained.
+This gives a data frame with one row for each term for each combination of metaparameters for whatever we want to do with it.

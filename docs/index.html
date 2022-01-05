@@ -76,11 +76,19 @@
 <div id="simpr" class="section level1">
 <div class="page-header"><h1 class="hasAnchor">
 <a href="#simpr" class="anchor"></a>simpr</h1></div>
-<p><code>simpr</code> provides a simple and tidyverse-friendly syntax for specifying and generating simulations, especially for power analysis. The primary workflow is:</p>
+<p><code>simpr</code> provides a general, simple, and tidyverse-friendly framework for specifying and generating simulations in R. It’s useful for power analysis and other types of design analysis, as well as for generating pedagogical examples of data. The philosophy of <code>simpr</code> is to <strong>keep simulations simple</strong>. This means:</p>
+<ul>
+<li><p><strong>Take care of the housekeeping.</strong> <code>simpr</code> takes care of all the details of generating your simulation across varying parameters, without the need for nested <code>for</code> loops or the <code>lapply</code> family of functions.</p></li>
+<li><p><strong>Specify the data generating mechanism inline.</strong> You can specify simulations in a few lines, including referring to other simulation variables and to simulation parameters that you’re varying (such as sample size).</p></li>
+<li><p><strong>Sensibly handle errors.</strong> <code>simpr</code> has various options to keep going even when simulation or model-fitting hits errors, so that you don’t need to start over if a single iteration hits fatal numerical issues.</p></li>
+<li><p><strong>Easy-to-use parallel processing.</strong> Building on <code>furrr</code>, parallel processing for <code>simpr</code> can be turned on with a couple lines of code.</p></li>
+<li><p><strong>Reproducible workflows.</strong> Individual simulations can be reproduced exactly without needed to perform the whole simulation again.</p></li>
+</ul>
+<p>The <code>simpr</code> workflow:</p>
 <ol>
-<li>Specify <strong>variables</strong> for your simulation data, with <code><a href="https://generics.r-lib.org/reference/specify.html">specify()</a></code>
+<li>Specify your data-generating process for each of your variables with <code><a href="https://generics.r-lib.org/reference/specify.html">specify()</a></code>
 </li>
-<li>Specify <strong>parameters</strong> that you want to systematically vary between different cells of your simulation design (e.g. <em>n</em>, effect size, distribution type), with <code><a href="reference/define.html">define()</a></code>
+<li>Define parameters that you want to systematically vary between different cells of your simulation design (e.g. <em>n</em>, effect size), with <code><a href="reference/define.html">define()</a></code>
 </li>
 <li>Generate the simulation data with <code><a href="reference/generate.html">generate()</a></code>
 </li>
@@ -97,181 +105,254 @@
 
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">simpr</span><span class="op">)</span></code></pre></div>
 </div>
-<div id="introductory-example-regression-with-three-variables" class="section level2">
+<div id="a-simple-example" class="section level2">
 <h2 class="hasAnchor">
-<a href="#introductory-example-regression-with-three-variables" class="anchor"></a>Introductory example: regression with three variables</h2>
-<p>Let’s say we want to see our power to detect an interaction in a linear model. We can completely run the simulation and calculate <em>p</em> values with a just a few lines of code:</p>
+<a href="#a-simple-example" class="anchor"></a>A simple example</h2>
+<p>What’s our power to detect an interaction in a linear model? The entire simulation and tidying happens in just a few lines of code:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">100</span><span class="op">)</span>
 <span class="va">simpr_tidy</span> <span class="op">=</span> <span class="co">## Specify the simulation</span>
   <span class="fu"><a href="https://generics.r-lib.org/reference/specify.html">specify</a></span><span class="op">(</span>x1 <span class="op">=</span> <span class="op">~</span> <span class="fl">2</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span>,
                        x2 <span class="op">=</span> <span class="op">~</span> <span class="fl">3</span> <span class="op">+</span> <span class="fl">2</span><span class="op">*</span><span class="va">x1</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="va">n</span>, <span class="fl">0</span>, sd <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span>,
-                       y <span class="op">=</span> <span class="op">~</span> <span class="fl">5</span> <span class="op">+</span> <span class="va">b1</span><span class="op">*</span><span class="va">x1</span> <span class="op">+</span> <span class="va">b2</span><span class="op">*</span><span class="va">x2</span> <span class="op">+</span> <span class="va">g1</span><span class="op">*</span><span class="va">x1</span><span class="op">*</span><span class="va">x2</span> <span class="op">+</span> <span class="fl">10</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="reference/define.html">define</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fl">100</span>, <span class="fl">300</span>, by <span class="op">=</span> <span class="fl">20</span><span class="op">)</span>,
-       b1 <span class="op">=</span> <span class="fl">1</span>,
-       b2 <span class="op">=</span> <span class="fl">1</span>,
+                       y <span class="op">=</span> <span class="op">~</span> <span class="fl">5</span> <span class="op">+</span> <span class="va">x1</span> <span class="op">+</span> <span class="va">x2</span> <span class="op">+</span> <span class="va">g1</span><span class="op">*</span><span class="va">x1</span><span class="op">*</span><span class="va">x2</span> <span class="op">+</span> <span class="fl">10</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="co">## Define varying parameters: here, sample size and effect size</span>
+  <span class="fu"><a href="reference/define.html">define</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fl">100</span>, <span class="fl">300</span>, by <span class="op">=</span> <span class="fl">50</span><span class="op">)</span>,
        g1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1</span>, <span class="fl">1</span>, by <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="co">## Generate the data</span>
+  <span class="co">## Generate 10 repetitions</span>
   <span class="fu"><a href="reference/generate.html">generate</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="co">## Fit models</span>
-  <span class="fu"><a href="reference/fit.html">fit</a></span><span class="op">(</span>lm <span class="op">=</span> <span class="op">~</span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="va">x1</span><span class="op">*</span><span class="va">x2</span>, data <span class="op">=</span> <span class="va">.</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="co">## Calculate the output</span>
+  <span class="fu"><a href="reference/fit.html">fit</a></span><span class="op">(</span>lm <span class="op">=</span> <span class="op">~</span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="va">x1</span><span class="op">*</span><span class="va">x2</span><span class="op">)</span><span class="op">)</span><span class="op">%&gt;%</span> 
+  <span class="co">## Tidy each simulation using broom::tidy and</span>
+  <span class="co">## bind together</span>
   <span class="va">tidy_fits</span></code></pre></div>
-<p>This gives a tibble with slope estimates and <em>p</em> values which we can use to plot the power curves:</p>
+<p>This gives a <code>tibble</code> with slope estimates and <em>p</em> values for all parameters in the model.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span>
-
-<span class="va">simpr_tidy</span> <span class="op">%&gt;%</span>
+<code class="sourceCode R"><span class="va">simpr_tidy</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="do">## # A tibble: 1,000 × 10</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="do">##    .sim_id     n    g1   rep Source term    estimate std.error statistic p.value</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="do">##      &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;chr&gt;  &lt;chr&gt;      &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="do">##  1       1   100    -1     1 lm     (Inter…  -2.32       7.37   -0.314   7.54e-1</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="do">##  2       1   100    -1     1 lm     x1       -0.953      4.93   -0.193   8.47e-1</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="do">##  3       1   100    -1     1 lm     x2        2.46       2.07    1.18    2.39e-1</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="do">##  4       1   100    -1     1 lm     x1:x2    -0.921      0.372  -2.47    1.51e-2</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="do">##  5       2   150    -1     1 lm     (Inter…   7.23       5.31    1.36    1.75e-1</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="do">##  6       2   150    -1     1 lm     x1        3.13       3.80    0.824   4.11e-1</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="do">##  7       2   150    -1     1 lm     x2       -0.0135     1.57   -0.00861 9.93e-1</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="do">##  8       2   150    -1     1 lm     x1:x2    -0.982      0.256  -3.84    1.86e-4</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="do">##  9       3   200    -1     1 lm     (Inter…  16.4        5.55    2.96    3.43e-3</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="do">## 10       3   200    -1     1 lm     x1       -0.647      3.94   -0.164   8.70e-1</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="do">## # … with 990 more rows</span></span></code></pre></div>
+<p>We can easily filter this and compute power for each condition using <code>dplyr</code>:</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="do">## Attaching package: 'dplyr'</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="do">## The following objects are masked from 'package:stats':</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="do">##     filter, lag</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="do">## The following objects are masked from 'package:base':</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="do">##     intersect, setdiff, setequal, union</span></span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">condition_power</span> <span class="op">=</span> <span class="va">simpr_tidy</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">term</span> <span class="op">%in%</span> <span class="st">"x1:x2"</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">n</span>, <span class="va">g1</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarize</a></span><span class="op">(</span>power <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">p.value</span> <span class="op">&lt;</span> <span class="fl">0.05</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarize</a></span><span class="op">(</span>power <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">p.value</span> <span class="op">&lt;</span> <span class="fl">0.05</span><span class="op">)</span><span class="op">)</span> </code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="do">## `summarise()` has grouped output by 'n'. You can override using the `.groups` argument.</span></span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">condition_power</span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="do">## # A tibble: 25 × 3</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="do">## # Groups:   n [5]</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="do">##        n    g1 power</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="do">##    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="do">##  1   100  -1     0.7</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="do">##  2   100  -0.5   0.3</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="do">##  3   100   0     0  </span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="do">##  4   100   0.5   0.4</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="do">##  5   100   1     0.5</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="do">##  6   150  -1     1  </span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="do">##  7   150  -0.5   0.4</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a><span class="do">##  8   150   0     0  </span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a><span class="do">##  9   150   0.5   0.4</span></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a><span class="do">## 10   150   1     1  </span></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a><span class="do">## # … with 15 more rows</span></span></code></pre></div>
+<p>This can be easily plotted:</p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span>
+
+<span class="va">condition_power</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">n</span>, <span class="va">power</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_grid.html">facet_grid</a></span><span class="op">(</span><span class="op">~</span><span class="va">g1</span><span class="op">)</span></code></pre></div>
-<p><img src="README_files/figure-markdown_github/unnamed-chunk-4-1.png"></p>
+<p><img src="README_files/figure-markdown_github/power_plot-1.png"></p>
 <div id="breaking-down-the-example" class="section level3">
 <h3 class="hasAnchor">
 <a href="#breaking-down-the-example" class="anchor"></a>Breaking down the example</h3>
 <p>First, we specify how we want the data to be generated:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">simpr_spec</span> <span class="op">=</span> <span class="fu"><a href="https://generics.r-lib.org/reference/specify.html">specify</a></span><span class="op">(</span>x1 <span class="op">=</span> <span class="op">~</span> <span class="fl">2</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span>,
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">simpr_spec</span> <span class="op">=</span> <span class="co">## Specify the simulation</span>
+  <span class="fu"><a href="https://generics.r-lib.org/reference/specify.html">specify</a></span><span class="op">(</span>x1 <span class="op">=</span> <span class="op">~</span> <span class="fl">2</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span>,
                        x2 <span class="op">=</span> <span class="op">~</span> <span class="fl">3</span> <span class="op">+</span> <span class="fl">2</span><span class="op">*</span><span class="va">x1</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="va">n</span>, <span class="fl">0</span>, sd <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span>,
-                       y <span class="op">=</span> <span class="op">~</span> <span class="fl">5</span> <span class="op">+</span> <span class="va">b1</span><span class="op">*</span><span class="va">x1</span> <span class="op">+</span> <span class="va">b2</span><span class="op">*</span><span class="va">x2</span> <span class="op">+</span> <span class="va">g1</span><span class="op">*</span><span class="va">x1</span><span class="op">*</span><span class="va">x2</span> <span class="op">+</span> <span class="fl">10</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="reference/define.html">define</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fl">100</span>, <span class="fl">300</span>, by <span class="op">=</span> <span class="fl">20</span><span class="op">)</span>,
-       b1 <span class="op">=</span> <span class="fl">1</span>,
-       b2 <span class="op">=</span> <span class="fl">1</span>,
-       g1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1</span>, <span class="fl">1</span>, by <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<p>The call to <code><a href="https://generics.r-lib.org/reference/specify.html">specify()</a></code> contains the basics of what we actually want simulated. Each argument is a named, one-sided formula that can include functions like <code>rnorm</code> or whatever else you want, specified similar to <code>purrr</code> formula functions. Note that these arguments include both references to previously defined variables (<code>x1</code> and <code>x2</code>), and to some other variables not yet defined (<code>n</code>, the sample size; <code>b1</code>, the slope of <code>x1</code>; <code>b2</code>, the slope of <code>x2</code>; <code>g1</code>, the interaction slope).</p>
-<p>We can define these variables, which we call <em>metaparameters</em> of the simulation, in the <code><a href="reference/define.html">define()</a></code> command. <code><a href="reference/define.html">define()</a></code> also takes named arguments, and here we define what those metaparameters are. We can specify them either as constants, or as lists or vectors; <code>simpr</code> will generate all possible combinations of these metaparameters and run the simulation for each combination using <code><a href="reference/generate.html">generate()</a></code>:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">simpr_gen</span> <span class="op">=</span> <span class="va">simpr_spec</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="reference/generate.html">generate</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span></code></pre></div>
-<p><code>generate</code> has one argument, the number of repetitions for each simulation. Here we generate 10 repetitions. This produces a <code>tibble</code> with one row for each combination of metaparameters and repetition, and a list-column with the generated data.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">simpr_gen</span></code></pre></div>
-<div class="sourceCode" id="cb7"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="do">## full tibble</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="do">## --------------------------</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="do">## # A tibble: 550 × 7</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="do">##    .sim_id     n    b1    b2    g1   rep sim               </span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="do">##      &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;list&gt;            </span></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="do">##  1       1   100     1     1    -1     1 &lt;tibble [100 × 3]&gt;</span></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="do">##  2       2   120     1     1    -1     1 &lt;tibble [120 × 3]&gt;</span></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="do">##  3       3   140     1     1    -1     1 &lt;tibble [140 × 3]&gt;</span></span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="do">##  4       4   160     1     1    -1     1 &lt;tibble [160 × 3]&gt;</span></span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="do">##  5       5   180     1     1    -1     1 &lt;tibble [180 × 3]&gt;</span></span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="do">##  6       6   200     1     1    -1     1 &lt;tibble [200 × 3]&gt;</span></span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="do">##  7       7   220     1     1    -1     1 &lt;tibble [220 × 3]&gt;</span></span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="do">##  8       8   240     1     1    -1     1 &lt;tibble [240 × 3]&gt;</span></span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="do">##  9       9   260     1     1    -1     1 &lt;tibble [260 × 3]&gt;</span></span>
-<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a><span class="do">## 10      10   280     1     1    -1     1 &lt;tibble [280 × 3]&gt;</span></span>
-<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a><span class="do">## # … with 540 more rows</span></span>
-<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a><span class="do">## sim[[1]]</span></span>
-<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a><span class="do">## --------------------------</span></span>
-<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a><span class="do">## # A tibble: 100 × 3</span></span>
-<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a><span class="do">##       x1    x2      y</span></span>
-<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a><span class="do">##    &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;</span></span>
-<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a><span class="do">##  1  1.38  5.26  -5.20</span></span>
-<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a><span class="do">##  2  1.67  6.38  -2.88</span></span>
-<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a><span class="do">##  3  2.90  9.08 -23.7 </span></span>
-<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a><span class="do">##  4  1.14  5.21  12.6 </span></span>
-<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a><span class="do">##  5  1.28  4.72   6.11</span></span>
-<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a><span class="do">##  6  1.24  5.77   3.47</span></span>
-<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a><span class="do">##  7  1.75  6.24   1.48</span></span>
-<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a><span class="do">##  8  3.03  8.64  -9.34</span></span>
-<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a><span class="do">##  9  2.11  7.68 -15.9 </span></span>
-<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a><span class="do">## 10  3.19  8.69  -5.24</span></span>
-<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a><span class="do">## # … with 90 more rows</span></span></code></pre></div>
-<p>Note the first 5 rows have everything the same with the column <code>n</code>, but <code>g1</code> varies, and each element of <code>sim</code> is a tibble with 100 rows; then on the sixth row, we have the next value of <code>n</code>, 120, and a tibble with 120 rows, and so on. Each element of <code>sim</code> contains the generated <code>x1</code>, <code>x2</code>, and <code>y</code>, e.g.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">simpr_gen</span><span class="op">$</span><span class="va">sim</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></code></pre></div>
-<div class="sourceCode" id="cb9"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="do">## # A tibble: 100 × 3</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="do">##       x1    x2      y</span></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="do">##    &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;</span></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="do">##  1  1.38  5.26  -5.20</span></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="do">##  2  1.67  6.38  -2.88</span></span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="do">##  3  2.90  9.08 -23.7 </span></span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="do">##  4  1.14  5.21  12.6 </span></span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="do">##  5  1.28  4.72   6.11</span></span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="do">##  6  1.24  5.77   3.47</span></span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="do">##  7  1.75  6.24   1.48</span></span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="do">##  8  3.03  8.64  -9.34</span></span>
-<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a><span class="do">##  9  2.11  7.68 -15.9 </span></span>
-<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a><span class="do">## 10  3.19  8.69  -5.24</span></span>
-<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a><span class="do">## # … with 90 more rows</span></span></code></pre></div>
-<p>Next, we can fit a model on this data using the <code><a href="reference/fit.html">fit()</a></code> function; this uses similar formula syntax to <code><a href="https://generics.r-lib.org/reference/specify.html">specify()</a></code>:</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">simpr_fit</span> <span class="op">=</span> <span class="va">simpr_gen</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="reference/fit.html">fit</a></span><span class="op">(</span>lm <span class="op">=</span> <span class="op">~</span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="va">x1</span><span class="op">*</span><span class="va">x2</span>, data <span class="op">=</span> <span class="va">.</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<p>Using <code>purrr</code> syntax, we refer to each simulated dataset that we want to fit the model to as <code>.</code>.</p>
-<p>This just adds a list-column onto <code>simpr_gen</code> with the model fit for each rep and metaparameter combination:</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">simpr_fit</span></code></pre></div>
-<div class="sourceCode" id="cb12"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="do">## full tibble</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="do">## --------------------------</span></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="do">## # A tibble: 550 × 8</span></span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="do">##    .sim_id     n    b1    b2    g1   rep sim                lm    </span></span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="do">##      &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;list&gt;             &lt;list&gt;</span></span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="do">##  1       1   100     1     1    -1     1 &lt;tibble [100 × 3]&gt; &lt;lm&gt;  </span></span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="do">##  2       2   120     1     1    -1     1 &lt;tibble [120 × 3]&gt; &lt;lm&gt;  </span></span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="do">##  3       3   140     1     1    -1     1 &lt;tibble [140 × 3]&gt; &lt;lm&gt;  </span></span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="do">##  4       4   160     1     1    -1     1 &lt;tibble [160 × 3]&gt; &lt;lm&gt;  </span></span>
-<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a><span class="do">##  5       5   180     1     1    -1     1 &lt;tibble [180 × 3]&gt; &lt;lm&gt;  </span></span>
-<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a><span class="do">##  6       6   200     1     1    -1     1 &lt;tibble [200 × 3]&gt; &lt;lm&gt;  </span></span>
-<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a><span class="do">##  7       7   220     1     1    -1     1 &lt;tibble [220 × 3]&gt; &lt;lm&gt;  </span></span>
-<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a><span class="do">##  8       8   240     1     1    -1     1 &lt;tibble [240 × 3]&gt; &lt;lm&gt;  </span></span>
-<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a><span class="do">##  9       9   260     1     1    -1     1 &lt;tibble [260 × 3]&gt; &lt;lm&gt;  </span></span>
-<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a><span class="do">## 10      10   280     1     1    -1     1 &lt;tibble [280 × 3]&gt; &lt;lm&gt;  </span></span>
-<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a><span class="do">## # … with 540 more rows</span></span>
-<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a><span class="do">## sim[[1]]</span></span>
-<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a><span class="do">## --------------------------</span></span>
-<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a><span class="do">## # A tibble: 100 × 3</span></span>
-<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a><span class="do">##       x1    x2      y</span></span>
-<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a><span class="do">##    &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;</span></span>
-<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a><span class="do">##  1  1.38  5.26  -5.20</span></span>
-<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a><span class="do">##  2  1.67  6.38  -2.88</span></span>
-<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a><span class="do">##  3  2.90  9.08 -23.7 </span></span>
-<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a><span class="do">##  4  1.14  5.21  12.6 </span></span>
-<span id="cb12-27"><a href="#cb12-27" aria-hidden="true" tabindex="-1"></a><span class="do">##  5  1.28  4.72   6.11</span></span>
-<span id="cb12-28"><a href="#cb12-28" aria-hidden="true" tabindex="-1"></a><span class="do">##  6  1.24  5.77   3.47</span></span>
-<span id="cb12-29"><a href="#cb12-29" aria-hidden="true" tabindex="-1"></a><span class="do">##  7  1.75  6.24   1.48</span></span>
-<span id="cb12-30"><a href="#cb12-30" aria-hidden="true" tabindex="-1"></a><span class="do">##  8  3.03  8.64  -9.34</span></span>
-<span id="cb12-31"><a href="#cb12-31" aria-hidden="true" tabindex="-1"></a><span class="do">##  9  2.11  7.68 -15.9 </span></span>
-<span id="cb12-32"><a href="#cb12-32" aria-hidden="true" tabindex="-1"></a><span class="do">## 10  3.19  8.69  -5.24</span></span>
-<span id="cb12-33"><a href="#cb12-33" aria-hidden="true" tabindex="-1"></a><span class="do">## # … with 90 more rows</span></span>
-<span id="cb12-34"><a href="#cb12-34" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb12-35"><a href="#cb12-35" aria-hidden="true" tabindex="-1"></a><span class="do">## lm[[1]]</span></span>
-<span id="cb12-36"><a href="#cb12-36" aria-hidden="true" tabindex="-1"></a><span class="do">## --------------------------</span></span>
-<span id="cb12-37"><a href="#cb12-37" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb12-38"><a href="#cb12-38" aria-hidden="true" tabindex="-1"></a><span class="do">## Call:</span></span>
-<span id="cb12-39"><a href="#cb12-39" aria-hidden="true" tabindex="-1"></a><span class="do">## lm(formula = y ~ x1 * x2, data = .)</span></span>
-<span id="cb12-40"><a href="#cb12-40" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb12-41"><a href="#cb12-41" aria-hidden="true" tabindex="-1"></a><span class="do">## Coefficients:</span></span>
-<span id="cb12-42"><a href="#cb12-42" aria-hidden="true" tabindex="-1"></a><span class="do">## (Intercept)           x1           x2        x1:x2  </span></span>
-<span id="cb12-43"><a href="#cb12-43" aria-hidden="true" tabindex="-1"></a><span class="do">##      5.2005      -2.6840       1.2711      -0.7086</span></span></code></pre></div>
-<p>But we can simplify this a lot more for the purposes of power analysis by using <code><a href="reference/tidy_fits.html">tidy_fits()</a></code>, which runs <code><a href="https://generics.r-lib.org/reference/tidy.html">broom::tidy()</a></code> on each of the <code>lm</code> objects and brings everything together into one data frame:</p>
+                       y <span class="op">=</span> <span class="op">~</span> <span class="fl">5</span> <span class="op">+</span> <span class="va">x1</span> <span class="op">+</span> <span class="va">x2</span> <span class="op">+</span> <span class="va">g1</span><span class="op">*</span><span class="va">x1</span><span class="op">*</span><span class="va">x2</span> <span class="op">+</span> <span class="fl">10</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="co">## Define varying parameters: here, sample size and effect size</span>
+  <span class="fu"><a href="reference/define.html">define</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fl">100</span>, <span class="fl">300</span>, by <span class="op">=</span> <span class="fl">50</span><span class="op">)</span>,
+       g1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1</span>, <span class="fl">1</span>, by <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span><span class="op">)</span> </code></pre></div>
+<p>The call to <code><a href="https://generics.r-lib.org/reference/specify.html">specify()</a></code> contains the basics of what we actually want simulated. Each argument is a named, one-sided formula that can include functions like <code>rnorm</code> or whatever else you want, specified similar to <code>purrr</code> formula functions. Note that these arguments include both references to previously defined variables (<code>x1</code> and <code>x2</code>), and to some other variables not yet defined (<code>n</code>, the sample size;and <code>g1</code>, the interaction slope).</p>
+<p>We can define these variables, which we call <em>metaparameters</em> of the simulation, in the <code><a href="reference/define.html">define()</a></code> command. <code><a href="reference/define.html">define()</a></code> also takes named arguments, and here we define what those metaparameters are. We can specify them either as constants, or as lists or vectors; <code>simpr</code> will generate all possible combinations of these metaparameters. We can view the specification before actually running the simulation:</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">simpr_spec</span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="do">## specify</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="do">## --------------------------</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="do">## $x1</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="do">## ~2 + rnorm(n)</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="do">## attr(,"varnames")</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] "x1"</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="do">## $x2</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="do">## ~3 + 2 * x1 + rnorm(n, 0, sd = 0.5)</span></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a><span class="do">## attr(,"varnames")</span></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] "x2"</span></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a><span class="do">## $y</span></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a><span class="do">## ~5 + x1 + x2 + g1 * x1 * x2 + 10 * rnorm(n)</span></span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a><span class="do">## attr(,"varnames")</span></span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] "y"</span></span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a><span class="do">## conditions</span></span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a><span class="do">## --------------------------</span></span>
+<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a><span class="do">## # A tibble: 25 × 2</span></span>
+<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a><span class="do">##        n    g1</span></span>
+<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a><span class="do">##    &lt;dbl&gt; &lt;dbl&gt;</span></span>
+<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a><span class="do">##  1   100  -1  </span></span>
+<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a><span class="do">##  2   150  -1  </span></span>
+<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a><span class="do">##  3   200  -1  </span></span>
+<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a><span class="do">##  4   250  -1  </span></span>
+<span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a><span class="do">##  5   300  -1  </span></span>
+<span id="cb14-29"><a href="#cb14-29" aria-hidden="true" tabindex="-1"></a><span class="do">##  6   100  -0.5</span></span>
+<span id="cb14-30"><a href="#cb14-30" aria-hidden="true" tabindex="-1"></a><span class="do">##  7   150  -0.5</span></span>
+<span id="cb14-31"><a href="#cb14-31" aria-hidden="true" tabindex="-1"></a><span class="do">##  8   200  -0.5</span></span>
+<span id="cb14-32"><a href="#cb14-32" aria-hidden="true" tabindex="-1"></a><span class="do">##  9   250  -0.5</span></span>
+<span id="cb14-33"><a href="#cb14-33" aria-hidden="true" tabindex="-1"></a><span class="do">## 10   300  -0.5</span></span>
+<span id="cb14-34"><a href="#cb14-34" aria-hidden="true" tabindex="-1"></a><span class="do">## # … with 15 more rows</span></span>
+<span id="cb14-35"><a href="#cb14-35" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb14-36"><a href="#cb14-36" aria-hidden="true" tabindex="-1"></a><span class="do">## meta_info</span></span>
+<span id="cb14-37"><a href="#cb14-37" aria-hidden="true" tabindex="-1"></a><span class="do">## --------------------------</span></span></code></pre></div>
+<p>Above we can see the code for the data-generating process and all the possible conditions. Now, we can run the simulation for each combination using <code><a href="reference/generate.html">generate()</a></code>:</p>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">simpr_gen</span> <span class="op">=</span> <span class="va">simpr_spec</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="reference/generate.html">generate</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span>
+
+<span class="va">simpr_gen</span></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="do">## full tibble</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="do">## --------------------------</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="do">## # A tibble: 50 × 5</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="do">##    .sim_id     n    g1   rep sim               </span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="do">##      &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;list&gt;            </span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="do">##  1       1   100  -1       1 &lt;tibble [100 × 3]&gt;</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a><span class="do">##  2       2   150  -1       1 &lt;tibble [150 × 3]&gt;</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a><span class="do">##  3       3   200  -1       1 &lt;tibble [200 × 3]&gt;</span></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a><span class="do">##  4       4   250  -1       1 &lt;tibble [250 × 3]&gt;</span></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a><span class="do">##  5       5   300  -1       1 &lt;tibble [300 × 3]&gt;</span></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a><span class="do">##  6       6   100  -0.5     1 &lt;tibble [100 × 3]&gt;</span></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a><span class="do">##  7       7   150  -0.5     1 &lt;tibble [150 × 3]&gt;</span></span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a><span class="do">##  8       8   200  -0.5     1 &lt;tibble [200 × 3]&gt;</span></span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a><span class="do">##  9       9   250  -0.5     1 &lt;tibble [250 × 3]&gt;</span></span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a><span class="do">## 10      10   300  -0.5     1 &lt;tibble [300 × 3]&gt;</span></span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a><span class="do">## # … with 40 more rows</span></span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a><span class="do">## sim[[1]]</span></span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a><span class="do">## --------------------------</span></span>
+<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a><span class="do">## # A tibble: 100 × 3</span></span>
+<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a><span class="do">##       x1    x2      y</span></span>
+<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a><span class="do">##    &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;</span></span>
+<span id="cb16-23"><a href="#cb16-23" aria-hidden="true" tabindex="-1"></a><span class="do">##  1  1.38  5.26  -5.20</span></span>
+<span id="cb16-24"><a href="#cb16-24" aria-hidden="true" tabindex="-1"></a><span class="do">##  2  1.67  6.38  -2.88</span></span>
+<span id="cb16-25"><a href="#cb16-25" aria-hidden="true" tabindex="-1"></a><span class="do">##  3  2.90  9.08 -23.7 </span></span>
+<span id="cb16-26"><a href="#cb16-26" aria-hidden="true" tabindex="-1"></a><span class="do">##  4  1.14  5.21  12.6 </span></span>
+<span id="cb16-27"><a href="#cb16-27" aria-hidden="true" tabindex="-1"></a><span class="do">##  5  1.28  4.72   6.11</span></span>
+<span id="cb16-28"><a href="#cb16-28" aria-hidden="true" tabindex="-1"></a><span class="do">##  6  1.24  5.77   3.47</span></span>
+<span id="cb16-29"><a href="#cb16-29" aria-hidden="true" tabindex="-1"></a><span class="do">##  7  1.75  6.24   1.48</span></span>
+<span id="cb16-30"><a href="#cb16-30" aria-hidden="true" tabindex="-1"></a><span class="do">##  8  3.03  8.64  -9.34</span></span>
+<span id="cb16-31"><a href="#cb16-31" aria-hidden="true" tabindex="-1"></a><span class="do">##  9  2.11  7.68 -15.9 </span></span>
+<span id="cb16-32"><a href="#cb16-32" aria-hidden="true" tabindex="-1"></a><span class="do">## 10  3.19  8.69  -5.24</span></span>
+<span id="cb16-33"><a href="#cb16-33" aria-hidden="true" tabindex="-1"></a><span class="do">## # … with 90 more rows</span></span></code></pre></div>
+<p><code>generate</code> has one argument, the number of repetitions for each simulation. Here we generate 10 repetitions. This produces a <code>tibble</code> with one row for each combination of metaparameters and repetition, and a list-column with the generated data.</p>
+<p>Note that <code>g1</code> is the same across the first 5 rows, but <code>n</code> varies, and each element of <code>sim</code> is a tibble with the same number of rows as <code>n</code>. Then, on the sixth row, we have the next value of <code>g1</code>, 0.5, and so on. Each element of the column <code>sim</code> contains the generated <code>x1</code>, <code>x2</code>, and <code>y</code>, and we already see the preview of <code>simpr_gen$sim[[1]]</code> in the output above.</p>
+<p>Next, we can fit a model on this data using the <code><a href="reference/fit.html">fit()</a></code> function; this uses similar formula syntax to <code><a href="https://generics.r-lib.org/reference/specify.html">specify()</a></code>:</p>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">simpr_fit</span> <span class="op">=</span> <span class="va">simpr_gen</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="reference/fit.html">fit</a></span><span class="op">(</span>lm <span class="op">=</span> <span class="op">~</span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="va">x1</span><span class="op">*</span><span class="va">x2</span><span class="op">)</span><span class="op">)</span>
+
+<span class="va">simpr_fit</span></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="do">## full tibble</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="do">## --------------------------</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="do">## # A tibble: 50 × 6</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="do">##    .sim_id     n    g1   rep sim                lm    </span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="do">##      &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;list&gt;             &lt;list&gt;</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a><span class="do">##  1       1   100  -1       1 &lt;tibble [100 × 3]&gt; &lt;lm&gt;  </span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="do">##  2       2   150  -1       1 &lt;tibble [150 × 3]&gt; &lt;lm&gt;  </span></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a><span class="do">##  3       3   200  -1       1 &lt;tibble [200 × 3]&gt; &lt;lm&gt;  </span></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a><span class="do">##  4       4   250  -1       1 &lt;tibble [250 × 3]&gt; &lt;lm&gt;  </span></span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a><span class="do">##  5       5   300  -1       1 &lt;tibble [300 × 3]&gt; &lt;lm&gt;  </span></span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a><span class="do">##  6       6   100  -0.5     1 &lt;tibble [100 × 3]&gt; &lt;lm&gt;  </span></span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a><span class="do">##  7       7   150  -0.5     1 &lt;tibble [150 × 3]&gt; &lt;lm&gt;  </span></span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a><span class="do">##  8       8   200  -0.5     1 &lt;tibble [200 × 3]&gt; &lt;lm&gt;  </span></span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a><span class="do">##  9       9   250  -0.5     1 &lt;tibble [250 × 3]&gt; &lt;lm&gt;  </span></span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a><span class="do">## 10      10   300  -0.5     1 &lt;tibble [300 × 3]&gt; &lt;lm&gt;  </span></span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a><span class="do">## # … with 40 more rows</span></span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a><span class="do">## sim[[1]]</span></span>
+<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a><span class="do">## --------------------------</span></span>
+<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a><span class="do">## # A tibble: 100 × 3</span></span>
+<span id="cb18-21"><a href="#cb18-21" aria-hidden="true" tabindex="-1"></a><span class="do">##       x1    x2      y</span></span>
+<span id="cb18-22"><a href="#cb18-22" aria-hidden="true" tabindex="-1"></a><span class="do">##    &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;</span></span>
+<span id="cb18-23"><a href="#cb18-23" aria-hidden="true" tabindex="-1"></a><span class="do">##  1  1.38  5.26  -5.20</span></span>
+<span id="cb18-24"><a href="#cb18-24" aria-hidden="true" tabindex="-1"></a><span class="do">##  2  1.67  6.38  -2.88</span></span>
+<span id="cb18-25"><a href="#cb18-25" aria-hidden="true" tabindex="-1"></a><span class="do">##  3  2.90  9.08 -23.7 </span></span>
+<span id="cb18-26"><a href="#cb18-26" aria-hidden="true" tabindex="-1"></a><span class="do">##  4  1.14  5.21  12.6 </span></span>
+<span id="cb18-27"><a href="#cb18-27" aria-hidden="true" tabindex="-1"></a><span class="do">##  5  1.28  4.72   6.11</span></span>
+<span id="cb18-28"><a href="#cb18-28" aria-hidden="true" tabindex="-1"></a><span class="do">##  6  1.24  5.77   3.47</span></span>
+<span id="cb18-29"><a href="#cb18-29" aria-hidden="true" tabindex="-1"></a><span class="do">##  7  1.75  6.24   1.48</span></span>
+<span id="cb18-30"><a href="#cb18-30" aria-hidden="true" tabindex="-1"></a><span class="do">##  8  3.03  8.64  -9.34</span></span>
+<span id="cb18-31"><a href="#cb18-31" aria-hidden="true" tabindex="-1"></a><span class="do">##  9  2.11  7.68 -15.9 </span></span>
+<span id="cb18-32"><a href="#cb18-32" aria-hidden="true" tabindex="-1"></a><span class="do">## 10  3.19  8.69  -5.24</span></span>
+<span id="cb18-33"><a href="#cb18-33" aria-hidden="true" tabindex="-1"></a><span class="do">## # … with 90 more rows</span></span>
+<span id="cb18-34"><a href="#cb18-34" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb18-35"><a href="#cb18-35" aria-hidden="true" tabindex="-1"></a><span class="do">## lm[[1]]</span></span>
+<span id="cb18-36"><a href="#cb18-36" aria-hidden="true" tabindex="-1"></a><span class="do">## --------------------------</span></span>
+<span id="cb18-37"><a href="#cb18-37" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb18-38"><a href="#cb18-38" aria-hidden="true" tabindex="-1"></a><span class="do">## Call:</span></span>
+<span id="cb18-39"><a href="#cb18-39" aria-hidden="true" tabindex="-1"></a><span class="do">## lm(formula = y ~ x1 * x2)</span></span>
+<span id="cb18-40"><a href="#cb18-40" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb18-41"><a href="#cb18-41" aria-hidden="true" tabindex="-1"></a><span class="do">## Coefficients:</span></span>
+<span id="cb18-42"><a href="#cb18-42" aria-hidden="true" tabindex="-1"></a><span class="do">## (Intercept)           x1           x2        x1:x2  </span></span>
+<span id="cb18-43"><a href="#cb18-43" aria-hidden="true" tabindex="-1"></a><span class="do">##      5.2005      -2.6840       1.2711      -0.7086</span></span></code></pre></div>
+<p>We don’t need to specify the dataset, because <code>fit</code> already computes within the dataset. (We can specify it if needed using <code>.</code>.)</p>
+<p>This just adds a list-column onto <code>simpr_gen</code> with the model fit for each rep and metaparameter combination, and we see a preview of <code>simpr_fit$lm[[1]]</code> in the output above now as well.</p>
+<p>We can simplify this a lot more for power or design analysis by using <code><a href="reference/tidy_fits.html">tidy_fits()</a></code>, which runs <code><a href="https://generics.r-lib.org/reference/tidy.html">broom::tidy()</a></code> on each of the <code>lm</code> objects and brings everything together into one data frame:</p>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">simpr_tidy</span> <span class="op">=</span> <span class="va">simpr_fit</span> <span class="op">%&gt;%</span> 
   <span class="va">tidy_fits</span>
 
 <span class="va">simpr_tidy</span></code></pre></div>
-<div class="sourceCode" id="cb14"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="do">## # A tibble: 2,200 × 12</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="do">##    .sim_id     n    b1    b2    g1   rep Source term        estimate std.error</span></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="do">##      &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;chr&gt;  &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;</span></span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="do">##  1       1   100     1     1    -1     1 lm     (Intercept)    5.20      7.58 </span></span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="do">##  2       1   100     1     1    -1     1 lm     x1            -2.68      5.68 </span></span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="do">##  3       1   100     1     1    -1     1 lm     x2             1.27      2.11 </span></span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="do">##  4       1   100     1     1    -1     1 lm     x1:x2         -0.709     0.389</span></span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="do">##  5       2   120     1     1    -1     1 lm     (Intercept)   -0.463     6.51 </span></span>
-<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="do">##  6       2   120     1     1    -1     1 lm     x1             6.05      4.48 </span></span>
-<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a><span class="do">##  7       2   120     1     1    -1     1 lm     x2             2.05      1.80 </span></span>
-<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a><span class="do">##  8       2   120     1     1    -1     1 lm     x1:x2         -1.67      0.355</span></span>
-<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a><span class="do">##  9       3   140     1     1    -1     1 lm     (Intercept)   -4.33      6.01 </span></span>
-<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a><span class="do">## 10       3   140     1     1    -1     1 lm     x1            -1.33      3.86 </span></span>
-<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a><span class="do">## # … with 2,190 more rows, and 2 more variables: statistic &lt;dbl&gt;, p.value &lt;dbl&gt;</span></span></code></pre></div>
-<p>This gives a data frame with one row for each term for each combination of metaparameters. We can easily plot power to detect the interaction term using <code>dplyr</code> and <code>ggplot2</code>, as noted above, and these commands can be easily chained.</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="do">## # A tibble: 200 × 10</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="do">##    .sim_id     n    g1   rep Source term    estimate std.error statistic p.value</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="do">##      &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;chr&gt;  &lt;chr&gt;      &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="do">##  1       1   100    -1     1 lm     (Inter…    5.20      7.58      0.686 4.94e-1</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="do">##  2       1   100    -1     1 lm     x1        -2.68      5.68     -0.472 6.38e-1</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a><span class="do">##  3       1   100    -1     1 lm     x2         1.27      2.11      0.603 5.48e-1</span></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a><span class="do">##  4       1   100    -1     1 lm     x1:x2     -0.709     0.389    -1.82  7.15e-2</span></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a><span class="do">##  5       2   150    -1     1 lm     (Inter…   -4.44      7.12     -0.624 5.34e-1</span></span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a><span class="do">##  6       2   150    -1     1 lm     x1         4.65      4.52      1.03  3.06e-1</span></span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a><span class="do">##  7       2   150    -1     1 lm     x2         2.69      2.00      1.34  1.82e-1</span></span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a><span class="do">##  8       2   150    -1     1 lm     x1:x2     -1.60      0.363    -4.41  2.03e-5</span></span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a><span class="do">##  9       3   200    -1     1 lm     (Inter…   14.2       6.09      2.34  2.05e-2</span></span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a><span class="do">## 10       3   200    -1     1 lm     x1        -1.39      3.41     -0.407 6.84e-1</span></span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a><span class="do">## # … with 190 more rows</span></span></code></pre></div>
+<p>This gives a data frame with one row for each term for each combination of metaparameters for whatever we want to do with it.</p>
 </div>
 </div>
 </div>
