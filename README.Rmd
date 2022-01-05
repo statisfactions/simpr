@@ -29,7 +29,7 @@ The `simpr` workflow:
   4. Fit models with your data (e.g. `lm()`), with `fit()`
   5. Tidy the model output for further processing, such as computing power or Type I Error rates, with `tidy_fits`
   
-## Installation and loading
+Installation and loading:
 
 ```{r installation, eval = FALSE}
 remotes::install_github("statisfactions/simpr")

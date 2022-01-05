@@ -1,0 +1,152 @@
+---
+title: "getting-started"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{getting-started}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(simpr)
+set.seed(2001)
+```
+
+This vignette provides an overview of each step in the `simpr` workflow:
+
+  1. Specify your data-generating process for each of your variables with `specify()`
+  2. Define parameters that you want to systematically vary between different cells of your simulation design (e.g. *n*, effect size), with `define()`
+  3. Generate the simulation data with `generate()`
+  4. Fit models with your data (e.g. `lm()`), with `fit()`
+  5. Tidy the model output for further processing, such as computing power or Type I Error rates, with `tidy_fits`
+  
+## `specify()` your data-generating process
+
+`specify()` takes arbitrary R expressions that can be used for generating data.  **Each argument should have a name and be prefixed with `~`, the tilde operator.**  Order matters: later arguments can refer to earlier arguments, but not the other way around.
+
+Good:
+```{r correct_order}
+specify(a = ~ runif(6), 
+        b = ~ a + rnorm(6)) %>% 
+  generate(1)
+
+```
+
+Error:
+```{r incorrect_order, warning = TRUE, purl = FALSE}
+specify(b = ~ a + rnorm(6),
+        a = ~ runif(6)) %>% 
+  generate(1)
+```
+
+All arguments must imply the same number of rows.  Arguments that imply 1 row are recycled.
+
+OK:
+```{r correct_number}
+specify(a = ~ runif(6), 
+        b = ~ rnorm(6)) %>% 
+  generate(1)
+```
+
+OK, with recycling:
+
+```{r recycle_number}
+specify(a = ~ runif(1), 
+        b = ~ rnorm(6)) %>% 
+  generate(1)
+```
+
+Error:
+```{r incorrect_number, warning = TRUE, purl = FALSE}
+specify(a = ~ runif(2), 
+        b = ~ rnorm(6)) %>% 
+  generate(1)
+```
+
+Using `x` as an argument to `specify()` is not recommended, because for technical reasons `x` is always placed as the first argument.  This means that if `x` refers to prior variables it will fail:
+
+```{r x_error, warning = TRUE, purl = FALSE}
+specify(y = ~ runif(6),
+        x = ~ y + runif(6)) %>% 
+  generate(1)
+
+```
+
+The same code works fine when `x` is renamed:
+
+```{r x_error_fixed}
+specify(y = ~ runif(6),
+        a = ~ y + runif(6)) %>% 
+  generate(1)
+```
+
+### Expressions that generate multiple columns
+`specify()` accepts expressions that generate multiple columns simultaneously in a `matrix`, `data.frame`, or `tibble`.  By default, the column names in the output append a number to the variable name.  Here's an example using `MASS::mvrnorm()`, which produces draws form the multivariate normal distribution:
+
+```{r multicolumn_default}
+specify(a = ~ MASS::mvrnorm(6, 
+                            mu = rep(0, 3),
+                            Sigma = diag(rep(1, 3)))) %>% 
+  generate(1)
+
+```
+
+You can change the separator via `sep`:
+```{r multicolumn_sep}
+specify(a = ~ MASS::mvrnorm(6, 
+                            mu = rep(0, 3),
+                            Sigma = diag(rep(1, 3))),
+        sep = ".") %>% 
+  generate(1)
+
+```
+
+Alternatively, you can set a two-sided formula to set names; the left hand side must use `c` or `cbind` and the argument name is ignored:
+
+```{r multicolumn_two_sided}
+specify(y = c(a, b, c) ~ MASS::mvrnorm(6, 
+                            mu = rep(0, 3),
+                            Sigma = diag(rep(1, 3)))) %>% 
+  generate(1)
+
+```
+
+If your expression already produces column names, those are used by default and the argument name is ignored:
+
+```{r multicolumn_use_names}
+specify(a = ~ MASS::mvrnorm(6, 
+                            mu = rep(0, 3),
+                            Sigma = diag(rep(1, 3))) %>% 
+          magrittr::set_colnames(c("d", "e", "f"))) %>% 
+  generate(1)
+```
+
+This is useful for dealing with functions from other packages that already provide informative names (e.g., `lavaan::simulateData()`). You can turn this behavior off with `use_names = FALSE`.
+
+Whatever method you use, you can still refer to these generated variables in later expressions:
+
+```{r multicolumn_refer}
+specify(a = ~ MASS::mvrnorm(6, 
+                            mu = rep(0, 3),
+                            Sigma = diag(rep(1, 3))),
+        b = ~ a_1 - a_2) %>% 
+  generate(1)
+```
+
+## `define()` parameters that you want to systematically vary
+
+## `generate()` the simulation data
+
+## `fit()` models with your data
+
+## `tidy_fits()` for further processing
+
+
+
