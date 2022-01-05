@@ -87,7 +87,7 @@ specify(y = ~ runif(6),
   generate(1)
 ```
 
-### Expressions that generate multiple columns
+### Advanced: expressions that generate multiple columns
 `specify()` accepts expressions that generate multiple columns simultaneously in a `matrix`, `data.frame`, or `tibble`.  By default, the column names in the output append a number to the variable name.  Here's an example using `MASS::mvrnorm()`, which produces draws form the multivariate normal distribution:
 
 ```{r multicolumn_default}
@@ -141,10 +141,54 @@ specify(a = ~ MASS::mvrnorm(6,
 ```
 
 ## `define()` parameters that you want to systematically vary
+`define()` creates metaparameters (also called simulation factors): values that you want to systematically vary.  An obvious choice is sample size:
+
+```{r define_n}
+specify(a = ~ rnorm(n)) %>% 
+  define(n = c(10, 20)) %>% 
+  generate(1)
+```
+
+Each argument to `define()` is a vector or list with the desired values to be used in the expressions in `specify().  `specify()` expressions can refer to the names of define arguments, and `generate()` will substitute the possible values that argument when generating data.
+
+When `define()` had multiple arguments, each possible combination is generated:
+
+```{r define_n_mu}
+specify(a = ~ rnorm(n, mu)) %>% 
+  define(n = c(10, 20),
+         mu = c(0, 10)) %>% 
+  generate(1)
+```
+
+(If not all combinations are desired, see options for filtering at the `generate()` step, below.)
+
+`define()` can also take lists for any type of value used in `specify`. For instance, matrices:
+
+```{r define_matrix}
+
+specify(a = ~ MASS::mvrnorm(6, rep(0, 2), Sigma = s)) %>% 
+  define(s = list(independent = diag(rep(1, 2)),
+                  dependent = matrix(c(1, 0.5, 0.5, 1), nrow = 2))) %>% 
+  generate(1)
+
+```
+
+Note that `simpr` creates a column `s_index` using the names of the list elements of `s` to make the results easier to view and filter.
+
+Functions can also be provided in `define()`:
+
+```{r define_function}
+specify(y = ~ distribution(10)) %>%
+  define(distribution = list(normal = rnorm,
+                             lognormal = rlnorm)) %>%
+  generate(1)
+```
 
 ## `generate()` the simulation data
 
 ## `fit()` models with your data
+
+### Advanced: pre-fit data munging
 
 ## `tidy_fits()` for further processing
 
