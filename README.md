@@ -1,7 +1,7 @@
 [![Build
 Status](https://travis-ci.com/statisfactions/simpr.svg?branch=master)](https://travis-ci.com/statisfactions/simpr)
 
-# simpr
+# [simpr](https://statisfactions.github.io/simpr/)
 
 `simpr` provides a general, simple, and tidyverse-friendly framework for
 specifying and generating simulations in R. It’s useful for power
@@ -39,7 +39,7 @@ The `simpr` workflow:
 5.  Tidy the model output for further processing, such as computing
     power or Type I Error rates, with `tidy_fits`
 
-## Installation and loading
+Installation and loading:
 
 ``` r
 remotes::install_github("statisfactions/simpr")
