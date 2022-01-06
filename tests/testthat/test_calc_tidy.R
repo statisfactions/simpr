@@ -67,3 +67,28 @@ test_that("Each iteration of simulation has model terms listed correctly in tidy
 
 })
 
+## Errors show up -----
+test_that("Errors show up in tidied output.", {
+
+  buggy_fit = specify(y = ~ rnorm(size)) %>%
+    define(size = c(-10, 10)) %>%
+    generate(1, warn_on_error = FALSE) %>%
+    fit(t_test = ~ t.test(y),
+        chisq = ~ chisq.test(y),
+        warn_on_error = FALSE) %>%
+    tidy_fits()
+
+  expect_equal(buggy_fit$.sim_error,
+               c("Error in rnorm(size): invalid arguments\n",
+                 "Error in rnorm(size): invalid arguments\n",
+                 NA, NA))
+
+  expect_equal(buggy_fit$.fit_error,
+               c("Error in t.test(y): object 'y' not found\n",
+                 "Error in is.data.frame(x): object 'y' not found\n",
+                 NA,
+                 "Error in chisq.test(y): all entries of 'x' must be nonnegative and finite\n"
+               ))
+
+})
+

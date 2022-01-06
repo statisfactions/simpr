@@ -30,6 +30,7 @@ apply_fits.simpr_spec = function(obj, .f, ..., .progress = FALSE,
   add_call(obj, mc, "apply_fits", replace_arg = "obj")
 }
 
+#' @importFrom rlang .data
 #' @export
 apply_fits.simpr_tibble = function(obj, .f, ..., .progress = FALSE,
                                    .options = furrr_options()) {
@@ -37,13 +38,32 @@ apply_fits.simpr_tibble = function(obj, .f, ..., .progress = FALSE,
   obj = tibble::as_tibble(as.data.frame(obj)) ## strip attributes
   fn_map = function(...) tibble::as_tibble(purrr::as_mapper(.f)(...))
   ## Create reference meta df for merging
-  simpr_meta = obj %>%
+  simpr_meta_raw = obj %>%
     dplyr::select(tidyselect::one_of(c(".sim_id", attr(obj, "meta"), "rep")))
 
+  simpr_meta = simpr_meta_raw
+
+  if(".sim_error" %in% names(obj))
+    simpr_meta$.sim_error = obj$.sim_error
+
+
+  if(any(grepl("^\\.fit_error", names(obj)))) {
+    fit_errors = obj %>%
+      dplyr::select(.data$.sim_id, tidyselect::starts_with(".fit_error_")) %>%
+      tidyr::pivot_longer(-.data$.sim_id, names_to = "Source", values_to = ".fit_error") %>%
+      dplyr::mutate(Source = sub("^^\\.fit_error_", "", .data$Source))
+
+    simpr_meta = dplyr::left_join(simpr_meta, fit_errors, by = c(".sim_id"))
+
+  }
+
+
   ## Extract all fit columns
+  fit_names = c(attr(obj, "fits"))
+
   simpr_mods = obj %>%
-    dplyr::select(tidyselect::one_of(c(attr(obj, "fits")))) %>%
-    purrr::map(purrr::set_names, nm = simpr_meta$.sim_id)
+    dplyr::select(tidyselect::one_of(fit_names)) %>%
+    purrr::map(purrr::set_names, nm = simpr_meta_raw$.sim_id)
 
   ## For each fit column (identified as "source"), run tidy on each element of that column
   simpr_tidy = purrr::map_dfr(simpr_mods, function(x, ...)
@@ -54,7 +74,10 @@ apply_fits.simpr_tibble = function(obj, .f, ..., .progress = FALSE,
   simpr_tidy$.sim_id = as.integer(simpr_tidy$.sim_id)
 
   ## Re-merge metaparameter columns to tidy output
-  output = dplyr::right_join(simpr_meta, simpr_tidy, by = ".sim_id")
+  if("Source" %in% names(simpr_meta))
+    output = dplyr::left_join(simpr_meta, simpr_tidy, by = c(".sim_id", "Source"))
+  else
+    output = dplyr::left_join(simpr_meta, simpr_tidy, by = ".sim_id")
 
   output
 }

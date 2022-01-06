@@ -107,7 +107,7 @@ The first fit `t_test` failed on just the first row, with `size = -10`, but the 
 fit_multi_error
 ```
 
-Even in this degenerate case, `tidy_fits` still gathers together whatever valid fits it can find, and ignores the rest:
+Even in this degenerate case, `tidy_fits` still gathers together whatever valid fits it can find, and reproduces the errors when there is not a valid fit:
 
 ```{r tidy_multi_error, purl = FALSE}
 fit_multi_error %>% 
@@ -164,7 +164,7 @@ If you aren't seeing any output when you type commands in the debugger, try runn
 
 This same mechanism is used by `fit()`:
 
-```{r eval = FALSE, purl = FALSE}
+```{r fit_debug, eval = FALSE, purl = FALSE}
 set.seed(100)
 specify(y1 = ~ rnorm(10),
         y2 = ~ rnorm(10)) %>%

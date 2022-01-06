@@ -22,8 +22,6 @@ test_that("define() can handle lists", {
 })
 
 ## Define can handle functions as elements in a list
-## ... but for some reason I can't figure out
-debug_random_seed(ignore = NULL)
 test_that("define can handle functions", {
 
   function_list = list(normal = rnorm,

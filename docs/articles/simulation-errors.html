@@ -210,15 +210,19 @@
 <span class="co">#&gt; chisq[[1]]</span>
 <span class="co">#&gt; --------------------------</span>
 <span class="co">#&gt; NULL</span></code></pre></div>
-<p>Even in this degenerate case, <code>tidy_fits</code> still gathers together whatever valid fits it can find, and ignores the rest:</p>
+<p>Even in this degenerate case, <code>tidy_fits</code> still gathers together whatever valid fits it can find, and reproduces the errors when there is not a valid fit:</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">fit_multi_error</span> <span class="op">%&gt;%</span> 
   <span class="va">tidy_fits</span>
-<span class="co">#&gt; # A tibble: 1 × 12</span>
-<span class="co">#&gt;   .sim_id  size   rep Source estimate statistic p.value parameter conf.low</span>
-<span class="co">#&gt;     &lt;int&gt; &lt;dbl&gt; &lt;int&gt; &lt;chr&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;</span>
-<span class="co">#&gt; 1       2    10     1 t_test   -0.113    -0.281   0.785         9    -1.02</span>
-<span class="co">#&gt; # … with 3 more variables: conf.high &lt;dbl&gt;, method &lt;chr&gt;, alternative &lt;chr&gt;</span></code></pre></div>
+<span class="co">#&gt; # A tibble: 4 × 14</span>
+<span class="co">#&gt;   .sim_id  size   rep .sim_error  Source .fit_error   estimate statistic p.value</span>
+<span class="co">#&gt;     &lt;int&gt; &lt;dbl&gt; &lt;int&gt; &lt;chr&gt;       &lt;chr&gt;  &lt;chr&gt;           &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;</span>
+<span class="co">#&gt; 1       1   -10     1 "Error in … t_test "Error in t…   NA        NA      NA    </span>
+<span class="co">#&gt; 2       1   -10     1 "Error in … chisq  "Error in i…   NA        NA      NA    </span>
+<span class="co">#&gt; 3       2    10     1  &lt;NA&gt;       t_test  &lt;NA&gt;          -0.113    -0.281   0.785</span>
+<span class="co">#&gt; 4       2    10     1  &lt;NA&gt;       chisq  "Error in c…   NA        NA      NA    </span>
+<span class="co">#&gt; # … with 5 more variables: parameter &lt;dbl&gt;, conf.low &lt;dbl&gt;, conf.high &lt;dbl&gt;,</span>
+<span class="co">#&gt; #   method &lt;chr&gt;, alternative &lt;chr&gt;</span></code></pre></div>
 </div>
 </div>
 <div id="debugging-simulations" class="section level2">
