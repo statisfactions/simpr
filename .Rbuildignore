@@ -9,3 +9,5 @@
 ^docs$
 ^pkgdown$
 ^README_files$
+^doc$
+^Meta$

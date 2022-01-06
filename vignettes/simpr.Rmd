@@ -1,5 +1,5 @@
 ---
-title: "getting-started"
+title: "simpr"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{getting-started}
@@ -178,19 +178,174 @@ Note that `simpr` creates a column `s_index` using the names of the list element
 Functions can also be provided in `define()`:
 
 ```{r define_function}
-specify(y = ~ distribution(10)) %>%
+specify(y = ~ distribution(6)) %>%
   define(distribution = list(normal = rnorm,
                              lognormal = rlnorm)) %>%
   generate(1)
 ```
 
 ## `generate()` the simulation data
+The main argument to `generate()` is `reps`,  the number of repetitions for each combination of metaparameters in `define()`.
+
+```{r generate_n_mu_2}
+specify(a = ~ rnorm(n, mu)) %>% 
+  define(n = c(6, 12),
+         mu = c(0, 10)) %>% 
+  generate(2)
+```
+
+Since there are 4 possible combinations of `n` and `mu`, there are a total of 4 * 2 = 8 simulations generated, 2 for each possible combination.
+
+If some combination of variables is not desired, add filtering criteria to `generate()` using the same syntax as `dplyr::filter()`.
+
+```{r generate_filter}
+specify(a = ~ rnorm(n, mu)) %>% 
+  define(n = c(6, 12),
+         mu = c(0, 10)) %>% 
+  generate(2, n > mu)
+```
+
+To preserve reproducibility, a given simulation in the filtered version of `generate` is still the same as if all possible combinations were generated: note .sim_id skips 3 and 7 above.  See `vignette("reproducibility")` for more information.
+
+`generate()` by default continues with the next iteration if an error is produced, and returns a column `.sim_error` with the text of the error.  Alternative error handling mechanisms are available, see `vignette("simulation-errors")`.
 
 ## `fit()` models with your data
 
-### Advanced: pre-fit data munging
+`fit()` uses similar syntax to `generate()`: you can write arbitrary R expressions to fit models. **Again, each argument should have a name and be prefixed with `~`, the tilde operator.**
+
+```{r fit_initial}
+specify(a = ~ rnorm(6),
+        b = ~ a + rnorm(6)) %>% 
+  generate(1) %>% 
+  fit(t_test = ~ t.test(a, b),
+      lm = ~ lm(b ~ a))
+```
+
+`fit()` adds columns to the overall tibble to contain each type of fit. Printing the object displays a preview of the first fit object in each column.
+
+Although the function is named `fit`, any arbitrary R expression can be used.
+
+```{r fit_describe}
+specify(a = ~ rnorm(6)) %>% 
+  generate(1) %>% 
+  fit(mean = ~ mean(a),
+      why_not = ~ a + 5)
+
+
+```
+
+`fit()` is computed within each simulation, so usually you do not need to refer to the entire dataset.  If it is needed by your R function, you can refer to the entire dataset using `.`. The below code is equivalent to the previous example, but explicitly referencing the dataset:
+
+```{r fit_explicit}
+specify(a = ~ rnorm(6),
+        b = ~ a + rnorm(6)) %>% 
+  generate(1) %>% 
+  fit(t_test = ~ t.test(.$a, .$b),
+      lm = ~ lm(b ~ a, data = .))
+```
+
+### Advanced: pre-fit data munging with `per_sim()
+
+Sometimes, it's convenient to specify a data-generating process in a different way than R expects it for fitting.  After `generate()`, run `per_sim()` and then chain any `dplyr` or `tidyr` verbs that work on `data.frame`s or `tibble`s.  These verbs will be applied to every individual simulation.
+
+A common use-case is needing to reshape wide to long.  Consider an intervention study with a control group, an intervention group that does slightly better than the control, and a second intervention group that does much better.  This is easiest to specify in wide format, with separate variables for each group:
+
+```{r fit_reshape_1}
+wide_gen = specify(control = ~ rnorm(6, mean = 0),
+        intervention_1 = ~ rnorm(6, mean = 0.2),
+        intervention_2 = ~ rnorm(6, mean = 2)) %>% 
+  generate(2) 
+
+wide_gen
+```
+
+But to run an ANOVA, we need the outcome in one column and the group name in another column. `per_sim()` and `tidyr::pivot_longer()` make this relatively easy:
+
+```{r fit_reshape_success}
+long_gen = wide_gen %>%  
+  per_sim() %>% 
+  pivot_longer(cols = everything(),
+               names_to = "group", 
+               values_to = "response")
+
+long_gen
+```
+
+Each simulation is now reshaped and ready for fitting:
+
+```{r long_fit}
+long_fit = long_gen %>% 
+  fit(aov = ~ aov(response ~ group),
+      lm = ~ lm(response ~ group))
+
+long_fit
+```
 
 ## `tidy_fits()` for further processing
+The output of `fit()` is not yet amenable to plotting or analysis.  `tidy_fits()` applies `broom::tidy()` to each fit object and binds them together in a single `tibble`:
+
+```{r tidy_fits_simple}
+specify(a = ~ rnorm(n),
+        b = ~ a + rnorm(n)) %>% 
+  define(n = c(6, 12)) %>% 
+  generate(2) %>% 
+  fit(lm = ~ lm(b ~ a)) %>% 
+  tidy_fits()
+
+```
+
+All the same metaparameter information appears in the left-hand column, and all the model information from `broom::tidy()` is provided. This is a convenient format for filtering, plotting, and calculating diagnostics.
+
+If more than one fit is present, `tidy_fits()` simply brings them together in the same `tibble` using `bind_rows`; this means there may be many NA values where one type of model has no values:
+
+```{r tidy_fits_complex}
+specify(a = ~ rnorm(n),
+        b = ~ a + rnorm(n)) %>% 
+  define(n = c(6, 12)) %>% 
+  generate(2) %>% 
+  fit(lm = ~ lm(b ~ a),
+      t_test = ~ t.test(a, b)) %>% 
+  tidy_fits()
+
+```
+
+Any option taken by the tidier can be passed through `tidy_fits()`:
+
+```{r tidy_fits_custom}
+specify(a = ~ rnorm(n),
+        b = ~ a + rnorm(n)) %>% 
+  define(n = c(6, 12)) %>% 
+  generate(2) %>% 
+  fit(lm = ~ lm(b ~ a),
+      t_test = ~ t.test(a, b)) %>% 
+  tidy_fits(conf.level = 0.99, conf.int = TRUE)
+
+```
+
+`glance_fits()` analagously provides the one-row summary provided by `broom::glance()` for each simulation:
+
+```{r glance_fits_simple}
+specify(a = ~ rnorm(n),
+        b = ~ a + rnorm(n)) %>% 
+  define(n = c(6, 12)) %>% 
+  generate(2) %>% 
+  fit(lm = ~ lm(b ~ a)) %>% 
+  glance_fits()
+
+```
+
+`apply_fits` can take any arbitrary expression (preceded by `~`) or function and apply it to each fit object:
+
+```{r apply_fits}
+specify(a = ~ rnorm(n),
+        b = ~ a + rnorm(n)) %>% 
+  define(n = c(6, 12)) %>% 
+  generate(2) %>% 
+  fit(lm = ~ lm(b ~ a)) %>% 
+  apply_fits(~ summary(.)$r.squared)
+```
+
+Similar to `fit()`, the special value `.` indicates the current fit.
 
 
 
