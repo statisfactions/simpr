@@ -8,8 +8,7 @@ define(.x = NULL, ..., suffix = "_index")
 }
 \arguments{
 \item{.x}{a \code{simpr_spec} object (the output
-of \code{\link{specify}}), or NULL to
-create a new specification}
+of \code{\link{specify}})}
 
 \item{...}{metaparameters: named arguments
 containing vectors or unidimensional lists of

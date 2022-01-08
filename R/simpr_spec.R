@@ -32,20 +32,24 @@ print.simpr_spec = function(x, ...) {
 
 }
 
-
+#' @export
+#' @rdname simpr_spec
 new_simpr_spec = function() {
   x = list(conditions = tibble::tibble(),
            meta_info = list(indices = list(),
                             lookup = list()),
            specify = list(),
            variable_sep = character(),
-           include_calls = list())
+           include_calls = list(),
+           use_names = logical())
 
   class(x) = "simpr_spec"
 
   x
 }
 
+#' @export
+#' @rdname simpr_spec
 is.simpr_spec = function(x) {
  empty = new_simpr_spec()
 
@@ -53,7 +57,4 @@ is.simpr_spec = function(x) {
  is.list(x) &&
    all(names(x) == names(empty)) &&
    all(names(x$meta_info) == names(empty$meta_info))
-
-
-
 }

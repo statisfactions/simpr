@@ -51,17 +51,20 @@
 #'   \code{specify(cbind(x, y) ~ MASS::mvrnorm(5,
 #'   c(0, 0), Sigma = diag(2)))}.
 #'
-#' @param x a \code{simpr_spec} object (the
-#'   output of \code{\link{define}}), or NULL to
-#'   create a new specification
-#' @param ... \code{purrr}-style formula functions
-#'   used for generating simulation variables.
+#' @param x leave this argument blank (NULL); this
+#'   argument is a placeholder and can be skipped.
+#' @param ... named \code{purrr}-style formula
+#'   functions used for generating simulation
+#'   variables. \code{x} is not recommended as a
+#'   name, since it is a formal argument and will
+#'   be automatically assumed to be the first
+#'   variable.
 #' @param sep Specify the separator for
 #'   auto-generating names.  See \emph{Column
 #'   naming}.
 #' @param use_names Whether to use names generated
-#'   by the lambda function (TRUE, the default), or to
-#'   overwrite them with supplied names.
+#'   by the lambda function (TRUE, the default),
+#'   or to overwrite them with supplied names.
 #' @return A \code{simpr_specify} object which
 #'   contains the functions needed to generate the
 #'   simulation; to be passed to
@@ -133,22 +136,11 @@ specify.formula = function(x = NULL, ..., use_names = TRUE, sep = "_") {
   ## include that as well
   if(!is.null(x)) {
     message("Formula specification for 'x' detected. ",
-    "Assuming 'x' is the first formula. ",
+    "Assuming 'x' is the first formula.\n\n",
     "To hide this message, or to avoid moving this formula first, ",
     "use a different variable name.")
 
     vars = c(list(x = x), vars)
-
-    ## In unusual case where user passes in output
-    ## of define() AND has a variable called x, add
-    ## that onto the specification as well
-    if(length(vars) > 1 && is.simpr_spec(vars[[2]])) {
-      return(add_specification(vars[[2]],
-                               vars[-2],
-                               sep = sep,
-                               use_names = use_names))
-    }
-
   }
 
   add_specification(new_simpr_spec(),
@@ -157,19 +149,6 @@ specify.formula = function(x = NULL, ..., use_names = TRUE, sep = "_") {
                     use_names = use_names)
 
 }
-
-#' @export
-#' @rdname specify.formula
-specify.simpr_spec = function(x, ..., use_names = TRUE, sep = "_") {
-  ## Method for existing simpr_spec objects (if
-  ## define() is run first)
-
-  vars = list(...)
-
-  out = add_specification(x, vars, sep = sep, use_names = use_names)
-
-}
-
 
 add_specification = function(spec, varlist, sep, use_names) {
 

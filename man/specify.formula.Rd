@@ -2,24 +2,24 @@
 % Please edit documentation in R/specify.R
 \name{specify.formula}
 \alias{specify.formula}
-\alias{specify.simpr_spec}
 \title{Specify data-generating mechanisms}
 \usage{
 \method{specify}{formula}(x = NULL, ..., use_names = TRUE, sep = "_")
-
-\method{specify}{simpr_spec}(x, ..., use_names = TRUE, sep = "_")
 }
 \arguments{
-\item{x}{a \code{simpr_spec} object (the
-output of \code{\link{define}}), or NULL to
-create a new specification}
+\item{x}{leave this argument blank (NULL); this
+argument is a placeholder and can be skipped.}
 
-\item{...}{\code{purrr}-style formula functions
-used for generating simulation variables.}
+\item{...}{named \code{purrr}-style formula
+functions used for generating simulation
+variables. \code{x} is not recommended as a
+name, since it is a formal argument and will
+be automatically assumed to be the first
+variable.}
 
 \item{use_names}{Whether to use names generated
-by the lambda function (TRUE, the default), or to
-overwrite them with supplied names.}
+by the lambda function (TRUE, the default),
+or to overwrite them with supplied names.}
 
 \item{sep}{Specify the separator for
 auto-generating names.  See \emph{Column

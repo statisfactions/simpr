@@ -39,8 +39,7 @@
 #' \code{"b"}.
 #'
 #' @param .x a \code{simpr_spec} object (the output
-#'   of \code{\link{specify}}), or NULL to
-#'   create a new specification
+#'   of \code{\link{specify}})
 #' @param ... metaparameters: named arguments
 #'   containing vectors or unidimensional lists of
 #'   objects to be used in the simulation.
@@ -84,11 +83,9 @@ define = function(.x = NULL, ..., suffix = "_index") {
   if(!(is.character(suffix)) || length(suffix) != 1 || nchar(suffix) <= 0)
     stop("suffix must be a string with at least 1 character")
 
-  if(is.null(.x)) {
-    out = new_simpr_spec()
-  } else {
-    out = .x
-  }
+  stopifnot(is.simpr_spec(.x))
+
+  out = .x
 
   meta = list(...)
 

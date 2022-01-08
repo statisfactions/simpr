@@ -2,9 +2,15 @@
 % Please edit documentation in R/simpr_spec.R
 \name{print.simpr_spec}
 \alias{print.simpr_spec}
+\alias{new_simpr_spec}
+\alias{is.simpr_spec}
 \title{Methods for simpr_spec class}
 \usage{
 \method{print}{simpr_spec}(x, ...)
+
+new_simpr_spec()
+
+is.simpr_spec(x)
 }
 \arguments{
 \item{x}{a \code{simpr_spec} object}
