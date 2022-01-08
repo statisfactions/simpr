@@ -41,7 +41,7 @@ new_simpr_spec = function() {
            specify = list(),
            variable_sep = character(),
            include_calls = list(),
-           use_names = logical())
+           .use_names = logical())
 
   class(x) = "simpr_spec"
 

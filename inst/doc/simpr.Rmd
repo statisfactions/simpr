@@ -98,12 +98,12 @@ specify(a = ~ MASS::mvrnorm(6,
 
 ```
 
-You can change the separator via `sep`:
+You can change the separator via `.sep`:
 ```{r multicolumn_sep}
 specify(a = ~ MASS::mvrnorm(6, 
                             mu = rep(0, 3),
                             Sigma = diag(rep(1, 3))),
-        sep = ".") %>% 
+        .sep = ".") %>% 
   generate(1)
 
 ```
@@ -120,7 +120,7 @@ specify(y = c(a, b, c) ~ MASS::mvrnorm(6,
 
 If your expression already produces column names, those are used by default and the argument name is ignored:
 
-```{r multicolumn_use_names}
+```{r multicolumn_.use_names}
 specify(a = ~ MASS::mvrnorm(6, 
                             mu = rep(0, 3),
                             Sigma = diag(rep(1, 3))) %>% 
@@ -128,7 +128,7 @@ specify(a = ~ MASS::mvrnorm(6,
   generate(1)
 ```
 
-This is useful for dealing with functions from other packages that already provide informative names (e.g., `lavaan::simulateData()`). You can turn this behavior off with `use_names = FALSE`.
+This is useful for dealing with functions from other packages that already provide informative names (e.g., `lavaan::simulateData()`). You can turn this behavior off with `.use_names = FALSE`.
 
 Whatever method you use, you can still refer to these generated variables in later expressions:
 

@@ -27,7 +27,7 @@ colnames(mat_2) = letters[1:10]
 
 test_that("Autonumber when generating multiple columns with named argument", {
   set.seed(100, kind = "L'Ecuyer-CMRG")
-  auto_out = specify(x = ~ MASS::mvrnorm(30, rep(0, 10), Sigma = diag(10)), sep = "_") %>%
+  auto_out = specify(x = ~ MASS::mvrnorm(30, rep(0, 10), Sigma = diag(10)), .sep = "_") %>%
     define(n = 10) %>%
     generate(1)
 
@@ -41,7 +41,7 @@ test_that("Can refer to autonumbered columns in specify()", {
 
   set.seed(100)
   auto_refer = specify(x = ~ MASS::mvrnorm(30, rep(0, 10), Sigma = diag(10)),
-                       y = ~ x_01 + x_02, sep = "_") %>%
+                       y = ~ x_01 + x_02, .sep = "_") %>%
     define(n = 10) %>%
     generate(1)
 
@@ -81,8 +81,8 @@ test_that("Can use names from DGP", {
   out2 = specify(x13 = ~ MASS::mvrnorm(10, mu = rep(0, 5), Sigma = diag(rep(1, 5))) %>%
                    data.frame %>%
                    setNames(letters[1:5]),
-                 use_names = FALSE,
-                 sep = "...") %>%
+                 .use_names = FALSE,
+                 .sep = "...") %>%
     generate(1)
 
   expect_equal(names(out2$sim[[1]]), paste("x13", 1:5, sep = "..."))

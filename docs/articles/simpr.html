@@ -353,7 +353,7 @@
 <span class="co">#&gt; 4  0.369  -0.00302  0.322 </span>
 <span class="co">#&gt; 5 -0.195   0.0547  -0.575 </span>
 <span class="co">#&gt; 6  0.379  -0.878   -1.11</span></code></pre></div>
-<p>This is useful for dealing with functions from other packages that already provide informative names (e.g., <code><a href="https://rdrr.io/pkg/lavaan/man/simulateData.html">lavaan::simulateData()</a></code>). You can turn this behavior off with <code>use_names = FALSE</code>.</p>
+<p>This is useful for dealing with functions from other packages that already provide informative names (e.g., <code><a href="https://rdrr.io/pkg/lavaan/man/simulateData.html">lavaan::simulateData()</a></code>). You can turn this behavior off with <code>.use_names = FALSE</code>.</p>
 <p>Whatever method you use, you can still refer to these generated variables in later expressions:</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://generics.r-lib.org/reference/specify.html">specify</a></span><span class="op">(</span>a <span class="op">=</span> <span class="op">~</span> <span class="fu">MASS</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/MASS/man/mvrnorm.html">mvrnorm</a></span><span class="op">(</span><span class="fl">6</span>, 

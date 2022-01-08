@@ -142,7 +142,7 @@ generate.simpr_spec = function(x, reps, ..., sim_name = "sim",
                      x = x[c("meta_info",
                                "specify",
                                "variable_sep",
-                               "use_names",
+                               ".use_names",
                                "include_calls")],
                      sim_name = sim_name,
                      quiet = quiet,
@@ -155,7 +155,7 @@ generate.simpr_spec = function(x, reps, ..., sim_name = "sim",
 }
 
 
-generate_sim = function(y, eval_environment, variable_sep, use_names, debug, stop_on_error) {
+generate_sim = function(y, eval_environment, variable_sep, .use_names, debug, stop_on_error) {
   eval_fun = purrr::as_mapper(y)
   environment(eval_fun) <- eval_environment
 
@@ -178,7 +178,7 @@ generate_sim = function(y, eval_environment, variable_sep, use_names, debug, sto
   } else if(ncol(gen) == 0) {
     stop("variable function returns 0 columns")
   } else if(ncol(gen) >= 1) {
-    if(use_names && !is.null(colnames(gen))) {
+    if(.use_names && !is.null(colnames(gen))) {
       varnames = colnames(gen)
     }
 
@@ -210,7 +210,7 @@ generate_sim = function(y, eval_environment, variable_sep, use_names, debug, sto
   gen_df
 }
 
-generate_row = function(variables, ..., variable_sep, use_names,
+generate_row = function(variables, ..., variable_sep, .use_names,
                              include_calls, meta_indices, sim_name, quiet,
                         debug, stop_on_error,
                         excluded_sim_ids) {
@@ -228,13 +228,13 @@ generate_row = function(variables, ..., variable_sep, use_names,
                               eval_environment = eval_environment,
                               variable_sep = variable_sep,
                               debug = debug,
-                              use_names = use_names)
+                              .use_names = .use_names)
   else
     sim_list = purrr::safely(purrr::map_dfc, otherwise = NULL, quiet = quiet)(variables, generate_sim,
                                                                               eval_environment = eval_environment,
                                                                               variable_sep = variable_sep,
                                                                               debug = debug,
-                                                                              use_names = use_names)
+                                                                              .use_names = .use_names)
 
   ## Create a 1-row tibble with meta values and the simulation cell
   df_full = purrr::map(meta_values, ~ if(length(.) == 1 && purrr::is_vector(.)) return(.) else return(list(.))) %>%
@@ -284,7 +284,7 @@ create_sim_results <- function(specs, x, sim_name, quiet, warn_on_error, .progre
                 variables = x$specify,
                 include_calls = x$include_calls,
                 variable_sep = x$variable_sep,
-                use_names = x$use_names,
+                .use_names = x$.use_names,
                 meta_indices = names(x$meta_info$indices),
                 debug = debug,
                 stop_on_error = stop_on_error,

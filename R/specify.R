@@ -31,11 +31,11 @@
 #'   becomes the name of the column.  If the
 #'   function already produces column names, then
 #'   the output will use these names if
-#'   \code{use_names = TRUE}, the default.
+#'   \code{.use_names = TRUE}, the default.
 #'   Otherwise, simpr uses the argument name as a
 #'   base and auto-numbers the columns. For
 #'   instance, if the argument \code{a} generates
-#'   a two-column matrix and \code{sep = "_"} (the
+#'   a two-column matrix and \code{.sep = "_"} (the
 #'   default) the columns will be named
 #'   \code{a_1}and \code{a_2}.
 #'
@@ -59,10 +59,10 @@
 #'   name, since it is a formal argument and will
 #'   be automatically assumed to be the first
 #'   variable (a message will be displayed if \code{x} is used).
-#' @param sep Specify the separator for
+#' @param .sep Specify the separator for
 #'   auto-generating names.  See \emph{Column
 #'   naming}.
-#' @param use_names Whether to use names generated
+#' @param .use_names Whether to use names generated
 #'   by the lambda function (TRUE, the default),
 #'   or to overwrite them with supplied names.
 #' @return A \code{simpr_specify} object which
@@ -118,7 +118,7 @@
 #' simple_meta$sim[[2]]
 #'
 #' @export
-specify.formula = function(x = NULL, ..., use_names = TRUE, sep = "_") {
+specify.formula = function(x = NULL, ..., .use_names = TRUE, .sep = "_") {
   ## Method for creating a new simpr_spec object,
   ## which means that first argument must be a formula
 
@@ -145,12 +145,12 @@ specify.formula = function(x = NULL, ..., use_names = TRUE, sep = "_") {
 
   add_specification(new_simpr_spec(),
                     varlist = vars,
-                    sep = sep,
-                    use_names = use_names)
+                    .sep = .sep,
+                    .use_names = .use_names)
 
 }
 
-add_specification = function(spec, varlist, sep, use_names) {
+add_specification = function(spec, varlist, .sep, .use_names) {
 
   if(length(varlist) == 0)
     stop("No variables defined")
@@ -203,9 +203,9 @@ add_specification = function(spec, varlist, sep, use_names) {
                             })
 
 
-  # set attributes of "use_names" and "sep" for auto-numbering variables with multiple outputs
-  spec$variable_sep = sep
-  spec$use_names = use_names
+  # set attributes of ".use_names" and ".sep" for auto-numbering variables with multiple outputs
+  spec$variable_sep = .sep
+  spec$.use_names = .use_names
 
   spec
 }

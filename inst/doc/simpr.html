@@ -180,8 +180,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">specify</span>(<span class="at">b =</span> <span class="sc">~</span> a <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="dv">6</span>),</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>        <span class="at">a =</span> <span class="sc">~</span> <span class="fu">runif</span>(<span class="dv">6</span>)) <span class="sc">%&gt;%</span> </span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">generate</span>(<span class="dv">1</span>)</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in create_sim_results(specs = specs, x = obj[c(&quot;meta_info&quot;, &quot;specify&quot;, : Simulation</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; produced errors. See column &#39;.sim_error&#39;.</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in create_sim_results(specs = specs, x = x[c(&quot;meta_info&quot;, &quot;specify&quot;, : Simulation produced errors. See</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; column &#39;.sim_error&#39;.</span></span>
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; tibble</span></span>
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; --------------------------</span></span>
 <span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 1 × 4</span></span>
@@ -237,8 +237,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">specify</span>(<span class="at">a =</span> <span class="sc">~</span> <span class="fu">runif</span>(<span class="dv">2</span>), </span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>        <span class="at">b =</span> <span class="sc">~</span> <span class="fu">rnorm</span>(<span class="dv">6</span>)) <span class="sc">%&gt;%</span> </span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">generate</span>(<span class="dv">1</span>)</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in create_sim_results(specs = specs, x = obj[c(&quot;meta_info&quot;, &quot;specify&quot;, : Simulation</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; produced errors. See column &#39;.sim_error&#39;.</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in create_sim_results(specs = specs, x = x[c(&quot;meta_info&quot;, &quot;specify&quot;, : Simulation produced errors. See</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; column &#39;.sim_error&#39;.</span></span>
 <span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; tibble</span></span>
 <span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; --------------------------</span></span>
 <span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 1 × 4</span></span>
@@ -249,15 +249,17 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">specify</span>(<span class="at">y =</span> <span class="sc">~</span> <span class="fu">runif</span>(<span class="dv">6</span>),</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>        <span class="at">x =</span> <span class="sc">~</span> y <span class="sc">+</span> <span class="fu">runif</span>(<span class="dv">6</span>)) <span class="sc">%&gt;%</span> </span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">generate</span>(<span class="dv">1</span>)</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Formula specification for &#39;x&#39; detected. Assuming &#39;x&#39; is the first formula. To hide this message, or to avoid moving this formula first, use a different variable name.</span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in create_sim_results(specs = specs, x = obj[c(&quot;meta_info&quot;, &quot;specify&quot;, : Simulation</span></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; produced errors. See column &#39;.sim_error&#39;.</span></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; tibble</span></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; --------------------------</span></span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 1 × 4</span></span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   .sim_id   rep sim    .sim_error                                   </span></span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     &lt;int&gt; &lt;int&gt; &lt;list&gt; &lt;chr&gt;                                        </span></span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1       1     1 &lt;NULL&gt; &quot;Error in eval_fun(): object &#39;y&#39; not found\n&quot;</span></span></code></pre></div>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Formula specification for &#39;x&#39; detected. Assuming &#39;x&#39; is the first formula.</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; To hide this message, or to avoid moving this formula first, use a different variable name.</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in create_sim_results(specs = specs, x = x[c(&quot;meta_info&quot;, &quot;specify&quot;, : Simulation produced errors. See</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; column &#39;.sim_error&#39;.</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; tibble</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; --------------------------</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 1 × 4</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   .sim_id   rep sim    .sim_error                                   </span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     &lt;int&gt; &lt;int&gt; &lt;list&gt; &lt;chr&gt;                                        </span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1       1     1 &lt;NULL&gt; &quot;Error in eval_fun(): object &#39;y&#39; not found\n&quot;</span></span></code></pre></div>
 <p>The same code works fine when <code>x</code> is renamed:</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">specify</span>(<span class="at">y =</span> <span class="sc">~</span> <span class="fu">runif</span>(<span class="dv">6</span>),</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>        <span class="at">a =</span> <span class="sc">~</span> y <span class="sc">+</span> <span class="fu">runif</span>(<span class="dv">6</span>)) <span class="sc">%&gt;%</span> </span>
@@ -305,11 +307,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4  1.55   0.724 -1.01 </span></span>
 <span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5  0.340  0.712 -0.847</span></span>
 <span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6  2.32   0.174 -2.04</span></span></code></pre></div>
-<p>You can change the separator via <code>sep</code>:</p>
+<p>You can change the separator via <code>.sep</code>:</p>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">specify</span>(<span class="at">a =</span> <span class="sc">~</span> MASS<span class="sc">::</span><span class="fu">mvrnorm</span>(<span class="dv">6</span>, </span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>                            <span class="at">mu =</span> <span class="fu">rep</span>(<span class="dv">0</span>, <span class="dv">3</span>),</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>                            <span class="at">Sigma =</span> <span class="fu">diag</span>(<span class="fu">rep</span>(<span class="dv">1</span>, <span class="dv">3</span>))),</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">sep =</span> <span class="st">&quot;.&quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">.sep =</span> <span class="st">&quot;.&quot;</span>) <span class="sc">%&gt;%</span> </span>
 <span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">generate</span>(<span class="dv">1</span>)</span>
 <span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; full tibble</span></span>
 <span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; --------------------------</span></span>
@@ -376,7 +378,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4  0.369  -0.00302  0.322 </span></span>
 <span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5 -0.195   0.0547  -0.575 </span></span>
 <span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6  0.379  -0.878   -1.11</span></span></code></pre></div>
-<p>This is useful for dealing with functions from other packages that already provide informative names (e.g., <code>lavaan::simulateData()</code>). You can turn this behavior off with <code>use_names = FALSE</code>.</p>
+<p>This is useful for dealing with functions from other packages that already provide informative names (e.g., <code>lavaan::simulateData()</code>). You can turn this behavior off with <code>.use_names = FALSE</code>.</p>
 <p>Whatever method you use, you can still refer to these generated variables in later expressions:</p>
 <div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">specify</span>(<span class="at">a =</span> <span class="sc">~</span> MASS<span class="sc">::</span><span class="fu">mvrnorm</span>(<span class="dv">6</span>, </span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>                            <span class="at">mu =</span> <span class="fu">rep</span>(<span class="dv">0</span>, <span class="dv">3</span>),</span>
@@ -871,22 +873,21 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">t_test =</span> <span class="sc">~</span> <span class="fu">t.test</span>(a, b)) <span class="sc">%&gt;%</span> </span>
 <span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tidy_fits</span>()</span>
 <span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 12 × 16</span></span>
-<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    .sim_id     n   rep Source term     estimate std.error statistic p.value estimate1 estimate2</span></span>
-<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      &lt;int&gt; &lt;dbl&gt; &lt;int&gt; &lt;chr&gt;  &lt;chr&gt;       &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;</span></span>
-<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  1       1     6     1 lm     (Interc… -0.431       0.268  -1.61    1.84e-1    NA       NA     </span></span>
-<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  2       1     6     1 lm     a         0.680       0.330   2.06    1.08e-1    NA       NA     </span></span>
-<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  3       1     6     1 t_test &lt;NA&gt;      0.388      NA       0.785   4.51e-1    -0.134   -0.522 </span></span>
-<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  4       2    12     1 lm     (Interc… -0.693       0.449  -1.54    1.54e-1    NA       NA     </span></span>
-<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  5       2    12     1 lm     a         0.751       0.533   1.41    1.89e-1    NA       NA     </span></span>
-<span id="cb27-16"><a href="#cb27-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  6       2    12     1 t_test &lt;NA&gt;      0.551      NA       1.41    1.78e-1    -0.571   -1.12  </span></span>
-<span id="cb27-17"><a href="#cb27-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  7       3     6     2 lm     (Interc… -0.103       0.379  -0.272   7.99e-1    NA       NA     </span></span>
-<span id="cb27-18"><a href="#cb27-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  8       3     6     2 lm     a         0.733       0.423   1.73    1.58e-1    NA       NA     </span></span>
-<span id="cb27-19"><a href="#cb27-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  9       3     6     2 t_test &lt;NA&gt;      0.00356    NA       0.00652 9.95e-1    -0.373   -0.377 </span></span>
-<span id="cb27-20"><a href="#cb27-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 10       4    12     2 lm     (Interc…  0.130       0.212   0.611   5.55e-1    NA       NA     </span></span>
-<span id="cb27-21"><a href="#cb27-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 11       4    12     2 lm     a         1.35        0.200   6.71    5.29e-5    NA       NA     </span></span>
-<span id="cb27-22"><a href="#cb27-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 12       4    12     2 t_test &lt;NA&gt;     -0.0821     NA      -0.145   8.86e-1    -0.138   -0.0559</span></span>
-<span id="cb27-23"><a href="#cb27-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # … with 5 more variables: parameter &lt;dbl&gt;, conf.low &lt;dbl&gt;, conf.high &lt;dbl&gt;, method &lt;chr&gt;,</span></span>
-<span id="cb27-24"><a href="#cb27-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   alternative &lt;chr&gt;</span></span></code></pre></div>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    .sim_id     n   rep Source term    estimate std.error statistic p.value estimate1 estimate2 parameter conf.low</span></span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      &lt;int&gt; &lt;dbl&gt; &lt;int&gt; &lt;chr&gt;  &lt;chr&gt;      &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;</span></span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  1       1     6     1 lm     (Inter… -0.431       0.268  -1.61    1.84e-1    NA       NA          NA      NA    </span></span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  2       1     6     1 lm     a        0.680       0.330   2.06    1.08e-1    NA       NA          NA      NA    </span></span>
+<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  3       1     6     1 t_test &lt;NA&gt;     0.388      NA       0.785   4.51e-1    -0.134   -0.522       9.97   -0.714</span></span>
+<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  4       2    12     1 lm     (Inter… -0.693       0.449  -1.54    1.54e-1    NA       NA          NA      NA    </span></span>
+<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  5       2    12     1 lm     a        0.751       0.533   1.41    1.89e-1    NA       NA          NA      NA    </span></span>
+<span id="cb27-16"><a href="#cb27-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  6       2    12     1 t_test &lt;NA&gt;     0.551      NA       1.41    1.78e-1    -0.571   -1.12       17.0    -0.276</span></span>
+<span id="cb27-17"><a href="#cb27-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  7       3     6     2 lm     (Inter… -0.103       0.379  -0.272   7.99e-1    NA       NA          NA      NA    </span></span>
+<span id="cb27-18"><a href="#cb27-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  8       3     6     2 lm     a        0.733       0.423   1.73    1.58e-1    NA       NA          NA      NA    </span></span>
+<span id="cb27-19"><a href="#cb27-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  9       3     6     2 t_test &lt;NA&gt;     0.00356    NA       0.00652 9.95e-1    -0.373   -0.377       9.88   -1.22 </span></span>
+<span id="cb27-20"><a href="#cb27-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 10       4    12     2 lm     (Inter…  0.130       0.212   0.611   5.55e-1    NA       NA          NA      NA    </span></span>
+<span id="cb27-21"><a href="#cb27-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 11       4    12     2 lm     a        1.35        0.200   6.71    5.29e-5    NA       NA          NA      NA    </span></span>
+<span id="cb27-22"><a href="#cb27-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 12       4    12     2 t_test &lt;NA&gt;    -0.0821     NA      -0.145   8.86e-1    -0.138   -0.0559     19.3    -1.27 </span></span>
+<span id="cb27-23"><a href="#cb27-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # … with 3 more variables: conf.high &lt;dbl&gt;, method &lt;chr&gt;, alternative &lt;chr&gt;</span></span></code></pre></div>
 <p>Any option taken by the tidier can be passed through <code>tidy_fits()</code>:</p>
 <div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">specify</span>(<span class="at">a =</span> <span class="sc">~</span> <span class="fu">rnorm</span>(n),</span>
 <span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>        <span class="at">b =</span> <span class="sc">~</span> a <span class="sc">+</span> <span class="fu">rnorm</span>(n)) <span class="sc">%&gt;%</span> </span>
@@ -896,22 +897,21 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">t_test =</span> <span class="sc">~</span> <span class="fu">t.test</span>(a, b)) <span class="sc">%&gt;%</span> </span>
 <span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tidy_fits</span>(<span class="at">conf.level =</span> <span class="fl">0.99</span>, <span class="at">conf.int =</span> <span class="cn">TRUE</span>)</span>
 <span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 12 × 16</span></span>
-<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    .sim_id     n   rep Source term      estimate std.error statistic p.value conf.low conf.high</span></span>
-<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      &lt;int&gt; &lt;dbl&gt; &lt;int&gt; &lt;chr&gt;  &lt;chr&gt;        &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;</span></span>
-<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  1       1     6     1 lm     (Interce… -0.184       0.307   -0.601  0.580    -1.60       1.23 </span></span>
-<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  2       1     6     1 lm     a          0.968       0.333    2.90   0.0440   -0.567      2.50 </span></span>
-<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  3       1     6     1 t_test &lt;NA&gt;       0.173      NA        0.295  0.774    -1.14       1.48 </span></span>
-<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  4       2    12     1 lm     (Interce…  0.402       0.276    1.45   0.177    -0.474      1.28 </span></span>
-<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  5       2    12     1 lm     a          0.719       0.447    1.61   0.139    -0.698      2.14 </span></span>
-<span id="cb28-16"><a href="#cb28-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  6       2    12     1 t_test &lt;NA&gt;      -0.329      NA       -1.04   0.313    -0.995      0.336</span></span>
-<span id="cb28-17"><a href="#cb28-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  7       3     6     2 lm     (Interce… -0.00991     0.708   -0.0140 0.990    -3.27       3.25 </span></span>
-<span id="cb28-18"><a href="#cb28-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  8       3     6     2 lm     a          0.514       0.465    1.11   0.331    -1.63       2.65 </span></span>
-<span id="cb28-19"><a href="#cb28-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  9       3     6     2 t_test &lt;NA&gt;       0.139      NA        0.142  0.890    -2.04       2.32 </span></span>
-<span id="cb28-20"><a href="#cb28-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 10       4    12     2 lm     (Interce… -0.290       0.383   -0.758  0.466    -1.50       0.923</span></span>
-<span id="cb28-21"><a href="#cb28-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 11       4    12     2 lm     a          1.13        0.326    3.46   0.00611   0.0952     2.16 </span></span>
-<span id="cb28-22"><a href="#cb28-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 12       4    12     2 t_test &lt;NA&gt;       0.205      NA        0.385  0.704    -0.910      1.32 </span></span>
-<span id="cb28-23"><a href="#cb28-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # … with 5 more variables: estimate1 &lt;dbl&gt;, estimate2 &lt;dbl&gt;, parameter &lt;dbl&gt;, method &lt;chr&gt;,</span></span>
-<span id="cb28-24"><a href="#cb28-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   alternative &lt;chr&gt;</span></span></code></pre></div>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    .sim_id     n   rep Source term    estimate std.error statistic p.value conf.low conf.high estimate1 estimate2</span></span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      &lt;int&gt; &lt;dbl&gt; &lt;int&gt; &lt;chr&gt;  &lt;chr&gt;      &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;</span></span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  1       1     6     1 lm     (Inter… -0.184       0.307   -0.601  0.580    -1.60       1.23     NA        NA    </span></span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  2       1     6     1 lm     a        0.968       0.333    2.90   0.0440   -0.567      2.50     NA        NA    </span></span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  3       1     6     1 t_test &lt;NA&gt;     0.173      NA        0.295  0.774    -1.14       1.48     -0.353    -0.526</span></span>
+<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  4       2    12     1 lm     (Inter…  0.402       0.276    1.45   0.177    -0.474      1.28     NA        NA    </span></span>
+<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  5       2    12     1 lm     a        0.719       0.447    1.61   0.139    -0.698      2.14     NA        NA    </span></span>
+<span id="cb28-16"><a href="#cb28-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  6       2    12     1 t_test &lt;NA&gt;    -0.329      NA       -1.04   0.313    -0.995      0.336     0.259     0.588</span></span>
+<span id="cb28-17"><a href="#cb28-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  7       3     6     2 lm     (Inter… -0.00991     0.708   -0.0140 0.990    -3.27       3.25     NA        NA    </span></span>
+<span id="cb28-18"><a href="#cb28-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  8       3     6     2 lm     a        0.514       0.465    1.11   0.331    -1.63       2.65     NA        NA    </span></span>
+<span id="cb28-19"><a href="#cb28-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  9       3     6     2 t_test &lt;NA&gt;     0.139      NA        0.142  0.890    -2.04       2.32      0.265     0.126</span></span>
+<span id="cb28-20"><a href="#cb28-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 10       4    12     2 lm     (Inter… -0.290       0.383   -0.758  0.466    -1.50       0.923    NA        NA    </span></span>
+<span id="cb28-21"><a href="#cb28-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 11       4    12     2 lm     a        1.13        0.326    3.46   0.00611   0.0952     2.16     NA        NA    </span></span>
+<span id="cb28-22"><a href="#cb28-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 12       4    12     2 t_test &lt;NA&gt;     0.205      NA        0.385  0.704    -0.910      1.32      0.667     0.461</span></span>
+<span id="cb28-23"><a href="#cb28-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # … with 3 more variables: parameter &lt;dbl&gt;, method &lt;chr&gt;, alternative &lt;chr&gt;</span></span></code></pre></div>
 <p><code>glance_fits()</code> analagously provides the one-row summary provided by <code>broom::glance()</code> for each simulation:</p>
 <div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">specify</span>(<span class="at">a =</span> <span class="sc">~</span> <span class="fu">rnorm</span>(n),</span>
 <span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>        <span class="at">b =</span> <span class="sc">~</span> a <span class="sc">+</span> <span class="fu">rnorm</span>(n)) <span class="sc">%&gt;%</span> </span>
@@ -920,13 +920,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit</span>(<span class="at">lm =</span> <span class="sc">~</span> <span class="fu">lm</span>(b <span class="sc">~</span> a)) <span class="sc">%&gt;%</span> </span>
 <span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">glance_fits</span>()</span>
 <span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 4 × 16</span></span>
-<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   .sim_id     n   rep Source r.squared adj.r.squared sigma statistic p.value    df logLik   AIC</span></span>
-<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     &lt;int&gt; &lt;dbl&gt; &lt;int&gt; &lt;chr&gt;      &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;</span></span>
-<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1       1     6     1 lm        0.0974       -0.128   1.01     0.431 0.547       1  -7.33  20.7</span></span>
-<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2       2    12     1 lm        0.115         0.0261  1.24     1.30  0.282       1 -18.5   43.1</span></span>
-<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3       3     6     2 lm        0.606         0.507   1.13     6.15  0.0682      1  -8.05  22.1</span></span>
-<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4       4    12     2 lm        0.587         0.545   1.06    14.2   0.00367     1 -16.6   39.3</span></span>
-<span id="cb29-14"><a href="#cb29-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # … with 4 more variables: BIC &lt;dbl&gt;, deviance &lt;dbl&gt;, df.residual &lt;int&gt;, nobs &lt;int&gt;</span></span></code></pre></div>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   .sim_id     n   rep Source r.squared adj.r.squared sigma statistic p.value    df logLik   AIC   BIC deviance</span></span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     &lt;int&gt; &lt;dbl&gt; &lt;int&gt; &lt;chr&gt;      &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;</span></span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1       1     6     1 lm        0.0974       -0.128   1.01     0.431 0.547       1  -7.33  20.7  20.0     4.04</span></span>
+<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2       2    12     1 lm        0.115         0.0261  1.24     1.30  0.282       1 -18.5   43.1  44.5    15.5 </span></span>
+<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3       3     6     2 lm        0.606         0.507   1.13     6.15  0.0682      1  -8.05  22.1  21.5     5.15</span></span>
+<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4       4    12     2 lm        0.587         0.545   1.06    14.2   0.00367     1 -16.6   39.3  40.7    11.2 </span></span>
+<span id="cb29-14"><a href="#cb29-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # … with 2 more variables: df.residual &lt;int&gt;, nobs &lt;int&gt;</span></span></code></pre></div>
 <p><code>apply_fits</code> can take any arbitrary expression (preceded by <code>~</code>) or function and apply it to each fit object:</p>
 <div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">specify</span>(<span class="at">a =</span> <span class="sc">~</span> <span class="fu">rnorm</span>(n),</span>
 <span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>        <span class="at">b =</span> <span class="sc">~</span> a <span class="sc">+</span> <span class="fu">rnorm</span>(n)) <span class="sc">%&gt;%</span> </span>

@@ -4,7 +4,7 @@
 \alias{specify.formula}
 \title{Specify data-generating mechanisms}
 \usage{
-\method{specify}{formula}(x = NULL, ..., use_names = TRUE, sep = "_")
+\method{specify}{formula}(x = NULL, ..., .use_names = TRUE, .sep = "_")
 }
 \arguments{
 \item{x}{leave this argument blank (NULL); this
@@ -17,11 +17,11 @@ name, since it is a formal argument and will
 be automatically assumed to be the first
 variable (a message will be displayed if \code{x} is used).}
 
-\item{use_names}{Whether to use names generated
+\item{.use_names}{Whether to use names generated
 by the lambda function (TRUE, the default),
 or to overwrite them with supplied names.}
 
-\item{sep}{Specify the separator for
+\item{.sep}{Specify the separator for
 auto-generating names.  See \emph{Column
 naming}.}
 }
@@ -81,11 +81,11 @@ multiple columns as well.
   becomes the name of the column.  If the
   function already produces column names, then
   the output will use these names if
-  \code{use_names = TRUE}, the default.
+  \code{.use_names = TRUE}, the default.
   Otherwise, simpr uses the argument name as a
   base and auto-numbers the columns. For
   instance, if the argument \code{a} generates
-  a two-column matrix and \code{sep = "_"} (the
+  a two-column matrix and \code{.sep = "_"} (the
   default) the columns will be named
   \code{a_1}and \code{a_2}.
 
