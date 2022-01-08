@@ -43,8 +43,9 @@ broadcast to the user as they occur?}
 \item{.warn_on_error}{Should there be a warning
 when simulation errors occur?}
 
-\item{.stop_on_error}{Should the simulation stop
-immediately when simulation errors occur?}
+\item{.stop_on_error}{Should the simulation
+stop immediately when simulation errors
+occur?}
 
 \item{.debug}{Run simulation in debug mode,
 allowing objects, etc. to be explored for
@@ -61,23 +62,24 @@ to
 \code{\link[furrr:furrr_options]{furrr_options()}}.}
 }
 \value{
-a \code{simpr_gen} object with
+a \code{simpr_tibble} object with
   additional list-columns for the output of the
   provided functions (e.g. model outputs). Just
-  like the output of
-  \code{\link{generate}}, there is one row
-  per repetition per combination of
-  metaparameters, and the columns are the
-  repetition number \code{rep}, the
-  metaparameter names, the simulated data
+  like the output of \code{\link{generate}},
+  there is one row per repetition per
+  combination of metaparameters, and the
+  columns are the repetition number \code{rep},
+  the metaparameter names, the simulated data
   \code{sim}, with additional columns for the
   function outputs specified in \code{\dots}.
+  If \code{\link{per_sims()}} was called
+  previously, \code{fit} returns the object to
+  default \code{simpr_tibble} mode.
 }
 \description{
 Takes simulated data from
-\code{\link{generate}} and applies
-functions to it, usually model-fitting
-functions.
+\code{\link{generate}} and applies functions to
+it, usually model-fitting functions.
 }
 \details{
 This is the fourth step in the simulation
@@ -102,9 +104,10 @@ regressions on each cell, you could specify
 your modeling function requires a reference to
 the full dataset, use \code{.}, e.g.
 \code{fit(linear_model = ~lm(c ~ a + b, data =
-.)}. These equivalent specifications would compute linear models on each
-simulation cell if there are variables a, b,
-and c specified in \code{specify}.
+.)}. These equivalent specifications would
+compute linear models on each simulation cell
+if there are variables a, b, and c specified in
+\code{specify}.
 }
 \examples{
 ## Generate data to fit models
@@ -148,5 +151,6 @@ add_five_data = simple_linear_data \%>\%
   fit(add_five = ~ . + 5)
 
 add_five_data
+
 
 }

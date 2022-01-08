@@ -58,3 +58,16 @@ test_that("reshaping works as expected with per_sim", {
   expect_equivalent(rt_gen, rt_gen_delayed)
 
 })
+
+
+test_that("fit() removes per_sim mode", {
+  set.seed(101)
+
+  fits = specify(a = ~ rnorm(6)) %>%
+    generate(2) %>%
+    per_sim() %>%
+    fit(lm = ~ lm(a ~ 1))
+
+  expect_equal(fits$.sim_id, pull(fits, .sim_id))
+
+})

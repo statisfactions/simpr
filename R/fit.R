@@ -1,9 +1,8 @@
 #' Fit models to the simulated data
 #'
 #' Takes simulated data from
-#' \code{\link{generate}} and applies
-#' functions to it, usually model-fitting
-#' functions.
+#' \code{\link{generate}} and applies functions to
+#' it, usually model-fitting functions.
 #'
 #' This is the fourth step in the simulation
 #' process: after generating the simulation data,
@@ -27,9 +26,10 @@
 #' your modeling function requires a reference to
 #' the full dataset, use \code{.}, e.g.
 #' \code{fit(linear_model = ~lm(c ~ a + b, data =
-#' .)}. These equivalent specifications would compute linear models on each
-#' simulation cell if there are variables a, b,
-#' and c specified in \code{specify}.
+#' .)}. These equivalent specifications would
+#' compute linear models on each simulation cell
+#' if there are variables a, b, and c specified in
+#' \code{specify}.
 #'
 #' @param object a \code{simpr_tibble} object--the
 #'   simulated data from
@@ -42,8 +42,9 @@
 #'   broadcast to the user as they occur?
 #' @param .warn_on_error Should there be a warning
 #'   when simulation errors occur?
-#' @param .stop_on_error Should the simulation stop
-#'   immediately when simulation errors occur?
+#' @param .stop_on_error Should the simulation
+#'   stop immediately when simulation errors
+#'   occur?
 #' @param .debug Run simulation in debug mode,
 #'   allowing objects, etc. to be explored for
 #'   each generated variable specification.
@@ -55,17 +56,20 @@
 #'   futures. This must be the result from a call
 #'   to
 #'   \code{\link[furrr:furrr_options]{furrr_options()}}.
-#' @return a \code{simpr_gen} object with
+#'
+#' @return a \code{simpr_tibble} object with
 #'   additional list-columns for the output of the
 #'   provided functions (e.g. model outputs). Just
-#'   like the output of
-#'   \code{\link{generate}}, there is one row
-#'   per repetition per combination of
-#'   metaparameters, and the columns are the
-#'   repetition number \code{rep}, the
-#'   metaparameter names, the simulated data
+#'   like the output of \code{\link{generate}},
+#'   there is one row per repetition per
+#'   combination of metaparameters, and the
+#'   columns are the repetition number \code{rep},
+#'   the metaparameter names, the simulated data
 #'   \code{sim}, with additional columns for the
 #'   function outputs specified in \code{\dots}.
+#'   If \code{\link{per_sims()}} was called
+#'   previously, \code{fit} returns the object to
+#'   default \code{simpr_tibble} mode.
 #'
 #' @examples
 #' ## Generate data to fit models
@@ -110,6 +114,7 @@
 #'
 #' add_five_data
 #'
+#'
 #' @export
 fit.simpr_tibble = function(object, ...,
                             .quiet = TRUE, .warn_on_error = TRUE,
@@ -132,6 +137,11 @@ fit.simpr_tibble = function(object, ...,
     return(alt_fn)
 
   }
+
+  if("simpr_sims" %in% class(object))
+    object = whole_tibble(object)
+
+
 
   fit_formulas = list(...)
   sim_name = get_sim_name(object)
