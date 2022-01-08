@@ -1,8 +1,8 @@
 ---
-title: "Exploring and Debugging Simulation Errors"
+title: "Managing simulation errors"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{simulation-errors}
+  %\VignetteIndexEntry{Managing simulation errors}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

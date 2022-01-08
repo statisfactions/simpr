@@ -5,13 +5,13 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>optimization • simpr</title>
+<title>Optimization • simpr</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../pkgdown.js"></script><meta property="og:title" content="optimization">
+<script src="../pkgdown.js"></script><meta property="og:title" content="Optimization">
 <meta property="og:description" content="simpr">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -57,13 +57,13 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/optimization.html">optimization</a>
+      <a href="../articles/optimization.html">Optimization</a>
     </li>
     <li>
-      <a href="../articles/reproducibility.html">reproducibility</a>
+      <a href="../articles/reproducibility.html">Reproducing simulations</a>
     </li>
     <li>
-      <a href="../articles/simulation-errors.html">Exploring and Debugging Simulation Errors</a>
+      <a href="../articles/simulation-errors.html">Managing simulation errors</a>
     </li>
   </ul>
 </li>
@@ -81,7 +81,7 @@
       </header><script src="optimization_files/header-attrs-2.10/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip>optimization</h1>
+      <h1 data-toc-skip>Optimization</h1>
             
       
       
@@ -137,18 +137,18 @@
 <span class="co">#&gt; # A tibble: 12 × 4</span>
 <span class="co">#&gt;    .sim_id     n term                estimate</span>
 <span class="co">#&gt;      &lt;int&gt; &lt;dbl&gt; &lt;chr&gt;                  &lt;dbl&gt;</span>
-<span class="co">#&gt;  1       1     6 (Intercept)         -0.403  </span>
-<span class="co">#&gt;  2       1     6 groupintervention_1  0.00539</span>
-<span class="co">#&gt;  3       1     6 groupintervention_2  2.63   </span>
-<span class="co">#&gt;  4       2    12 (Intercept)          0.00584</span>
-<span class="co">#&gt;  5       2    12 groupintervention_1  0.186  </span>
-<span class="co">#&gt;  6       2    12 groupintervention_2  1.74   </span>
-<span class="co">#&gt;  7       3     6 (Intercept)          0.510  </span>
-<span class="co">#&gt;  8       3     6 groupintervention_1 -0.481  </span>
-<span class="co">#&gt;  9       3     6 groupintervention_2  1.01   </span>
-<span class="co">#&gt; 10       4    12 (Intercept)         -0.268  </span>
-<span class="co">#&gt; 11       4    12 groupintervention_1  0.218  </span>
-<span class="co">#&gt; 12       4    12 groupintervention_2  2.25</span></code></pre></div>
+<span class="co">#&gt;  1       1     6 (Intercept)          -0.712 </span>
+<span class="co">#&gt;  2       1     6 groupintervention_1   0.0870</span>
+<span class="co">#&gt;  3       1     6 groupintervention_2   2.11  </span>
+<span class="co">#&gt;  4       2    12 (Intercept)           0.0774</span>
+<span class="co">#&gt;  5       2    12 groupintervention_1   0.0132</span>
+<span class="co">#&gt;  6       2    12 groupintervention_2   1.85  </span>
+<span class="co">#&gt;  7       3     6 (Intercept)          -0.0836</span>
+<span class="co">#&gt;  8       3     6 groupintervention_1   0.0944</span>
+<span class="co">#&gt;  9       3     6 groupintervention_2   1.92  </span>
+<span class="co">#&gt; 10       4    12 (Intercept)          -0.0874</span>
+<span class="co">#&gt; 11       4    12 groupintervention_1   1.13  </span>
+<span class="co">#&gt; 12       4    12 groupintervention_2   2.47</span></code></pre></div>
 </div>
 <div id="parallel-processing-with-the-future-package" class="section level2">
 <h2 class="hasAnchor">

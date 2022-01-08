@@ -1,8 +1,8 @@
 ---
-title: "optimization"
+title: "Optimization"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{optimization}
+  %\VignetteIndexEntry{Optimization}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

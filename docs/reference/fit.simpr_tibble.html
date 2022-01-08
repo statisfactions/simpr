@@ -41,9 +41,8 @@
 
 <meta property="og:title" content="Fit models to the simulated data — fit.simpr_tibble" />
 <meta property="og:description" content="Takes simulated data from
-generate and applies
-functions to it, usually model-fitting
-functions." />
+generate and applies functions to
+it, usually model-fitting functions." />
 
 
 
@@ -101,13 +100,13 @@ functions." />
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/optimization.html">optimization</a>
+      <a href="../articles/optimization.html">Optimization</a>
     </li>
     <li>
-      <a href="../articles/reproducibility.html">reproducibility</a>
+      <a href="../articles/reproducibility.html">Reproducing simulations</a>
     </li>
     <li>
-      <a href="../articles/simulation-errors.html">Exploring and Debugging Simulation Errors</a>
+      <a href="../articles/simulation-errors.html">Managing simulation errors</a>
     </li>
   </ul>
 </li>
@@ -134,9 +133,8 @@ functions." />
 
     <div class="ref-description">
     <p>Takes simulated data from
-<code><a href='https://generics.r-lib.org/reference/generate.html'>generate</a></code> and applies
-functions to it, usually model-fitting
-functions.</p>
+<code><a href='https://generics.r-lib.org/reference/generate.html'>generate</a></code> and applies functions to
+it, usually model-fitting functions.</p>
     </div>
 
     <pre class="usage"><span class='co'># S3 method for simpr_tibble</span>
@@ -191,8 +189,9 @@ when simulation errors occur?</p></td>
     </tr>
     <tr>
       <th>.stop_on_error</th>
-      <td><p>Should the simulation stop
-immediately when simulation errors occur?</p></td>
+      <td><p>Should the simulation
+stop immediately when simulation errors
+occur?</p></td>
     </tr>
     <tr>
       <th>.debug</th>
@@ -218,17 +217,19 @@ to
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>a <code>simpr_gen</code> object with
+    <p>a <code>simpr_tibble</code> object with
   additional list-columns for the output of the
   provided functions (e.g. model outputs). Just
-  like the output of
-  <code><a href='https://generics.r-lib.org/reference/generate.html'>generate</a></code>, there is one row
-  per repetition per combination of
-  metaparameters, and the columns are the
-  repetition number <code>rep</code>, the
-  metaparameter names, the simulated data
+  like the output of <code><a href='https://generics.r-lib.org/reference/generate.html'>generate</a></code>,
+  there is one row per repetition per
+  combination of metaparameters, and the
+  columns are the repetition number <code>rep</code>,
+  the metaparameter names, the simulated data
   <code>sim</code>, with additional columns for the
-  function outputs specified in <code>...</code>.</p>
+  function outputs specified in <code>...</code>.
+  If <code>per_sims()</code> was called
+  previously, <code>fit</code> returns the object to
+  default <code>simpr_tibble</code> mode.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>This is the fourth step in the simulation
@@ -252,9 +253,10 @@ regressions on each cell, you could specify
 your modeling function requires a reference to
 the full dataset, use <code>.</code>, e.g.
 <code>fit(linear_model = ~lm(c ~ a + b, data =
-.)</code>. These equivalent specifications would compute linear models on each
-simulation cell if there are variables a, b,
-and c specified in <code>specify</code>.</p>
+.)</code>. These equivalent specifications would
+compute linear models on each simulation cell
+if there are variables a, b, and c specified in
+<code>specify</code>.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'>## Generate data to fit models</span>
@@ -539,6 +541,7 @@ and c specified in <code>specify</code>.</p>
 #&gt; <span style='color: #BCBCBC;'>10</span>  6.47  15.7
 #&gt; <span style='color: #949494;'># … with 90 more rows</span>
 #&gt; </div><div class='input'>
+
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

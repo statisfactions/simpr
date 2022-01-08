@@ -1,8 +1,8 @@
 ---
-title: "reproducibility"
+title: "Reproducing simulations"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{reproducibility}
+  %\VignetteIndexEntry{Reproducing simulations}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -14,7 +14,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r setup}
+```{r setup, message = FALSE}
 library(simpr)
 ```
 
