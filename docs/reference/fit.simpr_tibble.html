@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Fit models to the simulated data — fit • simpr</title>
+<title>Fit models to the simulated data — fit.simpr_tibble • simpr</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,7 @@
 
 
 
-<meta property="og:title" content="Fit models to the simulated data — fit" />
+<meta property="og:title" content="Fit models to the simulated data — fit.simpr_tibble" />
 <meta property="og:description" content="Takes simulated data from
 generate and applies
 functions to it, usually model-fitting
@@ -129,18 +129,31 @@ functions." />
     <div class="page-header">
     <h1>Fit models to the simulated data</h1>
     
-    <div class="hidden name"><code>fit.Rd</code></div>
+    <div class="hidden name"><code>fit.simpr_tibble.Rd</code></div>
     </div>
 
     <div class="ref-description">
     <p>Takes simulated data from
-<code><a href='generate.html'>generate</a></code> and applies
+<code><a href='https://generics.r-lib.org/reference/generate.html'>generate</a></code> and applies
 functions to it, usually model-fitting
 functions.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>fit</span><span class='op'>(</span>
-  <span class='va'>obj</span>,
+    <pre class="usage"><span class='co'># S3 method for simpr_tibble</span>
+<span class='fu'><a href='https://generics.r-lib.org/reference/fit.html'>fit</a></span><span class='op'>(</span>
+  <span class='va'>object</span>,
+  <span class='va'>...</span>,
+  .quiet <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  .warn_on_error <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  .stop_on_error <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  .debug <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  .progress <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  .options <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/pkg/furrr/man/furrr_options.html'>furrr_options</a></span><span class='op'>(</span><span class='op'>)</span>
+<span class='op'>)</span>
+
+<span class='co'># S3 method for simpr_spec</span>
+<span class='fu'><a href='https://generics.r-lib.org/reference/fit.html'>fit</a></span><span class='op'>(</span>
+  <span class='va'>object</span>,
   <span class='va'>...</span>,
   .quiet <span class='op'>=</span> <span class='cn'>TRUE</span>,
   .warn_on_error <span class='op'>=</span> <span class='cn'>TRUE</span>,
@@ -154,11 +167,11 @@ functions.</p>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>obj</th>
-      <td><p>a <code>simpr_specify</code> object--the
+      <th>object</th>
+      <td><p>a <code>simpr_tibble</code> object--the
 simulated data from
-<code><a href='generate.html'>generate</a></code>--or an
-<code><a href='include.html'>include</a></code> object</p></td>
+<code><a href='https://generics.r-lib.org/reference/generate.html'>generate</a></code>--or an
+<code>simpr_spec</code> object not yet generated.</p></td>
     </tr>
     <tr>
       <th>...</th>
@@ -209,7 +222,7 @@ to
   additional list-columns for the output of the
   provided functions (e.g. model outputs). Just
   like the output of
-  <code><a href='generate.html'>generate</a></code>, there is one row
+  <code><a href='https://generics.r-lib.org/reference/generate.html'>generate</a></code>, there is one row
   per repetition per combination of
   metaparameters, and the columns are the
   repetition number <code>rep</code>, the
@@ -235,24 +248,24 @@ the data. The functions are computed within
 each simulation cell, so dataset names are
 often unnecessary: for instance, to compute
 regressions on each cell, you could specify
-<code>fit(linear_model = ~lm(y ~ x + z)</code>.  If
+<code>fit(linear_model = ~lm(c ~ a + b)</code>.  If
 your modeling function requires a reference to
 the full dataset, use <code>.</code>, e.g.
-<code>fit(linear_model = ~lm(y ~ x + z, data =
+<code>fit(linear_model = ~lm(c ~ a + b, data =
 .)</code>. These equivalent specifications would compute linear models on each
-simulation cell if there are variables x, y,
-and z specified in <code>specify</code>.</p>
+simulation cell if there are variables a, b,
+and c specified in <code>specify</code>.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'>## Generate data to fit models</span>
-<span class='va'>simple_linear_data</span> <span class='op'>=</span> <span class='fu'><a href='https://generics.r-lib.org/reference/specify.html'>specify</a></span><span class='op'>(</span>x1 <span class='op'>=</span> <span class='op'>~</span> <span class='fl'>2</span> <span class='op'>+</span> <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='va'>n</span><span class='op'>)</span>,
-                               y <span class='op'>=</span> <span class='op'>~</span> <span class='fl'>5</span> <span class='op'>+</span> <span class='fl'>3</span><span class='op'>*</span><span class='va'>x1</span> <span class='op'>+</span> <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='va'>n</span>, <span class='fl'>0</span>, sd <span class='op'>=</span> <span class='fl'>0.5</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+<span class='va'>simple_linear_data</span> <span class='op'>=</span> <span class='fu'><a href='https://generics.r-lib.org/reference/specify.html'>specify</a></span><span class='op'>(</span>a <span class='op'>=</span> <span class='op'>~</span> <span class='fl'>2</span> <span class='op'>+</span> <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='va'>n</span><span class='op'>)</span>,
+                               b <span class='op'>=</span> <span class='op'>~</span> <span class='fl'>5</span> <span class='op'>+</span> <span class='fl'>3</span><span class='op'>*</span><span class='va'>a</span> <span class='op'>+</span> <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='va'>n</span>, <span class='fl'>0</span>, sd <span class='op'>=</span> <span class='fl'>0.5</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
   <span class='fu'><a href='define.html'>define</a></span><span class='op'>(</span>n <span class='op'>=</span> <span class='fl'>100</span><span class='op'>:</span><span class='fl'>101</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
-  <span class='fu'><a href='generate.html'>generate</a></span><span class='op'>(</span><span class='fl'>2</span><span class='op'>)</span>
+  <span class='fu'><a href='https://generics.r-lib.org/reference/generate.html'>generate</a></span><span class='op'>(</span><span class='fl'>2</span><span class='op'>)</span>
 
 <span class='co'>## Fit with a single linear term</span>
 <span class='va'>linear_fit</span> <span class='op'>=</span> <span class='va'>simple_linear_data</span> <span class='op'>%&gt;%</span>
-  <span class='fu'>fit</span><span class='op'>(</span>linear <span class='op'>=</span> <span class='op'>~</span><span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span><span class='op'>(</span><span class='va'>y</span> <span class='op'>~</span> <span class='va'>x1</span>, data <span class='op'>=</span> <span class='va'>.</span><span class='op'>)</span><span class='op'>)</span>
+  <span class='fu'><a href='https://generics.r-lib.org/reference/fit.html'>fit</a></span><span class='op'>(</span>linear <span class='op'>=</span> <span class='op'>~</span><span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span><span class='op'>(</span><span class='va'>b</span> <span class='op'>~</span> <span class='va'>a</span>, data <span class='op'>=</span> <span class='va'>.</span><span class='op'>)</span><span class='op'>)</span>
 
 <span class='va'>linear_fit</span> <span class='co'># first fit element also prints</span>
 </div><div class='output co'>#&gt; full tibble
@@ -268,7 +281,7 @@ and z specified in <code>specify</code>.</p>
 #&gt; sim[[1]]
 #&gt; --------------------------
 #&gt; <span style='color: #949494;'># A tibble: 100 × 2</span>
-#&gt;       x1     y
+#&gt;        a     b
 #&gt;    <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>
 #&gt; <span style='color: #BCBCBC;'> 1</span> 1.88   9.89
 #&gt; <span style='color: #BCBCBC;'> 2</span> 2.86  14.1 
@@ -286,10 +299,10 @@ and z specified in <code>specify</code>.</p>
 #&gt; --------------------------
 #&gt; 
 #&gt; Call:
-#&gt; lm(formula = y ~ x1, data = .)
+#&gt; lm(formula = b ~ a, data = .)
 #&gt; 
 #&gt; Coefficients:
-#&gt; (Intercept)           x1  
+#&gt; (Intercept)            a  
 #&gt;       4.981        3.032  
 #&gt; 
 #&gt; </div><div class='input'>
@@ -298,47 +311,47 @@ and z specified in <code>specify</code>.</p>
 </div><div class='output co'>#&gt; [[1]]
 #&gt; 
 #&gt; Call:
-#&gt; lm(formula = y ~ x1, data = .)
+#&gt; lm(formula = b ~ a, data = .)
 #&gt; 
 #&gt; Coefficients:
-#&gt; (Intercept)           x1  
+#&gt; (Intercept)            a  
 #&gt;       4.981        3.032  
 #&gt; 
 #&gt; 
 #&gt; [[2]]
 #&gt; 
 #&gt; Call:
-#&gt; lm(formula = y ~ x1, data = .)
+#&gt; lm(formula = b ~ a, data = .)
 #&gt; 
 #&gt; Coefficients:
-#&gt; (Intercept)           x1  
+#&gt; (Intercept)            a  
 #&gt;       5.198        2.929  
 #&gt; 
 #&gt; 
 #&gt; [[3]]
 #&gt; 
 #&gt; Call:
-#&gt; lm(formula = y ~ x1, data = .)
+#&gt; lm(formula = b ~ a, data = .)
 #&gt; 
 #&gt; Coefficients:
-#&gt; (Intercept)           x1  
+#&gt; (Intercept)            a  
 #&gt;       4.922        3.055  
 #&gt; 
 #&gt; 
 #&gt; [[4]]
 #&gt; 
 #&gt; Call:
-#&gt; lm(formula = y ~ x1, data = .)
+#&gt; lm(formula = b ~ a, data = .)
 #&gt; 
 #&gt; Coefficients:
-#&gt; (Intercept)           x1  
+#&gt; (Intercept)            a  
 #&gt;       5.122        2.940  
 #&gt; 
 #&gt; </div><div class='input'>
 <span class='co'>## We can fit multiple models to the same data</span>
 <span class='va'>multi_fit</span> <span class='op'>=</span> <span class='va'>simple_linear_data</span> <span class='op'>%&gt;%</span>
-  <span class='fu'>fit</span><span class='op'>(</span>linear <span class='op'>=</span> <span class='op'>~</span><span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span><span class='op'>(</span><span class='va'>y</span> <span class='op'>~</span> <span class='va'>x1</span>, data <span class='op'>=</span> <span class='va'>.</span><span class='op'>)</span>,
-      quadratic <span class='op'>=</span> <span class='op'>~</span><span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span><span class='op'>(</span><span class='va'>y</span> <span class='op'>~</span> <span class='va'>x1</span> <span class='op'>+</span> <span class='fu'><a href='https://rdrr.io/r/base/AsIs.html'>I</a></span><span class='op'>(</span><span class='va'>x1</span><span class='op'>^</span><span class='fl'>2</span><span class='op'>)</span>, data <span class='op'>=</span> <span class='va'>.</span><span class='op'>)</span><span class='op'>)</span>
+  <span class='fu'><a href='https://generics.r-lib.org/reference/fit.html'>fit</a></span><span class='op'>(</span>linear <span class='op'>=</span> <span class='op'>~</span><span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span><span class='op'>(</span><span class='va'>b</span> <span class='op'>~</span> <span class='va'>a</span>, data <span class='op'>=</span> <span class='va'>.</span><span class='op'>)</span>,
+      quadratic <span class='op'>=</span> <span class='op'>~</span><span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span><span class='op'>(</span><span class='va'>b</span> <span class='op'>~</span> <span class='va'>a</span> <span class='op'>+</span> <span class='fu'><a href='https://rdrr.io/r/base/AsIs.html'>I</a></span><span class='op'>(</span><span class='va'>a</span><span class='op'>^</span><span class='fl'>2</span><span class='op'>)</span>, data <span class='op'>=</span> <span class='va'>.</span><span class='op'>)</span><span class='op'>)</span>
 
 <span class='co'>## Two columns, one for each model</span>
 <span class='va'>multi_fit</span>
@@ -355,7 +368,7 @@ and z specified in <code>specify</code>.</p>
 #&gt; sim[[1]]
 #&gt; --------------------------
 #&gt; <span style='color: #949494;'># A tibble: 100 × 2</span>
-#&gt;       x1     y
+#&gt;        a     b
 #&gt;    <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>
 #&gt; <span style='color: #BCBCBC;'> 1</span> 1.88   9.89
 #&gt; <span style='color: #BCBCBC;'> 2</span> 2.86  14.1 
@@ -373,10 +386,10 @@ and z specified in <code>specify</code>.</p>
 #&gt; --------------------------
 #&gt; 
 #&gt; Call:
-#&gt; lm(formula = y ~ x1, data = .)
+#&gt; lm(formula = b ~ a, data = .)
 #&gt; 
 #&gt; Coefficients:
-#&gt; (Intercept)           x1  
+#&gt; (Intercept)            a  
 #&gt;       4.981        3.032  
 #&gt; 
 #&gt; 
@@ -384,10 +397,10 @@ and z specified in <code>specify</code>.</p>
 #&gt; --------------------------
 #&gt; 
 #&gt; Call:
-#&gt; lm(formula = y ~ x1 + I(x1^2), data = .)
+#&gt; lm(formula = b ~ a + I(a^2), data = .)
 #&gt; 
 #&gt; Coefficients:
-#&gt; (Intercept)           x1      I(x1^2)  
+#&gt; (Intercept)            a       I(a^2)  
 #&gt;      4.6417       3.4438      -0.1019  
 #&gt; 
 #&gt; </div><div class='input'>
@@ -396,40 +409,40 @@ and z specified in <code>specify</code>.</p>
 </div><div class='output co'>#&gt; [[1]]
 #&gt; 
 #&gt; Call:
-#&gt; lm(formula = y ~ x1 + I(x1^2), data = .)
+#&gt; lm(formula = b ~ a + I(a^2), data = .)
 #&gt; 
 #&gt; Coefficients:
-#&gt; (Intercept)           x1      I(x1^2)  
+#&gt; (Intercept)            a       I(a^2)  
 #&gt;      4.6417       3.4438      -0.1019  
 #&gt; 
 #&gt; 
 #&gt; [[2]]
 #&gt; 
 #&gt; Call:
-#&gt; lm(formula = y ~ x1 + I(x1^2), data = .)
+#&gt; lm(formula = b ~ a + I(a^2), data = .)
 #&gt; 
 #&gt; Coefficients:
-#&gt; (Intercept)           x1      I(x1^2)  
+#&gt; (Intercept)            a       I(a^2)  
 #&gt;     5.17210      2.99702     -0.02076  
 #&gt; 
 #&gt; 
 #&gt; [[3]]
 #&gt; 
 #&gt; Call:
-#&gt; lm(formula = y ~ x1 + I(x1^2), data = .)
+#&gt; lm(formula = b ~ a + I(a^2), data = .)
 #&gt; 
 #&gt; Coefficients:
-#&gt; (Intercept)           x1      I(x1^2)  
+#&gt; (Intercept)            a       I(a^2)  
 #&gt;     4.74306      3.30813     -0.06536  
 #&gt; 
 #&gt; 
 #&gt; [[4]]
 #&gt; 
 #&gt; Call:
-#&gt; lm(formula = y ~ x1 + I(x1^2), data = .)
+#&gt; lm(formula = b ~ a + I(a^2), data = .)
 #&gt; 
 #&gt; Coefficients:
-#&gt; (Intercept)           x1      I(x1^2)  
+#&gt; (Intercept)            a       I(a^2)  
 #&gt;     5.23040      2.80192      0.03401  
 #&gt; 
 #&gt; </div><div class='input'>
@@ -440,25 +453,25 @@ and z specified in <code>specify</code>.</p>
 #&gt;    .sim_id     n   rep Source    term      estimate std.error statistic  p.value
 #&gt;      <span style='color: #949494; font-style: italic;'>&lt;int&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;int&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;int&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>     <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>        <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>     <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>     <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>    <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>
 #&gt; <span style='color: #BCBCBC;'> 1</span>       1   100     1 linear    (Interce…   4.98      0.135     37.0   2.05<span style='color: #949494;'>e</span><span style='color: #BB0000;'>-59</span>
-#&gt; <span style='color: #BCBCBC;'> 2</span>       1   100     1 linear    x1          3.03      0.061<span style='text-decoration: underline;'>3</span>    49.5   3.93<span style='color: #949494;'>e</span><span style='color: #BB0000;'>-71</span>
+#&gt; <span style='color: #BCBCBC;'> 2</span>       1   100     1 linear    a           3.03      0.061<span style='text-decoration: underline;'>3</span>    49.5   3.93<span style='color: #949494;'>e</span><span style='color: #BB0000;'>-71</span>
 #&gt; <span style='color: #BCBCBC;'> 3</span>       1   100     1 quadratic (Interce…   4.64      0.199     23.4   1.23<span style='color: #949494;'>e</span><span style='color: #BB0000;'>-41</span>
-#&gt; <span style='color: #BCBCBC;'> 4</span>       1   100     1 quadratic x1          3.44      0.190     18.1   6.50<span style='color: #949494;'>e</span><span style='color: #BB0000;'>-33</span>
-#&gt; <span style='color: #BCBCBC;'> 5</span>       1   100     1 quadratic I(x1^2)    -<span style='color: #BB0000;'>0.102</span>     0.044<span style='text-decoration: underline;'>6</span>    -<span style='color: #BB0000;'>2.28</span>  2.46<span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 2</span>
+#&gt; <span style='color: #BCBCBC;'> 4</span>       1   100     1 quadratic a           3.44      0.190     18.1   6.50<span style='color: #949494;'>e</span><span style='color: #BB0000;'>-33</span>
+#&gt; <span style='color: #BCBCBC;'> 5</span>       1   100     1 quadratic I(a^2)     -<span style='color: #BB0000;'>0.102</span>     0.044<span style='text-decoration: underline;'>6</span>    -<span style='color: #BB0000;'>2.28</span>  2.46<span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 2</span>
 #&gt; <span style='color: #BCBCBC;'> 6</span>       2   101     1 linear    (Interce…   5.20      0.095<span style='text-decoration: underline;'>7</span>    54.3   1.66<span style='color: #949494;'>e</span><span style='color: #BB0000;'>-75</span>
-#&gt; <span style='color: #BCBCBC;'> 7</span>       2   101     1 linear    x1          2.93      0.042<span style='text-decoration: underline;'>3</span>    69.2   1.12<span style='color: #949494;'>e</span><span style='color: #BB0000;'>-85</span>
+#&gt; <span style='color: #BCBCBC;'> 7</span>       2   101     1 linear    a           2.93      0.042<span style='text-decoration: underline;'>3</span>    69.2   1.12<span style='color: #949494;'>e</span><span style='color: #BB0000;'>-85</span>
 #&gt; <span style='color: #BCBCBC;'> 8</span>       2   101     1 quadratic (Interce…   5.17      0.101     51.2   1.46<span style='color: #949494;'>e</span><span style='color: #BB0000;'>-72</span>
-#&gt; <span style='color: #BCBCBC;'> 9</span>       2   101     1 quadratic x1          3.00      0.092<span style='text-decoration: underline;'>8</span>    32.3   4.92<span style='color: #949494;'>e</span><span style='color: #BB0000;'>-54</span>
-#&gt; <span style='color: #BCBCBC;'>10</span>       2   101     1 quadratic I(x1^2)    -<span style='color: #BB0000;'>0.020</span><span style='color: #BB0000; text-decoration: underline;'>8</span>    0.025<span style='text-decoration: underline;'>0</span>    -<span style='color: #BB0000;'>0.829</span> 4.09<span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 1</span>
+#&gt; <span style='color: #BCBCBC;'> 9</span>       2   101     1 quadratic a           3.00      0.092<span style='text-decoration: underline;'>8</span>    32.3   4.92<span style='color: #949494;'>e</span><span style='color: #BB0000;'>-54</span>
+#&gt; <span style='color: #BCBCBC;'>10</span>       2   101     1 quadratic I(a^2)     -<span style='color: #BB0000;'>0.020</span><span style='color: #BB0000; text-decoration: underline;'>8</span>    0.025<span style='text-decoration: underline;'>0</span>    -<span style='color: #BB0000;'>0.829</span> 4.09<span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 1</span>
 #&gt; <span style='color: #BCBCBC;'>11</span>       3   100     2 linear    (Interce…   4.92      0.110     44.7   5.28<span style='color: #949494;'>e</span><span style='color: #BB0000;'>-67</span>
-#&gt; <span style='color: #BCBCBC;'>12</span>       3   100     2 linear    x1          3.06      0.052<span style='text-decoration: underline;'>0</span>    58.8   3.04<span style='color: #949494;'>e</span><span style='color: #BB0000;'>-78</span>
+#&gt; <span style='color: #BCBCBC;'>12</span>       3   100     2 linear    a           3.06      0.052<span style='text-decoration: underline;'>0</span>    58.8   3.04<span style='color: #949494;'>e</span><span style='color: #BB0000;'>-78</span>
 #&gt; <span style='color: #BCBCBC;'>13</span>       3   100     2 quadratic (Interce…   4.74      0.148     32.0   2.58<span style='color: #949494;'>e</span><span style='color: #BB0000;'>-53</span>
-#&gt; <span style='color: #BCBCBC;'>14</span>       3   100     2 quadratic x1          3.31      0.151     21.9   2.62<span style='color: #949494;'>e</span><span style='color: #BB0000;'>-39</span>
-#&gt; <span style='color: #BCBCBC;'>15</span>       3   100     2 quadratic I(x1^2)    -<span style='color: #BB0000;'>0.065</span><span style='color: #BB0000; text-decoration: underline;'>4</span>    0.036<span style='text-decoration: underline;'>7</span>    -<span style='color: #BB0000;'>1.78</span>  7.84<span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 2</span>
+#&gt; <span style='color: #BCBCBC;'>14</span>       3   100     2 quadratic a           3.31      0.151     21.9   2.62<span style='color: #949494;'>e</span><span style='color: #BB0000;'>-39</span>
+#&gt; <span style='color: #BCBCBC;'>15</span>       3   100     2 quadratic I(a^2)     -<span style='color: #BB0000;'>0.065</span><span style='color: #BB0000; text-decoration: underline;'>4</span>    0.036<span style='text-decoration: underline;'>7</span>    -<span style='color: #BB0000;'>1.78</span>  7.84<span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 2</span>
 #&gt; <span style='color: #BCBCBC;'>16</span>       4   101     2 linear    (Interce…   5.12      0.118     43.4   2.93<span style='color: #949494;'>e</span><span style='color: #BB0000;'>-66</span>
-#&gt; <span style='color: #BCBCBC;'>17</span>       4   101     2 linear    x1          2.94      0.051<span style='text-decoration: underline;'>5</span>    57.1   1.51<span style='color: #949494;'>e</span><span style='color: #BB0000;'>-77</span>
+#&gt; <span style='color: #BCBCBC;'>17</span>       4   101     2 linear    a           2.94      0.051<span style='text-decoration: underline;'>5</span>    57.1   1.51<span style='color: #949494;'>e</span><span style='color: #BB0000;'>-77</span>
 #&gt; <span style='color: #BCBCBC;'>18</span>       4   101     2 quadratic (Interce…   5.23      0.178     29.4   1.78<span style='color: #949494;'>e</span><span style='color: #BB0000;'>-50</span>
-#&gt; <span style='color: #BCBCBC;'>19</span>       4   101     2 quadratic x1          2.80      0.177     15.9   7.96<span style='color: #949494;'>e</span><span style='color: #BB0000;'>-29</span>
-#&gt; <span style='color: #BCBCBC;'>20</span>       4   101     2 quadratic I(x1^2)     0.034<span style='text-decoration: underline;'>0</span>    0.041<span style='text-decoration: underline;'>5</span>     0.819 4.15<span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 1</span></div><div class='input'>
+#&gt; <span style='color: #BCBCBC;'>19</span>       4   101     2 quadratic a           2.80      0.177     15.9   7.96<span style='color: #949494;'>e</span><span style='color: #BB0000;'>-29</span>
+#&gt; <span style='color: #BCBCBC;'>20</span>       4   101     2 quadratic I(a^2)      0.034<span style='text-decoration: underline;'>0</span>    0.041<span style='text-decoration: underline;'>5</span>     0.819 4.15<span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 1</span></div><div class='input'>
 <span class='co'>## Can view model summaries with glance_fits</span>
 <span class='va'>multi_fit</span> <span class='op'>%&gt;%</span>
   <span class='va'>glance_fits</span>
@@ -479,7 +492,7 @@ and z specified in <code>specify</code>.</p>
 <span class='co'>## can be any arbitrary function. However, not all functions will lead to useful</span>
 <span class='co'>## output with tidy_fits and glance_fits.</span>
 <span class='va'>add_five_data</span> <span class='op'>=</span> <span class='va'>simple_linear_data</span> <span class='op'>%&gt;%</span>
-  <span class='fu'>fit</span><span class='op'>(</span>add_five <span class='op'>=</span> <span class='op'>~</span> <span class='va'>.</span> <span class='op'>+</span> <span class='fl'>5</span><span class='op'>)</span>
+  <span class='fu'><a href='https://generics.r-lib.org/reference/fit.html'>fit</a></span><span class='op'>(</span>add_five <span class='op'>=</span> <span class='op'>~</span> <span class='va'>.</span> <span class='op'>+</span> <span class='fl'>5</span><span class='op'>)</span>
 
 <span class='va'>add_five_data</span>
 </div><div class='output co'>#&gt; full tibble
@@ -495,7 +508,7 @@ and z specified in <code>specify</code>.</p>
 #&gt; sim[[1]]
 #&gt; --------------------------
 #&gt; <span style='color: #949494;'># A tibble: 100 × 2</span>
-#&gt;       x1     y
+#&gt;        a     b
 #&gt;    <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>
 #&gt; <span style='color: #BCBCBC;'> 1</span> 1.88   9.89
 #&gt; <span style='color: #BCBCBC;'> 2</span> 2.86  14.1 
@@ -512,7 +525,7 @@ and z specified in <code>specify</code>.</p>
 #&gt; add_five[[1]]
 #&gt; --------------------------
 #&gt; <span style='color: #949494;'># A tibble: 100 × 2</span>
-#&gt;       x1     y
+#&gt;        a     b
 #&gt;    <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>
 #&gt; <span style='color: #BCBCBC;'> 1</span>  6.88  14.9
 #&gt; <span style='color: #BCBCBC;'> 2</span>  7.86  19.1

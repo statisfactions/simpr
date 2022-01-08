@@ -105,7 +105,7 @@
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">500</span><span class="op">)</span>
 <span class="va">run_1</span> <span class="op">=</span> <span class="fu"><a href="https://generics.r-lib.org/reference/specify.html">specify</a></span><span class="op">(</span>a <span class="op">=</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span><span class="op">(</span><span class="fl">6</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../reference/generate.html">generate</a></span><span class="op">(</span><span class="fl">3</span><span class="op">)</span>
+  <span class="fu"><a href="https://generics.r-lib.org/reference/generate.html">generate</a></span><span class="op">(</span><span class="fl">3</span><span class="op">)</span>
 
 <span class="va">run_1</span>
 <span class="co">#&gt; full tibble</span>
@@ -131,7 +131,7 @@
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">500</span><span class="op">)</span>
 <span class="va">run_2</span> <span class="op">=</span> <span class="fu"><a href="https://generics.r-lib.org/reference/specify.html">specify</a></span><span class="op">(</span>a <span class="op">=</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span><span class="op">(</span><span class="fl">6</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../reference/generate.html">generate</a></span><span class="op">(</span><span class="fl">3</span><span class="op">)</span>
+  <span class="fu"><a href="https://generics.r-lib.org/reference/generate.html">generate</a></span><span class="op">(</span><span class="fl">3</span><span class="op">)</span>
 
 <span class="va">run_2</span>
 <span class="co">#&gt; full tibble</span>
@@ -157,11 +157,11 @@
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/identical.html">identical</a></span><span class="op">(</span><span class="va">run_1</span>, <span class="va">run_2</span><span class="op">)</span>
 <span class="co">#&gt; [1] TRUE</span></code></pre></div>
-<p>What’s more, <code><a href="../reference/generate.html">generate()</a></code> can take filtering criteria, so that you can re-generate specific repetitions or conditions <em>without having to recreate the entire simulation</em>. This requires that the seed, specification, definition, and number of reps is identical to the simulation you are trying to reproduce.</p>
+<p>What’s more, <code><a href="https://generics.r-lib.org/reference/generate.html">generate()</a></code> can take filtering criteria, so that you can re-generate specific repetitions or conditions <em>without having to recreate the entire simulation</em>. This requires that the seed, specification, definition, and number of reps is identical to the simulation you are trying to reproduce.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">500</span><span class="op">)</span>
 <span class="va">filter_after_generating</span> <span class="op">=</span> <span class="fu"><a href="https://generics.r-lib.org/reference/specify.html">specify</a></span><span class="op">(</span>a <span class="op">=</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span><span class="op">(</span><span class="fl">6</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../reference/generate.html">generate</a></span><span class="op">(</span><span class="fl">3</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://generics.r-lib.org/reference/generate.html">generate</a></span><span class="op">(</span><span class="fl">3</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">.sim_id</span> <span class="op">==</span> <span class="fl">2</span><span class="op">)</span>
 
 <span class="va">filter_after_generating</span>
@@ -187,7 +187,7 @@
 <code class="sourceCode R"><span class="co">## Much faster, same result!</span>
 <span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">500</span><span class="op">)</span>
 <span class="va">filter_while_generating</span> <span class="op">=</span> <span class="fu"><a href="https://generics.r-lib.org/reference/specify.html">specify</a></span><span class="op">(</span>a <span class="op">=</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span><span class="op">(</span><span class="fl">6</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../reference/generate.html">generate</a></span><span class="op">(</span><span class="fl">3</span>, <span class="va">.sim_id</span> <span class="op">==</span> <span class="fl">2</span><span class="op">)</span>
+  <span class="fu"><a href="https://generics.r-lib.org/reference/generate.html">generate</a></span><span class="op">(</span><span class="fl">3</span>, <span class="va">.sim_id</span> <span class="op">==</span> <span class="fl">2</span><span class="op">)</span>
 
 <span class="va">filter_while_generating</span>
 <span class="co">#&gt; full tibble</span>
@@ -218,8 +218,8 @@
 <span class="va">fit_tidy</span> <span class="op">=</span> <span class="fu"><a href="https://generics.r-lib.org/reference/specify.html">specify</a></span><span class="op">(</span>a <span class="op">=</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span><span class="op">(</span><span class="fl">0</span><span class="op">:</span><span class="va">max</span>, size <span class="op">=</span> <span class="fl">10</span>, replace <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,
         b <span class="op">=</span> <span class="op">~</span> <span class="va">a</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span><span class="op">)</span>  <span class="op">%&gt;%</span> 
   <span class="fu"><a href="../reference/define.html">define</a></span><span class="op">(</span>max <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">10</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="../reference/generate.html">generate</a></span><span class="op">(</span><span class="fl">3</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../reference/fit.html">fit</a></span><span class="op">(</span>lm <span class="op">=</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html">glm</a></span><span class="op">(</span><span class="va">a</span> <span class="op">~</span> <span class="va">b</span>, family <span class="op">=</span> <span class="st">"binomial"</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://generics.r-lib.org/reference/generate.html">generate</a></span><span class="op">(</span><span class="fl">3</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://generics.r-lib.org/reference/fit.html">fit</a></span><span class="op">(</span>lm <span class="op">=</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html">glm</a></span><span class="op">(</span><span class="va">a</span> <span class="op">~</span> <span class="va">b</span>, family <span class="op">=</span> <span class="st">"binomial"</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="../reference/tidy_fits.html">tidy_fits</a></span><span class="op">(</span><span class="op">)</span>
 <span class="co">#&gt; Warning in fit.simpr_tibble(., lm = ~glm(a ~ b, family = "binomial")): fit()</span>
 <span class="co">#&gt; produced errors. See '.fit_error_*' column(s).</span>
@@ -250,7 +250,7 @@
 <span class="va">filter_max_10</span> <span class="op">=</span> <span class="fu"><a href="https://generics.r-lib.org/reference/specify.html">specify</a></span><span class="op">(</span>a <span class="op">=</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span><span class="op">(</span><span class="fl">0</span><span class="op">:</span><span class="va">max</span>, size <span class="op">=</span> <span class="fl">10</span>, replace <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,
         b <span class="op">=</span> <span class="op">~</span> <span class="va">a</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span><span class="op">)</span>  <span class="op">%&gt;%</span> 
   <span class="fu"><a href="../reference/define.html">define</a></span><span class="op">(</span>max <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">10</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="../reference/generate.html">generate</a></span><span class="op">(</span><span class="fl">3</span>, <span class="va">max</span> <span class="op">==</span> <span class="fl">10</span><span class="op">)</span>
+  <span class="fu"><a href="https://generics.r-lib.org/reference/generate.html">generate</a></span><span class="op">(</span><span class="fl">3</span>, <span class="va">max</span> <span class="op">==</span> <span class="fl">10</span><span class="op">)</span>
 
 <span class="va">filter_max_10</span>
 <span class="co">#&gt; full tibble</span>
@@ -286,7 +286,7 @@
 <span class="va">fit_error_data</span> <span class="op">=</span> <span class="fu"><a href="https://generics.r-lib.org/reference/specify.html">specify</a></span><span class="op">(</span>a <span class="op">=</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="va">max</span>, size <span class="op">=</span> <span class="fl">10</span>, replace <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,
                      b <span class="op">=</span> <span class="op">~</span> <span class="va">a</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span><span class="op">)</span>  <span class="op">%&gt;%</span> 
   <span class="fu"><a href="../reference/define.html">define</a></span><span class="op">(</span>max <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">10</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="../reference/generate.html">generate</a></span><span class="op">(</span><span class="fl">3</span>, <span class="va">.sim_id</span> <span class="op">%in%</span> <span class="va">fit_errors</span><span class="op">$</span><span class="va">.sim_id</span><span class="op">)</span>
+  <span class="fu"><a href="https://generics.r-lib.org/reference/generate.html">generate</a></span><span class="op">(</span><span class="fl">3</span>, <span class="va">.sim_id</span> <span class="op">%in%</span> <span class="va">fit_errors</span><span class="op">$</span><span class="va">.sim_id</span><span class="op">)</span>
 
 <span class="va">fit_error_data</span>
 <span class="co">#&gt; full tibble</span>

@@ -40,7 +40,7 @@
 
 
 <meta property="og:title" content="Tidy simpr_gen simulated model results output into tibble of model summaries — glance_fits" />
-<meta property="og:description" content="Turn fitted model of simulated data (from fit) into a tidy
+<meta property="og:description" content="Turn fitted model of simulated data (from fit.simpr_tibble) into a tidy
 tibble of model summaries (via generics::glance)." />
 
 
@@ -131,7 +131,7 @@ tibble of model summaries (via generics::glance)." />
     </div>
 
     <div class="ref-description">
-    <p>Turn fitted model of simulated data (from <code><a href='fit.html'>fit</a></code>) into a tidy
+    <p>Turn fitted model of simulated data (from <code><a href='fit.simpr_tibble.html'>fit.simpr_tibble</a></code>) into a tidy
 tibble of model summaries (via <code>generics::<a href='https://generics.r-lib.org/reference/glance.html'>glance</a></code>).</p>
     </div>
 
@@ -143,7 +143,7 @@ tibble of model summaries (via <code>generics::<a href='https://generics.r-lib.o
     <tr>
       <th>obj</th>
       <td><p>tibble with repetition number, metaparameters, simulated
-data, and fitted models, from <code><a href='fit.html'>fit</a></code></p></td>
+data, and fitted models, from <code><a href='fit.simpr_tibble.html'>fit.simpr_tibble</a></code></p></td>
     </tr>
     <tr>
       <th>...</th>
@@ -172,7 +172,7 @@ to
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>This is part of the fifth step of the simulation process: after fitting the
-model with <code><a href='fit.html'>fit</a></code>, now tidy the model output for further analysis
+model with <code><a href='fit.simpr_tibble.html'>fit.simpr_tibble</a></code>, now tidy the model output for further analysis
 such as evaluating power.  All model objects should be supported by
 <code>generics::<a href='https://generics.r-lib.org/reference/glance.html'>glance</a></code>, primarily via the <code>broom</code>
 package.</p>
@@ -190,17 +190,17 @@ such as tests for individual parameter estimates, use <code><a href='tidy_fits.h
     <pre class="examples"><div class='input'><span class='va'>simple_linear_data</span> <span class='op'>=</span> <span class='fu'><a href='https://generics.r-lib.org/reference/specify.html'>specify</a></span><span class='op'>(</span>x1 <span class='op'>=</span> <span class='op'>~</span> <span class='fl'>2</span> <span class='op'>+</span> <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='va'>n</span><span class='op'>)</span>,
           y <span class='op'>=</span> <span class='op'>~</span> <span class='fl'>5</span> <span class='op'>+</span> <span class='fl'>3</span> <span class='op'>*</span> <span class='va'>x1</span> <span class='op'>+</span> <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='va'>n</span>, <span class='fl'>0</span>, sd <span class='op'>=</span> <span class='fl'>0.5</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
   <span class='fu'><a href='define.html'>define</a></span><span class='op'>(</span>n <span class='op'>=</span> <span class='fl'>100</span><span class='op'>:</span><span class='fl'>101</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
-  <span class='fu'><a href='generate.html'>generate</a></span><span class='op'>(</span><span class='fl'>2</span><span class='op'>)</span>
+  <span class='fu'><a href='https://generics.r-lib.org/reference/generate.html'>generate</a></span><span class='op'>(</span><span class='fl'>2</span><span class='op'>)</span>
 
 <span class='co'>## Can show glance output for multiple competing models,</span>
 <span class='va'>compare_degree</span> <span class='op'>=</span> <span class='va'>simple_linear_data</span> <span class='op'>%&gt;%</span>
-  <span class='fu'><a href='fit.html'>fit</a></span><span class='op'>(</span>linear <span class='op'>=</span> <span class='op'>~</span><span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span><span class='op'>(</span><span class='va'>y</span> <span class='op'>~</span> <span class='va'>x1</span>, data <span class='op'>=</span> <span class='va'>.</span><span class='op'>)</span>,
+  <span class='fu'><a href='https://generics.r-lib.org/reference/fit.html'>fit</a></span><span class='op'>(</span>linear <span class='op'>=</span> <span class='op'>~</span><span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span><span class='op'>(</span><span class='va'>y</span> <span class='op'>~</span> <span class='va'>x1</span>, data <span class='op'>=</span> <span class='va'>.</span><span class='op'>)</span>,
       quadratic <span class='op'>=</span> <span class='op'>~</span><span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span><span class='op'>(</span><span class='va'>y</span> <span class='op'>~</span> <span class='va'>x1</span> <span class='op'>+</span> <span class='fu'><a href='https://rdrr.io/r/base/AsIs.html'>I</a></span><span class='op'>(</span><span class='va'>x1</span><span class='op'>^</span><span class='fl'>2</span><span class='op'>)</span>, data <span class='op'>=</span> <span class='va'>.</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
   <span class='va'>glance_fits</span>
 
 <span class='co'>## Models can be of different types -- anything supported by broom::glance.</span>
 <span class='va'>cor_vs_lm</span> <span class='op'>=</span> <span class='va'>simple_linear_data</span> <span class='op'>%&gt;%</span>
-  <span class='fu'><a href='fit.html'>fit</a></span><span class='op'>(</span>linear <span class='op'>=</span> <span class='op'>~</span><span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span><span class='op'>(</span><span class='va'>y</span> <span class='op'>~</span> <span class='va'>x1</span>, data <span class='op'>=</span> <span class='va'>.</span><span class='op'>)</span>,
+  <span class='fu'><a href='https://generics.r-lib.org/reference/fit.html'>fit</a></span><span class='op'>(</span>linear <span class='op'>=</span> <span class='op'>~</span><span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span><span class='op'>(</span><span class='va'>y</span> <span class='op'>~</span> <span class='va'>x1</span>, data <span class='op'>=</span> <span class='va'>.</span><span class='op'>)</span>,
       cor <span class='op'>=</span> <span class='op'>~</span> <span class='fu'><a href='https://rdrr.io/r/stats/cor.test.html'>cor.test</a></span><span class='op'>(</span><span class='va'>.</span><span class='op'>$</span><span class='va'>y</span>, <span class='va'>.</span><span class='op'>$</span><span class='va'>x1</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
   <span class='va'>glance_fits</span>
 
@@ -229,9 +229,9 @@ such as tests for individual parameter estimates, use <code><a href='tidy_fits.h
   <span class='fu'><a href='define.html'>define</a></span><span class='op'>(</span>n <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span><span class='fl'>100</span>, <span class='fl'>300</span>, by <span class='op'>=</span> <span class='fl'>20</span><span class='op'>)</span>,
        g1 <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span><span class='op'>-</span><span class='fl'>1</span>, <span class='fl'>1</span>, by <span class='op'>=</span> <span class='fl'>0.5</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
   <span class='co'>## Generate the data</span>
-  <span class='fu'><a href='generate.html'>generate</a></span><span class='op'>(</span><span class='fl'>10</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='https://generics.r-lib.org/reference/generate.html'>generate</a></span><span class='op'>(</span><span class='fl'>10</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
   <span class='co'>## Fit models</span>
-  <span class='fu'><a href='fit.html'>fit</a></span><span class='op'>(</span>lm <span class='op'>=</span> <span class='op'>~</span><span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span><span class='op'>(</span><span class='va'>y</span> <span class='op'>~</span> <span class='va'>x1</span><span class='op'>*</span><span class='va'>x2</span>, data <span class='op'>=</span> <span class='va'>.</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='https://generics.r-lib.org/reference/fit.html'>fit</a></span><span class='op'>(</span>lm <span class='op'>=</span> <span class='op'>~</span><span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span><span class='op'>(</span><span class='va'>y</span> <span class='op'>~</span> <span class='va'>x1</span><span class='op'>*</span><span class='va'>x2</span>, data <span class='op'>=</span> <span class='va'>.</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
   <span class='co'>## Calculate the output</span>
   <span class='va'>glance_fits</span>
 

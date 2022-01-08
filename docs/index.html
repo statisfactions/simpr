@@ -99,9 +99,9 @@
 </li>
 <li>Define parameters that you want to systematically vary between different cells of your simulation design (e.g. <em>n</em>, effect size), with <code><a href="reference/define.html">define()</a></code>
 </li>
-<li>Generate the simulation data with <code><a href="reference/generate.html">generate()</a></code>
+<li>Generate the simulation data with <code><a href="https://generics.r-lib.org/reference/generate.html">generate()</a></code>
 </li>
-<li>Fit models with your data (e.g. <code><a href="https://rdrr.io/r/stats/lm.html">lm()</a></code>), with <code><a href="reference/fit.html">fit()</a></code>
+<li>Fit models with your data (e.g. <code><a href="https://rdrr.io/r/stats/lm.html">lm()</a></code>), with <code><a href="https://generics.r-lib.org/reference/fit.html">fit()</a></code>
 </li>
 <li>Tidy the model output for further processing, such as computing power or Type I Error rates, with <code>tidy_fits</code>
 </li>
@@ -125,9 +125,9 @@
   <span class="fu"><a href="reference/define.html">define</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fl">100</span>, <span class="fl">300</span>, by <span class="op">=</span> <span class="fl">50</span><span class="op">)</span>,
        g1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1</span>, <span class="fl">1</span>, by <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="co">## Generate 10 repetitions</span>
-  <span class="fu"><a href="reference/generate.html">generate</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://generics.r-lib.org/reference/generate.html">generate</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="co">## Fit models</span>
-  <span class="fu"><a href="reference/fit.html">fit</a></span><span class="op">(</span>lm <span class="op">=</span> <span class="op">~</span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="va">x1</span><span class="op">*</span><span class="va">x2</span><span class="op">)</span><span class="op">)</span><span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://generics.r-lib.org/reference/fit.html">fit</a></span><span class="op">(</span>lm <span class="op">=</span> <span class="op">~</span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="va">x1</span><span class="op">*</span><span class="va">x2</span><span class="op">)</span><span class="op">)</span><span class="op">%&gt;%</span> 
   <span class="co">## Tidy each simulation using broom::tidy and</span>
   <span class="co">## bind together</span>
   <span class="va">tidy_fits</span></code></pre></div>
@@ -246,10 +246,10 @@
 <span id="cb14-35"><a href="#cb14-35" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
 <span id="cb14-36"><a href="#cb14-36" aria-hidden="true" tabindex="-1"></a><span class="do">## meta_info</span></span>
 <span id="cb14-37"><a href="#cb14-37" aria-hidden="true" tabindex="-1"></a><span class="do">## --------------------------</span></span></code></pre></div>
-<p>Above we can see the code for the data-generating process and all the possible conditions. Now, we can run the simulation for each combination using <code><a href="reference/generate.html">generate()</a></code>:</p>
+<p>Above we can see the code for the data-generating process and all the possible conditions. Now, we can run the simulation for each combination using <code><a href="https://generics.r-lib.org/reference/generate.html">generate()</a></code>:</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">simpr_gen</span> <span class="op">=</span> <span class="va">simpr_spec</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="reference/generate.html">generate</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span>
+  <span class="fu"><a href="https://generics.r-lib.org/reference/generate.html">generate</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span>
 
 <span class="va">simpr_gen</span></code></pre></div>
 <div class="sourceCode" id="cb16"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="do">## full tibble</span></span>
@@ -287,10 +287,10 @@
 <span id="cb16-33"><a href="#cb16-33" aria-hidden="true" tabindex="-1"></a><span class="do">## # … with 90 more rows</span></span></code></pre></div>
 <p><code>generate</code> has one argument, the number of repetitions for each simulation. Here we generate 10 repetitions. This produces a <code>tibble</code> with one row for each combination of metaparameters and repetition, and a list-column with the generated data.</p>
 <p>Note that <code>g1</code> is the same across the first 5 rows, but <code>n</code> varies, and each element of <code>sim</code> is a tibble with the same number of rows as <code>n</code>. Then, on the sixth row, we have the next value of <code>g1</code>, 0.5, and so on. Each element of the column <code>sim</code> contains the generated <code>x1</code>, <code>x2</code>, and <code>y</code>, and we already see the preview of <code>simpr_gen$sim[[1]]</code> in the output above.</p>
-<p>Next, we can fit a model on this data using the <code><a href="reference/fit.html">fit()</a></code> function; this uses similar formula syntax to <code><a href="https://generics.r-lib.org/reference/specify.html">specify()</a></code>:</p>
+<p>Next, we can fit a model on this data using the <code><a href="https://generics.r-lib.org/reference/fit.html">fit()</a></code> function; this uses similar formula syntax to <code><a href="https://generics.r-lib.org/reference/specify.html">specify()</a></code>:</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">simpr_fit</span> <span class="op">=</span> <span class="va">simpr_gen</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="reference/fit.html">fit</a></span><span class="op">(</span>lm <span class="op">=</span> <span class="op">~</span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="va">x1</span><span class="op">*</span><span class="va">x2</span><span class="op">)</span><span class="op">)</span>
+  <span class="fu"><a href="https://generics.r-lib.org/reference/fit.html">fit</a></span><span class="op">(</span>lm <span class="op">=</span> <span class="op">~</span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="va">x1</span><span class="op">*</span><span class="va">x2</span><span class="op">)</span><span class="op">)</span>
 
 <span class="va">simpr_fit</span></code></pre></div>
 <div class="sourceCode" id="cb18"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="do">## full tibble</span></span>
