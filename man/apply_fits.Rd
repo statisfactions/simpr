@@ -10,7 +10,7 @@ apply_fits(obj, .f, ..., .progress = FALSE, .options = furrr_options())
 \arguments{
 \item{obj}{tibble with repetition number,
 metaparameters, simulated data, and fitted
-models, from \code{\link{fit}}}
+models, from \code{\link{fit.simpr_tibble}}}
 
 \item{.f}{A function or \code{purrr}-style formula function used for computing on the
 fit object}

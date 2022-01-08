@@ -11,7 +11,7 @@
 #' for each replication, for each combination of
 #' metaparameters. You likely want to use the
 #' output of \code{generate} to fit model(s) with
-#' \code{\link{fit}}.
+#' \code{\link{fit.simpr_tibble}}.
 #'
 #' Errors you get using this function usually have
 #' to do with how you specified the simulation in
@@ -61,7 +61,7 @@
 #'   repetition (a total of \code{rep}
 #'   repetitions) for each combination of
 #'   metaparameters and some extra metadata used
-#'   by \code{\link{fit}}.  The columns are
+#'   by \code{\link{fit.simpr_tibble}}.  The columns are
 #'   \code{rep} for the repetition number, the
 #'   names of the metaparameters, and a
 #'   list-column (named by the argument

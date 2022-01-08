@@ -31,10 +31,10 @@
 #' simulation cell if there are variables a, b,
 #' and c specified in \code{specify}.
 #'
-#' @param obj a \code{simpr_specify} object--the
+#' @param object a \code{simpr_tibble} object--the
 #'   simulated data from
 #'   \code{\link{generate}}--or an
-#'   \code{\link{include}} object
+#'   \code{simpr_spec} object not yet generated.
 #' @param ... \code{purrr}-style formula functions
 #'   used for computing on the simulated data. See
 #'   \emph{Details} and \emph{Examples}.
@@ -111,15 +111,7 @@
 #' add_five_data
 #'
 #' @export
-fit = function(obj, ..., quiet = TRUE, warn_on_error = TRUE,
-               stop_on_error = FALSE,
-               debug = FALSE, .progress = FALSE,
-               .options = furrr_options()) {
-  UseMethod("fit")
-}
-
-#' @export
-fit.simpr_tibble = function(obj, ...,
+fit.simpr_tibble = function(object, ...,
                             quiet = TRUE, warn_on_error = TRUE,
                             stop_on_error = FALSE,
                             debug = FALSE, .progress = FALSE,
@@ -142,9 +134,9 @@ fit.simpr_tibble = function(obj, ...,
   }
 
   fit_formulas = list(...)
-  sim_name = get_sim_name(obj)
+  sim_name = get_sim_name(object)
 
-  fit_out = purrr::imap(fit_formulas, ~ furrr::future_map(obj[[sim_name]],
+  fit_out = purrr::imap(fit_formulas, ~ furrr::future_map(object[[sim_name]],
                                                to_fit_fn(.x, debug = debug,
                                                          stop_on_error = stop_on_error,
                                                          quiet = quiet),
@@ -153,13 +145,13 @@ fit.simpr_tibble = function(obj, ...,
 
   any_fit_error = FALSE
   for(i in names(fit_out)) {
-    obj[[i]] = purrr::map(fit_out[[i]], "result")
+    object[[i]] = purrr::map(fit_out[[i]], "result")
 
     errors = purrr::map(fit_out[[i]], "error")
 
     if(!all(purrr::map_lgl(errors, is.null))) {
       any_fit_error = TRUE
-      obj[[paste0(".fit_error_", i)]] = purrr::map(errors,
+      object[[paste0(".fit_error_", i)]] = purrr::map(errors,
                                                    ~ ifelse(is.null(.x),
                                                             NA_character_,
                                                             as.character(.x))) %>%
@@ -167,25 +159,30 @@ fit.simpr_tibble = function(obj, ...,
     }
   }
 
-  # attr(simpr_mod, "meta") = attr(obj, "meta")
-  # attr(simpr_mod, "variables") = attr(obj, "variables")
-  attr(obj, "fits") = c(attr(obj, "fits"), names(fit_formulas))
+  # attr(simpr_mod, "meta") = attr(object, "meta")
+  # attr(simpr_mod, "variables") = attr(object, "variables")
+  attr(object, "fits") = c(attr(object, "fits"), names(fit_formulas))
 
   ## Give warning if errors occured
   if(warn_on_error && any_fit_error)
     warning("fit() produced errors.  See '.fit_error_*' column(s).")
 
-  obj
+  object
 }
 
 #' @export
-fit.simpr_spec = function(obj, ...,  quiet = TRUE, warn_on_error = TRUE,
+#' @rdname fit.simpr_tibble
+fit.simpr_spec = function(object, ...,  quiet = TRUE, warn_on_error = TRUE,
                           stop_on_error = FALSE,
                           debug = FALSE, .progress = FALSE,
                           .options = furrr_options()) {
   mc = match.call()
 
-  add_call(obj, mc, "fit", replace_arg = "obj")
+  add_call(object, mc, "fit", replace_arg = "object")
 
 }
+
+#' @importFrom generics fit
+#' @export
+generics::fit
 

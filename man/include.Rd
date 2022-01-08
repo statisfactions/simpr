@@ -38,7 +38,7 @@ the simulation as it proceeds incrementally.
 Arbitrary R operations are not supported for
 these postprocessing steps; only the
 postprocessing steps included in the simpr
-package (\code{\link{fit}},
+package (\code{\link{fit.simpr_tibble}},
 \code{\link{tidy_fits}},
 \code{\link{glance_fits}}).
 }
