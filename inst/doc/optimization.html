@@ -142,6 +142,82 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(simpr)</span></code></pre></div>
+<p>The default <code>simpr</code> workflow is easy to understand but computationally inefficient. Although <code>simpr</code> prioritizes ease of use over computational speed, two things <em>together</em> can make simpr more efficient:</p>
+<ol style="list-style-type: decimal">
+<li>Generating, fitting, and tidying simultaneously</li>
+<li>Parallel processing with the <code>future</code> package</li>
+</ol>
+<div id="generating-fitting-and-tidying-simultaneously" class="section level2">
+<h2>Generating, fitting, and tidying simultaneously</h2>
+<p>Consider a standard <code>simpr</code> workflow:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">specify</span>(<span class="at">a =</span> <span class="sc">~</span> <span class="fu">rnorm</span>(n),</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>        <span class="at">b =</span> <span class="sc">~</span> a <span class="sc">+</span> <span class="fu">rnorm</span>(n)) <span class="sc">%&gt;%</span> </span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">define</span>(<span class="at">n =</span> <span class="fu">c</span>(<span class="dv">100</span>, <span class="dv">200</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">generate</span>(<span class="dv">10</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit</span>(<span class="at">lm =</span> <span class="sc">~</span> <span class="fu">lm</span>(b <span class="sc">~</span> a)) <span class="sc">%&gt;%</span> </span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tidy_fits</span>()</span></code></pre></div>
+<p>An issue with this workflow is that it involves shuttling a lot of data around: the <code>generate()</code> step adds a list-column with simulated data to a tibble, which is then sent to <code>fit()</code>, which adds a list-column containing large model objects, and then these are all sent to <code>tidy_fits()</code> for extracting essential model statistics.</p>
+<p>Instead, you can simply place the call to <code>generate()</code> later in the chain:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">specify</span>(<span class="at">a =</span> <span class="sc">~</span> <span class="fu">rnorm</span>(n),</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>        <span class="at">b =</span> <span class="sc">~</span> a <span class="sc">+</span> <span class="fu">rnorm</span>(n)) <span class="sc">%&gt;%</span> </span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">define</span>(<span class="at">n =</span> <span class="fu">c</span>(<span class="dv">100</span>, <span class="dv">200</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit</span>(<span class="at">lm =</span> <span class="sc">~</span> <span class="fu">lm</span>(b <span class="sc">~</span> a)) <span class="sc">%&gt;%</span> </span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tidy_fits</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">generate</span>(<span class="dv">10</span>) </span></code></pre></div>
+<p>This means that the data is generated, fit, and tidied all at once once you call <code>generate()</code>. This means that these steps can occur on a single parallel worker without pushing lots of data around.</p>
+<p>Behind the scenes, before <code>generate()</code> is called, <code>simpr</code> simply adds successive calse onto the <code>simpr_spec</code> object, to be executed in order for each simulation as soon as <code>generate()</code> is called. Data munging, including with <code>per_sim()</code> or on the final tidied data, using <code>dplyr</code> or <code>tidyr</code> is also supported:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">specify</span>(<span class="at">control =</span> <span class="sc">~</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> <span class="dv">0</span>),</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>        <span class="at">intervention_1 =</span> <span class="sc">~</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> <span class="fl">0.2</span>),</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>        <span class="at">intervention_2 =</span> <span class="sc">~</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> <span class="dv">2</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">define</span>(<span class="at">n =</span> <span class="fu">c</span>(<span class="dv">6</span>, <span class="dv">12</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">per_sim</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">everything</span>(),</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>               <span class="at">names_to =</span> <span class="st">&quot;group&quot;</span>, </span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>               <span class="at">values_to =</span> <span class="st">&quot;response&quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit</span>(<span class="at">lm =</span> <span class="sc">~</span> <span class="fu">lm</span>(response <span class="sc">~</span> group)) <span class="sc">%&gt;%</span> </span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tidy_fits</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(.sim_id, n, term, estimate) <span class="sc">%&gt;%</span> </span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">generate</span>(<span class="dv">2</span>) </span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 12 × 4</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    .sim_id     n term                estimate</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      &lt;int&gt; &lt;dbl&gt; &lt;chr&gt;                  &lt;dbl&gt;</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  1       1     6 (Intercept)            0.552</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  2       1     6 groupintervention_1   -0.315</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  3       1     6 groupintervention_2    2.42 </span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  4       2    12 (Intercept)            0.497</span></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  5       2    12 groupintervention_1   -0.258</span></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  6       2    12 groupintervention_2    1.20 </span></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  7       3     6 (Intercept)            0.353</span></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  8       3     6 groupintervention_1    0.138</span></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  9       3     6 groupintervention_2    0.605</span></span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 10       4    12 (Intercept)           -0.451</span></span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 11       4    12 groupintervention_1    0.732</span></span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 12       4    12 groupintervention_2    2.64</span></span></code></pre></div>
+</div>
+<div id="parallel-processing-with-the-future-package" class="section level2">
+<h2>Parallel processing with the <code>future</code> package</h2>
+<p>Changing the evaluation order makes little difference on its own, but combined with parallel processing can produce a speedup. <code>simpr</code> uses the <code>furrr</code> package, part of the “futureverse” suite of packages designed around the <code>future</code> package. These packages are designed to make parallel processing transparent as easy to use.</p>
+<p>To use parallel processing with <code>simpr</code>, simply load the <code>future</code> package and declare your “plan” for code execution with <code>future::plan()</code>. The three most relevant plans are:</p>
+<ol style="list-style-type: decimal">
+<li><code>sequential</code>, the default R behavior using just one worker.</li>
+<li><code>multiprocess</code>, a parallel processing approach.</li>
+<li><code>multicore</code>, another parallel processing approach that can be faster than <code>multiprocess</code>, but which doesn’t work with R Studio and only works on Linux/Mac.</li>
+</ol>
+<p>For both <code>multiprocess</code> and <code>multicore</code> plans, you must tell R how many cores you want to use. You can check how many your computer has available with <code>future::availableCores()</code>.</p>
+<p>The optimized version of the opening example, rewritten to both change execution order and use parallel processing:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(future)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plan</span>(multisession, <span class="fu">availableCores</span>() <span class="sc">-</span> <span class="dv">1</span>)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="fu">specify</span>(<span class="at">a =</span> <span class="sc">~</span> <span class="fu">rnorm</span>(n),</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>        <span class="at">b =</span> <span class="sc">~</span> a <span class="sc">+</span> <span class="fu">rnorm</span>(n)) <span class="sc">%&gt;%</span> </span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">define</span>(<span class="at">n =</span> <span class="fu">c</span>(<span class="dv">100</span>, <span class="dv">200</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit</span>(<span class="at">lm =</span> <span class="sc">~</span> <span class="fu">lm</span>(b <span class="sc">~</span> a)) <span class="sc">%&gt;%</span> </span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tidy_fits</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">generate</span>(<span class="dv">10</span>) </span></code></pre></div>
+<p>Results will vary. The parallel version for this small simulation actually takes longer, because there fixed costs in setting up the workers. The speed advantage will become more apparent for larger simulations with slow data-generation or data-fitting steps.</p>
+</div>
 
 
 

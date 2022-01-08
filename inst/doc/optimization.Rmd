@@ -14,6 +14,88 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r setup}
+```{r setup, message=FALSE}
 library(simpr)
 ```
+
+The default `simpr` workflow is easy to understand but computationally inefficient. Although `simpr` prioritizes ease of use over computational speed, two things *together* can make simpr more efficient:
+
+  1. Generating, fitting, and tidying simultaneously
+  2. Parallel processing with the `future` package
+  
+## Generating, fitting, and tidying simultaneously
+
+Consider a standard `simpr` workflow:
+
+```{r standard, eval = FALSE, purl = FALSE}
+
+specify(a = ~ rnorm(n),
+        b = ~ a + rnorm(n)) %>% 
+  define(n = c(100, 200)) %>% 
+  generate(10) %>% 
+  fit(lm = ~ lm(b ~ a)) %>% 
+  tidy_fits()
+
+```
+
+An issue with this workflow is that it involves shuttling a lot of data around: the `generate()` step adds a list-column with simulated data to a tibble, which is then sent to `fit()`, which adds a list-column containing large model objects, and then these are all sent to `tidy_fits()` for extracting essential model statistics.
+
+Instead, you can simply place the call to `generate()` later in the chain:
+
+```{r delayed, eval = FALSE, purl = FALSE}
+specify(a = ~ rnorm(n),
+        b = ~ a + rnorm(n)) %>% 
+  define(n = c(100, 200)) %>% 
+  fit(lm = ~ lm(b ~ a)) %>% 
+  tidy_fits() %>% 
+  generate(10) 
+```
+
+This means that the data is generated, fit, and tidied all at once once you call `generate()`.  This means that these steps can occur on a single parallel worker without pushing lots of data around.
+
+Behind the scenes, before `generate()` is called, `simpr` simply adds successive calse onto the `simpr_spec` object, to be executed in order for each simulation as soon as `generate()` is called.  Data munging, including with `per_sim()` or on the final tidied data, using `dplyr` or `tidyr` is also supported:
+
+```{r data_munging}
+specify(control = ~ rnorm(n, mean = 0),
+        intervention_1 = ~ rnorm(n, mean = 0.2),
+        intervention_2 = ~ rnorm(n, mean = 2)) %>% 
+  define(n = c(6, 12)) %>% 
+  per_sim() %>% 
+  pivot_longer(cols = everything(),
+               names_to = "group", 
+               values_to = "response") %>% 
+  fit(lm = ~ lm(response ~ group)) %>% 
+  tidy_fits() %>% 
+  select(.sim_id, n, term, estimate) %>% 
+  generate(2) 
+```
+
+## Parallel processing with the `future` package
+Changing the evaluation order makes little difference on its own, but combined with parallel processing can produce a speedup.  `simpr` uses the `furrr` package, part of the "futureverse" suite of packages designed around the `future` package.  These packages are designed to make parallel processing transparent as easy to use.
+
+To use parallel processing with `simpr`, simply load the `future` package and declare your "plan" for code execution with `future::plan()`.  The three most relevant plans are:
+
+  1. `sequential`, the default R behavior using just one worker.
+  2. `multiprocess`, a parallel processing approach.
+  3. `multicore`, another parallel processing approach that can be faster than `multiprocess`, but which doesn't work with R Studio and only works on Linux/Mac.
+
+For both `multiprocess` and `multicore` plans, you must tell R how many cores you want to use.  You can check how many your computer has available with `future::availableCores()`.
+
+The optimized version of the opening example, rewritten to both change execution order and use parallel processing:
+
+```{r optimized, eval = FALSE, purl = FALSE}
+library(future)
+
+plan(multisession, availableCores() - 1)
+
+specify(a = ~ rnorm(n),
+        b = ~ a + rnorm(n)) %>% 
+  define(n = c(100, 200)) %>% 
+  fit(lm = ~ lm(b ~ a)) %>% 
+  tidy_fits() %>% 
+  generate(10) 
+
+```
+
+Results will vary.  The parallel version for this small simulation actually takes longer, because there fixed costs in setting up the workers.  The speed advantage will become more apparent for larger simulations with slow data-generation or data-fitting steps.
+
