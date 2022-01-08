@@ -101,6 +101,219 @@
 <span class="co">#&gt; The following objects are masked from 'package:base':</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt;     intersect, setdiff, setequal, union</span></code></pre></div>
+<p><code>simpr</code> is designed with reproducibility in mind. If you set the same seed, you get the same results.</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">500</span><span class="op">)</span>
+<span class="va">run_1</span> <span class="op">=</span> <span class="fu"><a href="https://generics.r-lib.org/reference/specify.html">specify</a></span><span class="op">(</span>a <span class="op">=</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span><span class="op">(</span><span class="fl">6</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../reference/generate.html">generate</a></span><span class="op">(</span><span class="fl">3</span><span class="op">)</span>
+
+<span class="va">run_1</span>
+<span class="co">#&gt; full tibble</span>
+<span class="co">#&gt; --------------------------</span>
+<span class="co">#&gt; # A tibble: 3 × 3</span>
+<span class="co">#&gt;   .sim_id   rep sim             </span>
+<span class="co">#&gt;     &lt;int&gt; &lt;int&gt; &lt;list&gt;          </span>
+<span class="co">#&gt; 1       1     1 &lt;tibble [6 × 1]&gt;</span>
+<span class="co">#&gt; 2       2     2 &lt;tibble [6 × 1]&gt;</span>
+<span class="co">#&gt; 3       3     3 &lt;tibble [6 × 1]&gt;</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; sim[[1]]</span>
+<span class="co">#&gt; --------------------------</span>
+<span class="co">#&gt; # A tibble: 6 × 1</span>
+<span class="co">#&gt;        a</span>
+<span class="co">#&gt;    &lt;dbl&gt;</span>
+<span class="co">#&gt; 1 0.869 </span>
+<span class="co">#&gt; 2 0.0882</span>
+<span class="co">#&gt; 3 0.914 </span>
+<span class="co">#&gt; 4 0.384 </span>
+<span class="co">#&gt; 5 0.147 </span>
+<span class="co">#&gt; 6 0.352</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">500</span><span class="op">)</span>
+<span class="va">run_2</span> <span class="op">=</span> <span class="fu"><a href="https://generics.r-lib.org/reference/specify.html">specify</a></span><span class="op">(</span>a <span class="op">=</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span><span class="op">(</span><span class="fl">6</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../reference/generate.html">generate</a></span><span class="op">(</span><span class="fl">3</span><span class="op">)</span>
+
+<span class="va">run_2</span>
+<span class="co">#&gt; full tibble</span>
+<span class="co">#&gt; --------------------------</span>
+<span class="co">#&gt; # A tibble: 3 × 3</span>
+<span class="co">#&gt;   .sim_id   rep sim             </span>
+<span class="co">#&gt;     &lt;int&gt; &lt;int&gt; &lt;list&gt;          </span>
+<span class="co">#&gt; 1       1     1 &lt;tibble [6 × 1]&gt;</span>
+<span class="co">#&gt; 2       2     2 &lt;tibble [6 × 1]&gt;</span>
+<span class="co">#&gt; 3       3     3 &lt;tibble [6 × 1]&gt;</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; sim[[1]]</span>
+<span class="co">#&gt; --------------------------</span>
+<span class="co">#&gt; # A tibble: 6 × 1</span>
+<span class="co">#&gt;        a</span>
+<span class="co">#&gt;    &lt;dbl&gt;</span>
+<span class="co">#&gt; 1 0.869 </span>
+<span class="co">#&gt; 2 0.0882</span>
+<span class="co">#&gt; 3 0.914 </span>
+<span class="co">#&gt; 4 0.384 </span>
+<span class="co">#&gt; 5 0.147 </span>
+<span class="co">#&gt; 6 0.352</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/identical.html">identical</a></span><span class="op">(</span><span class="va">run_1</span>, <span class="va">run_2</span><span class="op">)</span>
+<span class="co">#&gt; [1] TRUE</span></code></pre></div>
+<p>What’s more, <code><a href="../reference/generate.html">generate()</a></code> can take filtering criteria, so that you can re-generate specific repetitions or conditions <em>without having to recreate the entire simulation</em>. This requires that the seed, specification, definition, and number of reps is identical to the simulation you are trying to reproduce.</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">500</span><span class="op">)</span>
+<span class="va">filter_after_generating</span> <span class="op">=</span> <span class="fu"><a href="https://generics.r-lib.org/reference/specify.html">specify</a></span><span class="op">(</span>a <span class="op">=</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span><span class="op">(</span><span class="fl">6</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../reference/generate.html">generate</a></span><span class="op">(</span><span class="fl">3</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">.sim_id</span> <span class="op">==</span> <span class="fl">2</span><span class="op">)</span>
+
+<span class="va">filter_after_generating</span>
+<span class="co">#&gt; full tibble</span>
+<span class="co">#&gt; --------------------------</span>
+<span class="co">#&gt; # A tibble: 1 × 3</span>
+<span class="co">#&gt;   .sim_id   rep sim             </span>
+<span class="co">#&gt;     &lt;int&gt; &lt;int&gt; &lt;list&gt;          </span>
+<span class="co">#&gt; 1       2     2 &lt;tibble [6 × 1]&gt;</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; sim[[1]]</span>
+<span class="co">#&gt; --------------------------</span>
+<span class="co">#&gt; # A tibble: 6 × 1</span>
+<span class="co">#&gt;        a</span>
+<span class="co">#&gt;    &lt;dbl&gt;</span>
+<span class="co">#&gt; 1 0.811 </span>
+<span class="co">#&gt; 2 0.100 </span>
+<span class="co">#&gt; 3 0.0916</span>
+<span class="co">#&gt; 4 0.444 </span>
+<span class="co">#&gt; 5 0.205 </span>
+<span class="co">#&gt; 6 0.0947</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co">## Much faster, same result!</span>
+<span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">500</span><span class="op">)</span>
+<span class="va">filter_while_generating</span> <span class="op">=</span> <span class="fu"><a href="https://generics.r-lib.org/reference/specify.html">specify</a></span><span class="op">(</span>a <span class="op">=</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span><span class="op">(</span><span class="fl">6</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../reference/generate.html">generate</a></span><span class="op">(</span><span class="fl">3</span>, <span class="va">.sim_id</span> <span class="op">==</span> <span class="fl">2</span><span class="op">)</span>
+
+<span class="va">filter_while_generating</span>
+<span class="co">#&gt; full tibble</span>
+<span class="co">#&gt; --------------------------</span>
+<span class="co">#&gt; # A tibble: 1 × 3</span>
+<span class="co">#&gt;   .sim_id   rep sim             </span>
+<span class="co">#&gt;     &lt;int&gt; &lt;int&gt; &lt;list&gt;          </span>
+<span class="co">#&gt; 1       2     2 &lt;tibble [6 × 1]&gt;</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; sim[[1]]</span>
+<span class="co">#&gt; --------------------------</span>
+<span class="co">#&gt; # A tibble: 6 × 1</span>
+<span class="co">#&gt;        a</span>
+<span class="co">#&gt;    &lt;dbl&gt;</span>
+<span class="co">#&gt; 1 0.811 </span>
+<span class="co">#&gt; 2 0.100 </span>
+<span class="co">#&gt; 3 0.0916</span>
+<span class="co">#&gt; 4 0.444 </span>
+<span class="co">#&gt; 5 0.205 </span>
+<span class="co">#&gt; 6 0.0947</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/identical.html">identical</a></span><span class="op">(</span><span class="va">filter_after_generating</span>, <span class="va">filter_while_generating</span><span class="op">)</span>
+<span class="co">#&gt; [1] TRUE</span></code></pre></div>
+<p>Although only one repetition was generated above, it is the same data as was generated when we actually did the full simulation.</p>
+<p>A common use case is for regenrating the data in cases where an error was created. Here’s an example of a simulation that only generated errors in one condition. We generate some data and fit a logistic regression, but notice that we get some errors.</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">500</span><span class="op">)</span>
+<span class="va">fit_tidy</span> <span class="op">=</span> <span class="fu"><a href="https://generics.r-lib.org/reference/specify.html">specify</a></span><span class="op">(</span>a <span class="op">=</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span><span class="op">(</span><span class="fl">0</span><span class="op">:</span><span class="va">max</span>, size <span class="op">=</span> <span class="fl">10</span>, replace <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,
+        b <span class="op">=</span> <span class="op">~</span> <span class="va">a</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span><span class="op">)</span>  <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../reference/define.html">define</a></span><span class="op">(</span>max <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">10</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="../reference/generate.html">generate</a></span><span class="op">(</span><span class="fl">3</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../reference/fit.html">fit</a></span><span class="op">(</span>lm <span class="op">=</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html">glm</a></span><span class="op">(</span><span class="va">a</span> <span class="op">~</span> <span class="va">b</span>, family <span class="op">=</span> <span class="st">"binomial"</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../reference/tidy_fits.html">tidy_fits</a></span><span class="op">(</span><span class="op">)</span>
+<span class="co">#&gt; Warning in fit.simpr_tibble(., lm = ~glm(a ~ b, family = "binomial")): fit()</span>
+<span class="co">#&gt; produced errors. See '.fit_error_*' column(s).</span>
+
+<span class="va">fit_tidy</span>
+<span class="co">#&gt; # A tibble: 15 × 10</span>
+<span class="co">#&gt;    .sim_id   max   rep Source .fit_error     term   estimate std.error statistic</span>
+<span class="co">#&gt;      &lt;int&gt; &lt;dbl&gt; &lt;int&gt; &lt;chr&gt;  &lt;chr&gt;          &lt;chr&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;</span>
+<span class="co">#&gt;  1       1     0     1 lm      &lt;NA&gt;          (Int… -2.46e+ 1 42594.    -5.77e- 4</span>
+<span class="co">#&gt;  2       1     0     1 lm      &lt;NA&gt;          b     -5.05e-15 44211.    -1.14e-19</span>
+<span class="co">#&gt;  3       2     1     1 lm      &lt;NA&gt;          (Int… -2.22e- 1     0.689 -3.22e- 1</span>
+<span class="co">#&gt;  4       2     1     1 lm      &lt;NA&gt;          b     -1.47e+ 0     1.65  -8.93e- 1</span>
+<span class="co">#&gt;  5       3    10     1 lm     "Error in eva… &lt;NA&gt;  NA           NA     NA       </span>
+<span class="co">#&gt;  6       4     0     2 lm      &lt;NA&gt;          (Int… -2.46e+ 1 41863.    -5.87e- 4</span>
+<span class="co">#&gt;  7       4     0     2 lm      &lt;NA&gt;          b      7.36e-15 40303.     1.83e-19</span>
+<span class="co">#&gt;  8       5     1     2 lm      &lt;NA&gt;          (Int… -1.23e- 1     0.679 -1.81e- 1</span>
+<span class="co">#&gt;  9       5     1     2 lm      &lt;NA&gt;          b      5.74e- 1     1.04   5.53e- 1</span>
+<span class="co">#&gt; 10       6    10     2 lm     "Error in eva… &lt;NA&gt;  NA           NA     NA       </span>
+<span class="co">#&gt; 11       7     0     3 lm      &lt;NA&gt;          (Int… -2.46e+ 1 41535.    -5.91e- 4</span>
+<span class="co">#&gt; 12       7     0     3 lm      &lt;NA&gt;          b      1.73e-14 40125.     4.30e-19</span>
+<span class="co">#&gt; 13       8     1     3 lm      &lt;NA&gt;          (Int… -1.28e+ 0     1.23  -1.04e+ 0</span>
+<span class="co">#&gt; 14       8     1     3 lm      &lt;NA&gt;          b      1.60e+ 0     1.02   1.57e+ 0</span>
+<span class="co">#&gt; 15       9    10     3 lm     "Error in eva… &lt;NA&gt;  NA           NA     NA       </span>
+<span class="co">#&gt; # … with 1 more variable: p.value &lt;dbl&gt;</span></code></pre></div>
+<p>One options for regenerating is to filter directly to the problematic <code>max == 10</code> condition to examine the generated data.</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">500</span><span class="op">)</span>
+<span class="va">filter_max_10</span> <span class="op">=</span> <span class="fu"><a href="https://generics.r-lib.org/reference/specify.html">specify</a></span><span class="op">(</span>a <span class="op">=</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span><span class="op">(</span><span class="fl">0</span><span class="op">:</span><span class="va">max</span>, size <span class="op">=</span> <span class="fl">10</span>, replace <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,
+        b <span class="op">=</span> <span class="op">~</span> <span class="va">a</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span><span class="op">)</span>  <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../reference/define.html">define</a></span><span class="op">(</span>max <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">10</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="../reference/generate.html">generate</a></span><span class="op">(</span><span class="fl">3</span>, <span class="va">max</span> <span class="op">==</span> <span class="fl">10</span><span class="op">)</span>
+
+<span class="va">filter_max_10</span>
+<span class="co">#&gt; full tibble</span>
+<span class="co">#&gt; --------------------------</span>
+<span class="co">#&gt; # A tibble: 3 × 4</span>
+<span class="co">#&gt;   .sim_id   max   rep sim              </span>
+<span class="co">#&gt;     &lt;int&gt; &lt;dbl&gt; &lt;int&gt; &lt;list&gt;           </span>
+<span class="co">#&gt; 1       3    10     1 &lt;tibble [10 × 2]&gt;</span>
+<span class="co">#&gt; 2       6    10     2 &lt;tibble [10 × 2]&gt;</span>
+<span class="co">#&gt; 3       9    10     3 &lt;tibble [10 × 2]&gt;</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; sim[[1]]</span>
+<span class="co">#&gt; --------------------------</span>
+<span class="co">#&gt; # A tibble: 10 × 2</span>
+<span class="co">#&gt;        a     b</span>
+<span class="co">#&gt;    &lt;int&gt; &lt;dbl&gt;</span>
+<span class="co">#&gt;  1    10 10.3 </span>
+<span class="co">#&gt;  2     6  6.18</span>
+<span class="co">#&gt;  3     3  2.92</span>
+<span class="co">#&gt;  4    10 10.3 </span>
+<span class="co">#&gt;  5     8  7.65</span>
+<span class="co">#&gt;  6     7  8.35</span>
+<span class="co">#&gt;  7     1  2.80</span>
+<span class="co">#&gt;  8     2  2.55</span>
+<span class="co">#&gt;  9     7  7.93</span>
+<span class="co">#&gt; 10    10  8.64</span></code></pre></div>
+<p>Looking at the raw generated data, we can see our outcome variable is often larger than 1, which makes no sense for a logistic regression.</p>
+<p>In general, we could also filter down to only values of <code>.sim_id</code> which generated errors to examine those:</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">fit_errors</span> <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">fit_tidy</span>, <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">.fit_error</span><span class="op">)</span><span class="op">)</span>
+
+<span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">500</span><span class="op">)</span>
+<span class="va">fit_error_data</span> <span class="op">=</span> <span class="fu"><a href="https://generics.r-lib.org/reference/specify.html">specify</a></span><span class="op">(</span>a <span class="op">=</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="va">max</span>, size <span class="op">=</span> <span class="fl">10</span>, replace <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,
+                     b <span class="op">=</span> <span class="op">~</span> <span class="va">a</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span><span class="op">)</span>  <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../reference/define.html">define</a></span><span class="op">(</span>max <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">10</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="../reference/generate.html">generate</a></span><span class="op">(</span><span class="fl">3</span>, <span class="va">.sim_id</span> <span class="op">%in%</span> <span class="va">fit_errors</span><span class="op">$</span><span class="va">.sim_id</span><span class="op">)</span>
+
+<span class="va">fit_error_data</span>
+<span class="co">#&gt; full tibble</span>
+<span class="co">#&gt; --------------------------</span>
+<span class="co">#&gt; # A tibble: 3 × 4</span>
+<span class="co">#&gt;   .sim_id   max   rep sim              </span>
+<span class="co">#&gt;     &lt;int&gt; &lt;dbl&gt; &lt;int&gt; &lt;list&gt;           </span>
+<span class="co">#&gt; 1       3    10     1 &lt;tibble [10 × 2]&gt;</span>
+<span class="co">#&gt; 2       6    10     2 &lt;tibble [10 × 2]&gt;</span>
+<span class="co">#&gt; 3       9    10     3 &lt;tibble [10 × 2]&gt;</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; sim[[1]]</span>
+<span class="co">#&gt; --------------------------</span>
+<span class="co">#&gt; # A tibble: 10 × 2</span>
+<span class="co">#&gt;        a     b</span>
+<span class="co">#&gt;    &lt;int&gt; &lt;dbl&gt;</span>
+<span class="co">#&gt;  1     7 7.47 </span>
+<span class="co">#&gt;  2     4 5.19 </span>
+<span class="co">#&gt;  3     9 8.49 </span>
+<span class="co">#&gt;  4     8 7.74 </span>
+<span class="co">#&gt;  5     2 1.81 </span>
+<span class="co">#&gt;  6     3 2.35 </span>
+<span class="co">#&gt;  7     8 7.68 </span>
+<span class="co">#&gt;  8     4 4.34 </span>
+<span class="co">#&gt;  9     6 7.17 </span>
+<span class="co">#&gt; 10     1 0.940</span></code></pre></div>
+<p>This approach is useful in cases where we don’t know which conditions are producing the errors. Sometimes simulation errors arise from numerical issues arising from unlucky draws from the data-generating mechanism, and are not systematic.</p>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

@@ -304,49 +304,6 @@ to do with how you specified the simulation in
 #&gt; <span style='color: #BCBCBC;'> 9</span>  0.218    0.071<span style='text-decoration: underline;'>5</span>
 #&gt; <span style='color: #BCBCBC;'>10</span> -<span style='color: #BB0000;'>0.266</span>   -<span style='color: #BB0000;'>0.536</span> 
 #&gt; </div><div class='input'>
- <span class='co'>## Tidyverse verbs change each simulation output</span>
- <span class='va'>meta_list_out</span> <span class='op'>%&gt;%</span>
-   <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span><span class='op'>(</span>y <span class='op'>=</span> <span class='va'>x_1</span> <span class='op'>+</span> <span class='va'>x_2</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; full tibble
-#&gt; --------------------------
-#&gt; <span style='color: #949494;'># A tibble: 18 × 6</span>
-#&gt;    .sim_id     n S_index       rep S             sim              
-#&gt;      <span style='color: #949494; font-style: italic;'>&lt;int&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>       <span style='color: #949494; font-style: italic;'>&lt;int&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;list&gt;</span>        <span style='color: #949494; font-style: italic;'>&lt;list&gt;</span>           
-#&gt; <span style='color: #BCBCBC;'> 1</span>       1    10 independent     1 <span style='color: #949494;'>&lt;dbl [2 × 2]&gt;</span> <span style='color: #949494;'>&lt;tibble [10 × 3]&gt;</span>
-#&gt; <span style='color: #BCBCBC;'> 2</span>       2    20 independent     1 <span style='color: #949494;'>&lt;dbl [2 × 2]&gt;</span> <span style='color: #949494;'>&lt;tibble [20 × 3]&gt;</span>
-#&gt; <span style='color: #BCBCBC;'> 3</span>       3    30 independent     1 <span style='color: #949494;'>&lt;dbl [2 × 2]&gt;</span> <span style='color: #949494;'>&lt;tibble [30 × 3]&gt;</span>
-#&gt; <span style='color: #BCBCBC;'> 4</span>       4    10 correlated      1 <span style='color: #949494;'>&lt;dbl [2 × 2]&gt;</span> <span style='color: #949494;'>&lt;tibble [10 × 3]&gt;</span>
-#&gt; <span style='color: #BCBCBC;'> 5</span>       5    20 correlated      1 <span style='color: #949494;'>&lt;dbl [2 × 2]&gt;</span> <span style='color: #949494;'>&lt;tibble [20 × 3]&gt;</span>
-#&gt; <span style='color: #BCBCBC;'> 6</span>       6    30 correlated      1 <span style='color: #949494;'>&lt;dbl [2 × 2]&gt;</span> <span style='color: #949494;'>&lt;tibble [30 × 3]&gt;</span>
-#&gt; <span style='color: #BCBCBC;'> 7</span>       7    10 independent     2 <span style='color: #949494;'>&lt;dbl [2 × 2]&gt;</span> <span style='color: #949494;'>&lt;tibble [10 × 3]&gt;</span>
-#&gt; <span style='color: #BCBCBC;'> 8</span>       8    20 independent     2 <span style='color: #949494;'>&lt;dbl [2 × 2]&gt;</span> <span style='color: #949494;'>&lt;tibble [20 × 3]&gt;</span>
-#&gt; <span style='color: #BCBCBC;'> 9</span>       9    30 independent     2 <span style='color: #949494;'>&lt;dbl [2 × 2]&gt;</span> <span style='color: #949494;'>&lt;tibble [30 × 3]&gt;</span>
-#&gt; <span style='color: #BCBCBC;'>10</span>      10    10 correlated      2 <span style='color: #949494;'>&lt;dbl [2 × 2]&gt;</span> <span style='color: #949494;'>&lt;tibble [10 × 3]&gt;</span>
-#&gt; <span style='color: #BCBCBC;'>11</span>      11    20 correlated      2 <span style='color: #949494;'>&lt;dbl [2 × 2]&gt;</span> <span style='color: #949494;'>&lt;tibble [20 × 3]&gt;</span>
-#&gt; <span style='color: #BCBCBC;'>12</span>      12    30 correlated      2 <span style='color: #949494;'>&lt;dbl [2 × 2]&gt;</span> <span style='color: #949494;'>&lt;tibble [30 × 3]&gt;</span>
-#&gt; <span style='color: #BCBCBC;'>13</span>      13    10 independent     3 <span style='color: #949494;'>&lt;dbl [2 × 2]&gt;</span> <span style='color: #949494;'>&lt;tibble [10 × 3]&gt;</span>
-#&gt; <span style='color: #BCBCBC;'>14</span>      14    20 independent     3 <span style='color: #949494;'>&lt;dbl [2 × 2]&gt;</span> <span style='color: #949494;'>&lt;tibble [20 × 3]&gt;</span>
-#&gt; <span style='color: #BCBCBC;'>15</span>      15    30 independent     3 <span style='color: #949494;'>&lt;dbl [2 × 2]&gt;</span> <span style='color: #949494;'>&lt;tibble [30 × 3]&gt;</span>
-#&gt; <span style='color: #BCBCBC;'>16</span>      16    10 correlated      3 <span style='color: #949494;'>&lt;dbl [2 × 2]&gt;</span> <span style='color: #949494;'>&lt;tibble [10 × 3]&gt;</span>
-#&gt; <span style='color: #BCBCBC;'>17</span>      17    20 correlated      3 <span style='color: #949494;'>&lt;dbl [2 × 2]&gt;</span> <span style='color: #949494;'>&lt;tibble [20 × 3]&gt;</span>
-#&gt; <span style='color: #BCBCBC;'>18</span>      18    30 correlated      3 <span style='color: #949494;'>&lt;dbl [2 × 2]&gt;</span> <span style='color: #949494;'>&lt;tibble [30 × 3]&gt;</span>
-#&gt; 
-#&gt; sim[[1]]
-#&gt; --------------------------
-#&gt; <span style='color: #949494;'># A tibble: 10 × 3</span>
-#&gt;         x_1     x_2       y
-#&gt;       <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>   <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>   <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>
-#&gt; <span style='color: #BCBCBC;'> 1</span> -<span style='color: #BB0000;'>0.324</span>    0.458   0.133 
-#&gt; <span style='color: #BCBCBC;'> 2</span>  0.572    1.31    1.88  
-#&gt; <span style='color: #BCBCBC;'> 3</span>  0.622   -<span style='color: #BB0000;'>1.46</span>   -<span style='color: #BB0000;'>0.839</span> 
-#&gt; <span style='color: #BCBCBC;'> 4</span>  1.63    -<span style='color: #BB0000;'>1.72</span>   -<span style='color: #BB0000;'>0.096</span><span style='color: #BB0000; text-decoration: underline;'>5</span>
-#&gt; <span style='color: #BCBCBC;'> 5</span> -<span style='color: #BB0000;'>0.008</span><span style='color: #BB0000; text-decoration: underline;'>86</span>  0.673   0.664 
-#&gt; <span style='color: #BCBCBC;'> 6</span>  0.468    1.59    2.05  
-#&gt; <span style='color: #BCBCBC;'> 7</span> -<span style='color: #BB0000;'>0.349</span>    0.905   0.556 
-#&gt; <span style='color: #BCBCBC;'> 8</span> -<span style='color: #BB0000;'>0.411</span>   -<span style='color: #BB0000;'>0.612</span>  -<span style='color: #BB0000;'>1.02</span>  
-#&gt; <span style='color: #BCBCBC;'> 9</span>  0.218    0.071<span style='text-decoration: underline;'>5</span>  0.289 
-#&gt; <span style='color: #BCBCBC;'>10</span> -<span style='color: #BB0000;'>0.266</span>   -<span style='color: #BB0000;'>0.536</span>  -<span style='color: #BB0000;'>0.802</span> 
-#&gt; </div><div class='input'>
  <span class='co'>## Changing reps will change the number of replications and thus the number of</span>
  <span class='co'>## rows in the output</span>
  <span class='va'>meta_list_2</span> <span class='op'>=</span> <span class='fu'><a href='https://generics.r-lib.org/reference/specify.html'>specify</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='op'>~</span> <span class='fu'>MASS</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/MASS/man/mvrnorm.html'>mvrnorm</a></span><span class='op'>(</span><span class='va'>n</span>, <span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>2</span><span class='op'>)</span>, Sigma <span class='op'>=</span> <span class='va'>S</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span>

@@ -5,6 +5,7 @@
 ^\..*$
 ^example.R$
 ^make.R$
+^vignettes_workflow.R$
 ^_pkgdown\.yml$
 ^docs$
 ^pkgdown$
