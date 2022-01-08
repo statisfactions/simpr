@@ -32,13 +32,13 @@
 #' @param sim_name name of the list-column to be
 #'   created, containing simulation results.
 #'   Default is \code{"sim"}
-#' @param quiet Should simulation errors be
+#' @param .quiet Should simulation errors be
 #'   broadcast to the user as they occur?
-#' @param warn_on_error Should there be a warning
+#' @param .warn_on_error Should there be a warning
 #'   when simulation errors occur?
-#' @param stop_on_error Should the simulation stop
+#' @param .stop_on_error Should the simulation stop
 #'   immediately when simulation errors occur?
-#' @param debug Run simulation in debug mode,
+#' @param .debug Run simulation in debug mode,
 #'   allowing objects, etc. to be explored for
 #'   each generated variable specification.
 #' @param .progress	A logical, for whether or not
@@ -109,9 +109,9 @@
 #'
 #' @export
 generate.simpr_spec = function(x, reps, ..., sim_name = "sim",
-                    quiet = TRUE, warn_on_error = TRUE,
-                    stop_on_error = FALSE,
-                    debug = FALSE,
+                    .quiet = TRUE, .warn_on_error = TRUE,
+                    .stop_on_error = FALSE,
+                    .debug = FALSE,
                     .progress = FALSE,
                     .options = furrr_options(seed = TRUE)) {
 
@@ -145,21 +145,21 @@ generate.simpr_spec = function(x, reps, ..., sim_name = "sim",
                                ".use_names",
                                "include_calls")],
                      sim_name = sim_name,
-                     quiet = quiet,
-                     debug = debug,
-                     warn_on_error = warn_on_error,
-                     stop_on_error = stop_on_error,
+                     .quiet = .quiet,
+                     .debug = .debug,
+                     .warn_on_error = .warn_on_error,
+                     .stop_on_error = .stop_on_error,
                      .progress = .progress,
                      .options = .options,
                      excluded_sim_ids = excluded_sim_ids)
 }
 
 
-generate_sim = function(y, eval_environment, variable_sep, .use_names, debug, stop_on_error) {
+generate_sim = function(y, eval_environment, variable_sep, .use_names, .debug, .stop_on_error) {
   eval_fun = purrr::as_mapper(y)
   environment(eval_fun) <- eval_environment
 
-  if(debug)
+  if(.debug)
     debug(eval_fun)
 
   gen = eval_fun()
@@ -211,8 +211,8 @@ generate_sim = function(y, eval_environment, variable_sep, .use_names, debug, st
 }
 
 generate_row = function(variables, ..., variable_sep, .use_names,
-                             include_calls, meta_indices, sim_name, quiet,
-                        debug, stop_on_error,
+                             include_calls, meta_indices, sim_name, .quiet,
+                        .debug, .stop_on_error,
                         excluded_sim_ids) {
 
   meta_values = list(...)
@@ -223,17 +223,17 @@ generate_row = function(variables, ..., variable_sep, .use_names,
 
   eval_environment = rlang::as_environment(meta_values, parent = parent.frame())
 
-  if(stop_on_error)
+  if(.stop_on_error)
     sim_list = purrr::map_dfc(variables, generate_sim,
                               eval_environment = eval_environment,
                               variable_sep = variable_sep,
-                              debug = debug,
+                              .debug = .debug,
                               .use_names = .use_names)
   else
-    sim_list = purrr::safely(purrr::map_dfc, otherwise = NULL, quiet = quiet)(variables, generate_sim,
+    sim_list = purrr::safely(purrr::map_dfc, otherwise = NULL, quiet = .quiet)(variables, generate_sim,
                                                                               eval_environment = eval_environment,
                                                                               variable_sep = variable_sep,
-                                                                              debug = debug,
+                                                                              .debug = .debug,
                                                                               .use_names = .use_names)
 
   ## Create a 1-row tibble with meta values and the simulation cell
@@ -272,8 +272,8 @@ eval_pipe = function(lhs, rhs) {
   eval(call("%>%", lhs = lhs, rhs = rhs))
 }
 
-create_sim_results <- function(specs, x, sim_name, quiet, warn_on_error, .progress, .options,
-                               debug, stop_on_error,
+create_sim_results <- function(specs, x, sim_name, .quiet, .warn_on_error, .progress, .options,
+                               .debug, .stop_on_error,
                                excluded_sim_ids) {
   ## Create simulation results from specification
 
@@ -286,17 +286,17 @@ create_sim_results <- function(specs, x, sim_name, quiet, warn_on_error, .progre
                 variable_sep = x$variable_sep,
                 .use_names = x$.use_names,
                 meta_indices = names(x$meta_info$indices),
-                debug = debug,
-                stop_on_error = stop_on_error,
+                .debug = .debug,
+                .stop_on_error = .stop_on_error,
                 sim_name = sim_name,
-                quiet = quiet,
+                .quiet = .quiet,
                 .progress = .progress,
                 .options = .options,
                 excluded_sim_ids = excluded_sim_ids) %>%
     dplyr::bind_rows()
 
   ## Give warning if errors occured
-  if(warn_on_error && ".sim_error" %in% names(sim_results))
+  if(.warn_on_error && ".sim_error" %in% names(sim_results))
     warning("Simulation produced errors.  See column '.sim_error'.")
 
   ## Add some attributes to the tibble to track meta and variables

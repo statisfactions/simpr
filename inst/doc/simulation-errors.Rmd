@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 library(simpr)
 ```
 
-Quite often, errors will arise in the course of simulating or fitting models.  These errors can be tricky to debug because they may happen within a simulation function and only in certain cases.  Consider the following example:
+Quite often, errors will arise in the course of simulating or fitting models.  These errors can be tricky to .debug because they may happen within a simulation function and only in certain cases.  Consider the following example:
 
 ```{r buggy_spec}
 buggy_spec = specify(y = ~ rnorm(size)) %>%
@@ -32,8 +32,8 @@ We'd expect this to produce an error when `n` is negative, since that's not a va
 
 The primary place where errors occur in the simulation is in generating the data and fitting models.  Both `generate()` and `fit()` have the same primary error handling options:
 
-   - `warn_on_error`. When `TRUE`, the default, a warning is given when the simulation returned errors.  If you expect errors or have other ways of checking on them, you can make this `FALSE`.
-  - `stop_on_error`. When `TRUE`, the simulation stops as soon as an error is encountered.  This is useful when running interactively and when errors are unexpected. Default is `FALSE`.
+   - `.warn_on_error`. When `TRUE`, the default, a warning is given when the simulation returned errors.  If you expect errors or have other ways of checking on them, you can make this `FALSE`.
+  - `.stop_on_error`. When `TRUE`, the simulation stops as soon as an error is encountered.  This is useful when running interactively and when errors are unexpected. Default is `FALSE`.
   
 The default behavior is to warn when there are errors, and storing those error messages in a separate directory.  This gives you the flexibility to continue with the simulation or model-fitting process even if one particular simulation hit an error.
 
@@ -56,21 +56,21 @@ generate_default
 
 The first simulation had an error and thus did not return any simulation data. We can see the error message given directly in the `.sim_error` column.
 
-We would get the same output without a warning if we set `warn_on_error = FALSE`:
+We would get the same output without a warning if we set `.warn_on_error = FALSE`:
 
 ```{r generate_no_warn}
 set.seed(100)
 generate_no_warn = buggy_spec %>% 
-  generate(1, warn_on_error = FALSE)
+  generate(1, .warn_on_error = FALSE)
 
 generate_no_warn
 ```
 
-Alternatively, we can set `stop_on_error = TRUE` to simply stop the simulation and immediately produce the error.  This is often useful during initial development of the simulation, when an error often means that something is misspecified:
+Alternatively, we can set `.stop_on_error = TRUE` to simply stop the simulation and immediately produce the error.  This is often useful during initial development of the simulation, when an error often means that something is misspecified:
 
 ```{r generate_error, error = TRUE, purl = FALSE}
 generate_error = buggy_spec %>% 
-  generate(1, stop_on_error = TRUE)
+  generate(1, .stop_on_error = TRUE)
 ```
 
 ### `fit()`
@@ -117,19 +117,19 @@ fit_multi_error %>%
 
 ## Debugging simulations
 
-Sometimes it is difficult to tell what went wrong in a simulation just from the error message.  In this case it is useful to use R's powerful debugging features.  See `?browser` and the (debugging chapter)[https://adv-r.hadley.nz/debugging.html#browser] from (Advanced R)[https://adv-r.hadley.nz/index.html] for general information on using R's debugging.
+Sometimes it is difficult to tell what went wrong in a simulation just from the error message.  In this case it is useful to use R's powerful .debugging features.  See `?browser` and the (.debugging chapter)[https://adv-r.hadley.nz/.debugging.html#browser] from (Advanced R)[https://adv-r.hadley.nz/index.html] for general information on using R's .debugging.
 
-Both `generate()` and `fit()` allow you to set `debug = TRUE` to look interactively at what is coming in to R.  This allows you to see how the data is coming in and to figure out what is causing the error.
+Both `generate()` and `fit()` allow you to set `.debug = TRUE` to look interactively at what is coming in to R.  This allows you to see how the data is coming in and to figure out what is causing the error.
 
 Let's use the same example as above:
-```{r generate_debug, eval = FALSE, purl = FALSE}
+```{r generate_.debug, eval = FALSE, purl = FALSE}
 specify(y = ~ rnorm(size)) %>%
   define(size = c(-10, 10)) %>% 
-  generate(1, debug = TRUE)
+  generate(1, .debug = TRUE)
 
 ```
 
-If we run this in Rstudio, we'll see this in the debugger view:
+If we run this in Rstudio, we'll see this in the .debugger view:
 
 ```r
 function (..., .x = ..1, .y = ..2, . = ..1) 
@@ -158,19 +158,19 @@ Warning messages:
   restarting interrupted promise evaluation
 ```
 
-We can type `"Q"` to exit debugging or `"n"` to move to the next debug step.  (If we have a variable called `n`, we would need to use `print(n)` to see its value.)
+We can type `"Q"` to exit .debugging or `"n"` to move to the next .debug step.  (If we have a variable called `n`, we would need to use `print(n)` to see its value.)
 
-If you aren't seeing any output when you type commands in the debugger, try running the command `sink()`, which seems to allow the output to show up in some cases.
+If you aren't seeing any output when you type commands in the .debugger, try running the command `sink()`, which seems to allow the output to show up in some cases.
 
 This same mechanism is used by `fit()`:
 
-```{r fit_debug, eval = FALSE, purl = FALSE}
+```{r fit_.debug, eval = FALSE, purl = FALSE}
 set.seed(100)
 specify(y1 = ~ rnorm(10),
         y2 = ~ rnorm(10)) %>%
   generate(2) %>% 
   fit(t_test = ~ t.test(y1, y2),
-      debug = TRUE)
+      .debug = TRUE)
 ```
 
 The function displays a bit differently:
@@ -206,8 +206,8 @@ We can type `n` to move to the next simulation, which has different data:
 ```r
 Browse[2]> n
 exiting from: ...furrr_fn(...)
-debugging in: ...furrr_fn(...)
-debug: with(data = ., expr = t.test(y1, y2))
+.debugging in: ...furrr_fn(...)
+.debug: with(data = ., expr = t.test(y1, y2))
 Browse[2]> .
 # A tibble: 10 × 2
         y1      y2

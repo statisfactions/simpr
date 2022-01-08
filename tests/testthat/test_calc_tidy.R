@@ -72,10 +72,10 @@ test_that("Errors show up in tidied output.", {
 
   buggy_fit = specify(y = ~ rnorm(size)) %>%
     define(size = c(-10, 10)) %>%
-    generate(1, warn_on_error = FALSE) %>%
+    generate(1, .warn_on_error = FALSE) %>%
     fit(t_test = ~ t.test(y),
         chisq = ~ chisq.test(y),
-        warn_on_error = FALSE) %>%
+        .warn_on_error = FALSE) %>%
     tidy_fits()
 
   expect_equal(buggy_fit$.sim_error,

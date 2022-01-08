@@ -10,7 +10,7 @@ blue_only = specify(x1 = ~ 2 + rnorm(n),
 spec = blue_only %>%
   define(n = 10)
 
-err_out = generate(spec, 30, warn_on_error = FALSE, .options = furrr_options(seed = TRUE,
+err_out = generate(spec, 30, .warn_on_error = FALSE, .options = furrr_options(seed = TRUE,
                                                                                  globals = list(errgt = errgt)))
 
 expect_true(".sim_error" %in% names(err_out))

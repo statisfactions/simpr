@@ -9,10 +9,10 @@
   reps,
   ...,
   sim_name = "sim",
-  quiet = TRUE,
-  warn_on_error = TRUE,
-  stop_on_error = FALSE,
-  debug = FALSE,
+  .quiet = TRUE,
+  .warn_on_error = TRUE,
+  .stop_on_error = FALSE,
+  .debug = FALSE,
   .progress = FALSE,
   .options = furrr_options(seed = TRUE)
 )
@@ -37,16 +37,16 @@ simulation.}
 created, containing simulation results.
 Default is \code{"sim"}}
 
-\item{quiet}{Should simulation errors be
+\item{.quiet}{Should simulation errors be
 broadcast to the user as they occur?}
 
-\item{warn_on_error}{Should there be a warning
+\item{.warn_on_error}{Should there be a warning
 when simulation errors occur?}
 
-\item{stop_on_error}{Should the simulation stop
+\item{.stop_on_error}{Should the simulation stop
 immediately when simulation errors occur?}
 
-\item{debug}{Run simulation in debug mode,
+\item{.debug}{Run simulation in debug mode,
 allowing objects, etc. to be explored for
 each generated variable specification.}
 

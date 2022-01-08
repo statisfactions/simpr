@@ -38,13 +38,13 @@
 #' @param ... \code{purrr}-style formula functions
 #'   used for computing on the simulated data. See
 #'   \emph{Details} and \emph{Examples}.
-#' @param quiet Should simulation errors be
+#' @param .quiet Should simulation errors be
 #'   broadcast to the user as they occur?
-#' @param warn_on_error Should there be a warning
+#' @param .warn_on_error Should there be a warning
 #'   when simulation errors occur?
-#' @param stop_on_error Should the simulation stop
+#' @param .stop_on_error Should the simulation stop
 #'   immediately when simulation errors occur?
-#' @param debug Run simulation in debug mode,
+#' @param .debug Run simulation in debug mode,
 #'   allowing objects, etc. to be explored for
 #'   each generated variable specification.
 #' @param .progress	A logical, for whether or not
@@ -112,21 +112,21 @@
 #'
 #' @export
 fit.simpr_tibble = function(object, ...,
-                            quiet = TRUE, warn_on_error = TRUE,
-                            stop_on_error = FALSE,
-                            debug = FALSE, .progress = FALSE,
+                            .quiet = TRUE, .warn_on_error = TRUE,
+                            .stop_on_error = FALSE,
+                            .debug = FALSE, .progress = FALSE,
                             .options = furrr_options()) {
 
-  to_fit_fn = function(formula, debug, stop_on_error, quiet) {
+  to_fit_fn = function(formula, .debug, .stop_on_error, .quiet) {
     stopifnot(rlang::is_formula(formula))
     afl = rlang::as_function(formula) %>% as.list
     afl[[5]] = call("with", data = quote(.), expr = afl[[5]])
     alt_fn = as.function(afl)
 
-    if(!stop_on_error && !debug)
-      alt_fn = purrr::safely(alt_fn, quiet = quiet)
+    if(!.stop_on_error && !.debug)
+      alt_fn = purrr::safely(alt_fn, quiet = .quiet)
 
-    if(debug)
+    if(.debug)
       debug(alt_fn)
 
     return(alt_fn)
@@ -137,9 +137,9 @@ fit.simpr_tibble = function(object, ...,
   sim_name = get_sim_name(object)
 
   fit_out = purrr::imap(fit_formulas, ~ furrr::future_map(object[[sim_name]],
-                                               to_fit_fn(.x, debug = debug,
-                                                         stop_on_error = stop_on_error,
-                                                         quiet = quiet),
+                                               to_fit_fn(.x, .debug = .debug,
+                                                         .stop_on_error = .stop_on_error,
+                                                         .quiet = .quiet),
                                                .progress = .progress,
                                                .options = .options))
 
@@ -164,7 +164,7 @@ fit.simpr_tibble = function(object, ...,
   attr(object, "fits") = c(attr(object, "fits"), names(fit_formulas))
 
   ## Give warning if errors occured
-  if(warn_on_error && any_fit_error)
+  if(.warn_on_error && any_fit_error)
     warning("fit() produced errors.  See '.fit_error_*' column(s).")
 
   object
@@ -172,9 +172,9 @@ fit.simpr_tibble = function(object, ...,
 
 #' @export
 #' @rdname fit.simpr_tibble
-fit.simpr_spec = function(object, ...,  quiet = TRUE, warn_on_error = TRUE,
-                          stop_on_error = FALSE,
-                          debug = FALSE, .progress = FALSE,
+fit.simpr_spec = function(object, ...,  .quiet = TRUE, .warn_on_error = TRUE,
+                          .stop_on_error = FALSE,
+                          .debug = FALSE, .progress = FALSE,
                           .options = furrr_options()) {
   mc = match.call()
 

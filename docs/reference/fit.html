@@ -142,10 +142,10 @@ functions.</p>
     <pre class="usage"><span class='fu'>fit</span><span class='op'>(</span>
   <span class='va'>obj</span>,
   <span class='va'>...</span>,
-  quiet <span class='op'>=</span> <span class='cn'>TRUE</span>,
-  warn_on_error <span class='op'>=</span> <span class='cn'>TRUE</span>,
-  stop_on_error <span class='op'>=</span> <span class='cn'>FALSE</span>,
-  debug <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  .quiet <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  .warn_on_error <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  .stop_on_error <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  .debug <span class='op'>=</span> <span class='cn'>FALSE</span>,
   .progress <span class='op'>=</span> <span class='cn'>FALSE</span>,
   .options <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/pkg/furrr/man/furrr_options.html'>furrr_options</a></span><span class='op'>(</span><span class='op'>)</span>
 <span class='op'>)</span></pre>
@@ -167,22 +167,22 @@ used for computing on the simulated data. See
 <em>Details</em> and <em>Examples</em>.</p></td>
     </tr>
     <tr>
-      <th>quiet</th>
+      <th>.quiet</th>
       <td><p>Should simulation errors be
 broadcast to the user as they occur?</p></td>
     </tr>
     <tr>
-      <th>warn_on_error</th>
+      <th>.warn_on_error</th>
       <td><p>Should there be a warning
 when simulation errors occur?</p></td>
     </tr>
     <tr>
-      <th>stop_on_error</th>
+      <th>.stop_on_error</th>
       <td><p>Should the simulation stop
 immediately when simulation errors occur?</p></td>
     </tr>
     <tr>
-      <th>debug</th>
+      <th>.debug</th>
       <td><p>Run simulation in debug mode,
 allowing objects, etc. to be explored for
 each generated variable specification.</p></td>

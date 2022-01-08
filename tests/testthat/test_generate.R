@@ -3,7 +3,7 @@ library(tibble)
 
 
 # Error options ------------
-test_that("quiet, warn_on_error, stop_on_error options work as expected", {
+test_that(".quiet, .warn_on_error, .stop_on_error options work as expected", {
   buggy_spec = specify(y = ~ rnorm(n)) %>%
     define(n = c(-10, 10))
 
@@ -12,12 +12,12 @@ test_that("quiet, warn_on_error, stop_on_error options work as expected", {
 
   expect_warning(generate(buggy_spec, 1), "Simulation produced errors")
 
-  expect_silent(generate(buggy_spec, 1, warn_on_error = FALSE))
+  expect_silent(generate(buggy_spec, 1, .warn_on_error = FALSE))
 
-  expect_message(generate(buggy_spec, 1, warn_on_error = FALSE, quiet = FALSE),
+  expect_message(generate(buggy_spec, 1, .warn_on_error = FALSE, .quiet = FALSE),
                  message)
 
-  expect_error(generate(buggy_spec, 1, stop_on_error = TRUE),
+  expect_error(generate(buggy_spec, 1, .stop_on_error = TRUE),
                  message)
 })
 

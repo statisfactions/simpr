@@ -15,7 +15,7 @@ buggy_spec = specify(y = ~ rnorm(size)) %>%
 ## ----generate_no_warn------------------------------------------------------------------------------------------
 set.seed(100)
 generate_no_warn = buggy_spec %>% 
-  generate(1, warn_on_error = FALSE)
+  generate(1, .warn_on_error = FALSE)
 
 generate_no_warn
 

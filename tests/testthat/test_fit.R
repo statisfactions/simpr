@@ -36,15 +36,15 @@ test_that("error options work for fit()", {
     expect_warning("produced errors.")
 
   char %>%
-    fit(t_test = ~ t.test(y), stop_on_error = TRUE) %>%
+    fit(t_test = ~ t.test(y), .stop_on_error = TRUE) %>%
     expect_error("data are essentially constant")
 
   char %>%
-    fit(t_test = ~ t.test(y), warn_on_error = FALSE, quiet = FALSE) %>%
+    fit(t_test = ~ t.test(y), .warn_on_error = FALSE, .quiet = FALSE) %>%
     expect_message("data are essentially constant")
 
   char %>%
-    fit(t_test = ~ t.test(y), warn_on_error = FALSE) %>%
+    fit(t_test = ~ t.test(y), .warn_on_error = FALSE) %>%
     expect_silent()
 
 })
