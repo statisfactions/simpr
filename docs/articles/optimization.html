@@ -120,7 +120,7 @@
   <span class="fu"><a href="../reference/tidy_fits.html">tidy_fits</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="https://generics.r-lib.org/reference/generate.html">generate</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span> </code></pre></div>
 <p>This means that the data is generated, fit, and tidied all at once once you call <code><a href="https://generics.r-lib.org/reference/generate.html">generate()</a></code>. This means that these steps can occur on a single parallel worker without pushing lots of data around.</p>
-<p>Behind the scenes, before <code><a href="https://generics.r-lib.org/reference/generate.html">generate()</a></code> is called, <code>simpr</code> simply adds successive calse onto the <code>simpr_spec</code> object, to be executed in order for each simulation as soon as <code><a href="https://generics.r-lib.org/reference/generate.html">generate()</a></code> is called. Data munging, including with <code><a href="../reference/per_sim.html">per_sim()</a></code> or on the final tidied data, using <code>dplyr</code> or <code>tidyr</code> is also supported:</p>
+<p>Behind the scenes, before <code><a href="https://generics.r-lib.org/reference/generate.html">generate()</a></code> is called, <code>simpr</code> simply stores successive commands in the <code>simpr_spec</code> object. When <code><a href="https://generics.r-lib.org/reference/generate.html">generate()</a></code> is called, these successive commands are executed in order. Data munging, including with <code><a href="../reference/per_sim.html">per_sim()</a></code> or on the final tidied data, using <code>dplyr</code> or <code>tidyr</code> is also supported in this workflow. Below, data is specified, and the commands for reshaping, fitting, and tidying, and selecting columns from the tidied output are all written before <code><a href="https://generics.r-lib.org/reference/generate.html">generate()</a></code> and are executed together:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://generics.r-lib.org/reference/specify.html">specify</a></span><span class="op">(</span>control <span class="op">=</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="va">n</span>, mean <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>,
         intervention_1 <span class="op">=</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="va">n</span>, mean <span class="op">=</span> <span class="fl">0.2</span><span class="op">)</span>,
@@ -137,23 +137,23 @@
 <span class="co">#&gt; # A tibble: 12 × 4</span>
 <span class="co">#&gt;    .sim_id     n term                estimate</span>
 <span class="co">#&gt;      &lt;int&gt; &lt;dbl&gt; &lt;chr&gt;                  &lt;dbl&gt;</span>
-<span class="co">#&gt;  1       1     6 (Intercept)         -0.383  </span>
-<span class="co">#&gt;  2       1     6 groupintervention_1  0.496  </span>
-<span class="co">#&gt;  3       1     6 groupintervention_2  2.46   </span>
-<span class="co">#&gt;  4       2    12 (Intercept)          0.00497</span>
-<span class="co">#&gt;  5       2    12 groupintervention_1  0.147  </span>
-<span class="co">#&gt;  6       2    12 groupintervention_2  1.66   </span>
-<span class="co">#&gt;  7       3     6 (Intercept)         -0.114  </span>
-<span class="co">#&gt;  8       3     6 groupintervention_1  0.792  </span>
-<span class="co">#&gt;  9       3     6 groupintervention_2  2.31   </span>
-<span class="co">#&gt; 10       4    12 (Intercept)          0.296  </span>
-<span class="co">#&gt; 11       4    12 groupintervention_1  0.403  </span>
-<span class="co">#&gt; 12       4    12 groupintervention_2  1.07</span></code></pre></div>
+<span class="co">#&gt;  1       1     6 (Intercept)           0.182 </span>
+<span class="co">#&gt;  2       1     6 groupintervention_1  -0.129 </span>
+<span class="co">#&gt;  3       1     6 groupintervention_2   1.51  </span>
+<span class="co">#&gt;  4       2    12 (Intercept)          -0.0556</span>
+<span class="co">#&gt;  5       2    12 groupintervention_1  -0.0449</span>
+<span class="co">#&gt;  6       2    12 groupintervention_2   1.79  </span>
+<span class="co">#&gt;  7       3     6 (Intercept)           0.167 </span>
+<span class="co">#&gt;  8       3     6 groupintervention_1  -0.853 </span>
+<span class="co">#&gt;  9       3     6 groupintervention_2   1.21  </span>
+<span class="co">#&gt; 10       4    12 (Intercept)          -0.582 </span>
+<span class="co">#&gt; 11       4    12 groupintervention_1   0.732 </span>
+<span class="co">#&gt; 12       4    12 groupintervention_2   2.26</span></code></pre></div>
 </div>
 <div id="parallel-processing-with-the-future-package" class="section level2">
 <h2 class="hasAnchor">
 <a href="#parallel-processing-with-the-future-package" class="anchor"></a>Parallel processing with the <code>future</code> package</h2>
-<p>Changing the evaluation order makes little difference on its own, but combined with parallel processing can produce a speedup. <code>simpr</code> uses the <code>furrr</code> package, part of the “futureverse” suite of packages designed around the <code>future</code> package. These packages are designed to make parallel processing transparent as easy to use.</p>
+<p>Changing the evaluation order makes little difference on its own, but combined with parallel processing can produce a speedup. <code>simpr</code> uses the <code>furrr</code> package, part of the <a href="https://www.futureverse.org">futureverse</a> suite of packages designed around the <code>future</code> package. These packages are designed to make parallel processing transparent as easy to use.</p>
 <p>To use parallel processing with <code>simpr</code>, simply load the <code>future</code> package and declare your “plan” for code execution with <code><a href="https://future.futureverse.org/reference/plan.html">future::plan()</a></code>. The three most relevant plans are:</p>
 <ol style="list-style-type: decimal">
 <li>

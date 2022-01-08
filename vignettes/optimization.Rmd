@@ -53,7 +53,7 @@ specify(a = ~ rnorm(n),
 
 This means that the data is generated, fit, and tidied all at once once you call `generate()`.  This means that these steps can occur on a single parallel worker without pushing lots of data around.
 
-Behind the scenes, before `generate()` is called, `simpr` simply adds successive calse onto the `simpr_spec` object, to be executed in order for each simulation as soon as `generate()` is called.  Data munging, including with `per_sim()` or on the final tidied data, using `dplyr` or `tidyr` is also supported:
+Behind the scenes, before `generate()` is called, `simpr` simply stores successive commands in the `simpr_spec` object.  When `generate()` is called, these successive commands are executed in order.  Data munging, including with `per_sim()` or on the final tidied data, using `dplyr` or `tidyr` is also supported in this workflow.  Below, data is specified, and the commands for reshaping, fitting, and tidying, and selecting columns from the tidied output are all written before `generate()` and are executed together:
 
 ```{r data_munging}
 specify(control = ~ rnorm(n, mean = 0),
@@ -71,7 +71,7 @@ specify(control = ~ rnorm(n, mean = 0),
 ```
 
 ## Parallel processing with the `future` package
-Changing the evaluation order makes little difference on its own, but combined with parallel processing can produce a speedup.  `simpr` uses the `furrr` package, part of the "futureverse" suite of packages designed around the `future` package.  These packages are designed to make parallel processing transparent as easy to use.
+Changing the evaluation order makes little difference on its own, but combined with parallel processing can produce a speedup.  `simpr` uses the `furrr` package, part of the [futureverse](https://www.futureverse.org) suite of packages designed around the `future` package.  These packages are designed to make parallel processing transparent as easy to use.
 
 To use parallel processing with `simpr`, simply load the `future` package and declare your "plan" for code execution with `future::plan()`.  The three most relevant plans are:
 

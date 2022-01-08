@@ -93,14 +93,7 @@
     
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">simpr</span><span class="op">)</span></code></pre></div>
-<p>Quite often, errors will arise in the course of simulating or fitting models. These errors can be tricky to .debug because they may happen within a simulation function and only in certain cases. Consider the following example:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">buggy_spec</span> <span class="op">=</span> <span class="fu"><a href="https://generics.r-lib.org/reference/specify.html">specify</a></span><span class="op">(</span>y <span class="op">=</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="va">size</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="../reference/define.html">define</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">10</span>, <span class="fl">10</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<p>We’d expect this to produce an error when <code>n</code> is negative, since that’s not a valid sample size.</p>
-<div id="error-handling-options" class="section level2">
-<h2 class="hasAnchor">
-<a href="#error-handling-options" class="anchor"></a>Error handling options</h2>
+<p>Quite often, errors will arise in the course of simulating or fitting models. These errors can be tricky to debug because they may happen within a simulation function and only in certain cases.</p>
 <p>The primary place where errors occur in the simulation is in generating the data and fitting models. Both <code><a href="https://generics.r-lib.org/reference/generate.html">generate()</a></code> and <code><a href="https://generics.r-lib.org/reference/fit.html">fit()</a></code> have the same primary error handling options:</p>
 <ul>
 <li>
@@ -108,11 +101,16 @@
 <li>
 <code>.stop_on_error</code>. When <code>TRUE</code>, the simulation stops as soon as an error is encountered. This is useful when running interactively and when errors are unexpected. Default is <code>FALSE</code>.</li>
 </ul>
-<p>The default behavior is to warn when there are errors, and storing those error messages in a separate directory. This gives you the flexibility to continue with the simulation or model-fitting process even if one particular simulation hit an error.</p>
+<p>The default behavior is to warn when there are errors, and storing those error messages in a separate column <code>.sim_error</code>. This gives you the flexibility to continue with the simulation or model-fitting process even if one particular data generation or model fit hit an error.</p>
 <div id="generate" class="section level3">
 <h3 class="hasAnchor">
 <a href="#generate" class="anchor"></a><code>generate()</code>
 </h3>
+<p>Consider the following example:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">buggy_spec</span> <span class="op">=</span> <span class="fu"><a href="https://generics.r-lib.org/reference/specify.html">specify</a></span><span class="op">(</span>y <span class="op">=</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="va">size</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="../reference/define.html">define</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">10</span>, <span class="fl">10</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<p>We’d expect this to produce an error when <code>n</code> is negative, since that’s not a valid sample size.</p>
 <p>What happens when we try to generate data based on the buggy specification?</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">100</span><span class="op">)</span>
@@ -224,11 +222,10 @@
 <span class="co">#&gt; # … with 5 more variables: parameter &lt;dbl&gt;, conf.low &lt;dbl&gt;, conf.high &lt;dbl&gt;,</span>
 <span class="co">#&gt; #   method &lt;chr&gt;, alternative &lt;chr&gt;</span></code></pre></div>
 </div>
-</div>
 <div id="debugging-simulations" class="section level2">
 <h2 class="hasAnchor">
 <a href="#debugging-simulations" class="anchor"></a>Debugging simulations</h2>
-<p>Sometimes it is difficult to tell what went wrong in a simulation just from the error message. In this case it is useful to use R’s powerful .debugging features. See <code><a href="https://rdrr.io/r/base/browser.html">?browser</a></code> and the (.debugging chapter)[<a href="https://adv-r.hadley.nz/.debugging.html#browser" class="uri">https://adv-r.hadley.nz/.debugging.html#browser</a>] from (Advanced R)[<a href="https://adv-r.hadley.nz/index.html" class="uri">https://adv-r.hadley.nz/index.html</a>] for general information on using R’s .debugging.</p>
+<p>Sometimes it is difficult to tell what went wrong in a simulation just from the error message. In this case it is useful to use R’s powerful debugging features. See <code><a href="https://rdrr.io/r/base/browser.html">?browser</a></code> and the <a href="https://adv-r.hadley.nz/debugging.html#browser">debugging chapter</a> from <a href="https://adv-r.hadley.nz/index.html">Advanced R</a> for general information on using R’s debugger.</p>
 <p>Both <code><a href="https://generics.r-lib.org/reference/generate.html">generate()</a></code> and <code><a href="https://generics.r-lib.org/reference/fit.html">fit()</a></code> allow you to set <code>.debug = TRUE</code> to look interactively at what is coming in to R. This allows you to see how the data is coming in and to figure out what is causing the error.</p>
 <p>Let’s use the same example as above:</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
@@ -244,16 +241,9 @@
 <div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>Browse[<span class="dv">2</span>]<span class="sc">&gt;</span> </span></code></pre></div>
 <p>What’s nice is that we can see what the incoming data look like, so we can for instance type <code>n</code> at the console to see what’s coming in:</p>
 <div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>Browse[<span class="dv">2</span>]<span class="sc">&gt;</span> size</span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>[<span class="dv">1</span>] <span class="sc">-</span><span class="dv">10</span></span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>Warning messages<span class="sc">:</span></span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span><span class="sc">:</span> In <span class="fu">get</span>(object, <span class="at">envir =</span> currentEnv, <span class="at">inherits =</span> <span class="cn">TRUE</span>) <span class="sc">:</span></span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>  restarting interrupted promise evaluation</span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span><span class="sc">:</span> In <span class="fu">get</span>(object, <span class="at">envir =</span> currentEnv, <span class="at">inherits =</span> <span class="cn">TRUE</span>) <span class="sc">:</span></span>
-<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>  restarting interrupted promise evaluation</span>
-<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a><span class="dv">3</span><span class="sc">:</span> In <span class="fu">get</span>(object, <span class="at">envir =</span> currentEnv, <span class="at">inherits =</span> <span class="cn">TRUE</span>) <span class="sc">:</span></span>
-<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>  restarting interrupted promise evaluation</span></code></pre></div>
-<p>We can type <code>"Q"</code> to exit .debugging or <code>"n"</code> to move to the next .debug step. (If we have a variable called <code>n</code>, we would need to use <code><a href="https://rdrr.io/r/base/print.html">print(n)</a></code> to see its value.)</p>
-<p>If you aren’t seeing any output when you type commands in the .debugger, try running the command <code><a href="https://rdrr.io/r/base/sink.html">sink()</a></code>, which seems to allow the output to show up in some cases.</p>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>[<span class="dv">1</span>] <span class="sc">-</span><span class="dv">10</span></span></code></pre></div>
+<p>We can type <code>"Q"</code> to exit debugging or <code>"n"</code> to move to the next debug step. (If we have a variable called <code>n</code>, we would need to use <code><a href="https://rdrr.io/r/base/print.html">print(n)</a></code> to see its value.)</p>
+<p>If you aren’t seeing any output when you type commands in the debugger, try running the command <code><a href="https://rdrr.io/r/base/sink.html">sink()</a></code>, which seems to allow the output to show up in some cases.</p>
 <p>This same mechanism is used by <code><a href="https://generics.r-lib.org/reference/fit.html">fit()</a></code>:</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">100</span><span class="op">)</span>
@@ -285,8 +275,8 @@
 <p>We can type <code>n</code> to move to the next simulation, which has different data:</p>
 <div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>Browse[<span class="dv">2</span>]<span class="sc">&gt;</span> n</span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>exiting from<span class="sc">:</span> <span class="fu">...furrr_fn</span>(...)</span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>.debugging <span class="cf">in</span><span class="sc">:</span> <span class="fu">...furrr_fn</span>(...)</span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>.debug<span class="sc">:</span> <span class="fu">with</span>(<span class="at">data =</span> ., <span class="at">expr =</span> <span class="fu">t.test</span>(y1, y2))</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>debugging <span class="cf">in</span><span class="sc">:</span> <span class="fu">...furrr_fn</span>(...)</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>debug<span class="sc">:</span> <span class="fu">with</span>(<span class="at">data =</span> ., <span class="at">expr =</span> <span class="fu">t.test</span>(y1, y2))</span>
 <span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>Browse[<span class="dv">2</span>]<span class="sc">&gt;</span> .</span>
 <span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a><span class="co"># A tibble: 10 × 2</span></span>
 <span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>        y1      y2</span>
