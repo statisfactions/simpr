@@ -21,17 +21,22 @@ set.seed(2001)
 
 This vignette provides an overview of each step in the `simpr` workflow:
 
-  1. Specify your data-generating process for each of your variables with `specify()`
-  2. Define parameters that you want to systematically vary between different cells of your simulation design (e.g. *n*, effect size), with `define()`
-  3. Generate the simulation data with `generate()`
-  4. Fit models with your data (e.g. `lm()`), with `fit()`
-  5. Tidy the model output for further processing, such as computing power or Type I Error rates, with `tidy_fits`
+
+1. `specify()` your data-generating process
+  
+2. `define()` parameters that you want to systematically vary across your simulation design (e.g. *n*, effect size)
+  
+3. `generate()` the simulation data
+  
+4. `fit()` models to your data (e.g. `lm()`)
+  
+5. `tidy_fits()` for further processing, such as computing power or Type I Error rates
   
 ## `specify()` your data-generating process
 
 `specify()` takes arbitrary R expressions that can be used for generating data.  **Each argument should have a name and be prefixed with `~`, the tilde operator.**  Order matters: later arguments can refer to earlier arguments, but not the other way around.
 
-Good:
+Good---`b` specification refers to `a` specification, and comes after `a`:
 ```{r correct_order}
 specify(a = ~ runif(6), 
         b = ~ a + rnorm(6)) %>% 
@@ -39,7 +44,7 @@ specify(a = ~ runif(6),
 
 ```
 
-Error:
+Error---`b` specification refers to `a` specification, but comes before `a`, so `generate()` doesn't know what `a` is:
 ```{r incorrect_order, warning = TRUE, purl = FALSE}
 specify(b = ~ a + rnorm(6),
         a = ~ runif(6)) %>% 
@@ -48,29 +53,28 @@ specify(b = ~ a + rnorm(6),
 
 All arguments must imply the same number of rows.  Arguments that imply 1 row are recycled.
 
-OK:
+OK---both `a` and `b` imply 6 rows:
 ```{r correct_number}
 specify(a = ~ runif(6), 
         b = ~ rnorm(6)) %>% 
   generate(1)
 ```
 
-OK, with recycling:
-
+OK---`a` implies 1 row and `b` implies 6 rows, so `a` is recycled:
 ```{r recycle_number}
 specify(a = ~ runif(1), 
         b = ~ rnorm(6)) %>% 
   generate(1)
 ```
 
-Error:
+Error---`a` implies 2 rows and `b` implies 6 rows:
 ```{r incorrect_number, warning = TRUE, purl = FALSE}
 specify(a = ~ runif(2), 
         b = ~ rnorm(6)) %>% 
   generate(1)
 ```
 
-Using `x` as an argument to `specify()` is not recommended, because for technical reasons `x` is always placed as the first argument.  This means that if `x` refers to prior variables it will fail:
+Using `x` as an argument to `specify()` is not recommended, because for technical reasons `x` is always placed as the first argument.  This means that if `x` refers to prior variables it will return an error:
 
 ```{r x_error, warning = TRUE, purl = FALSE}
 specify(y = ~ runif(6),
@@ -79,7 +83,7 @@ specify(y = ~ runif(6),
 
 ```
 
-The same code works fine when `x` is renamed:
+The same specification works fine when `x` is renamed:
 
 ```{r x_error_fixed}
 specify(y = ~ runif(6),
@@ -88,7 +92,9 @@ specify(y = ~ runif(6),
 ```
 
 ### Advanced: expressions that generate multiple columns
-`specify()` accepts expressions that generate multiple columns simultaneously in a `matrix`, `data.frame`, or `tibble`.  By default, the column names in the output append a number to the variable name.  Here's an example using `MASS::mvrnorm()`, which produces draws form the multivariate normal distribution:
+`specify()` accepts expressions that generate multiple columns simultaneously in a `matrix`, `data.frame`, or `tibble`.  By default, the column names in the output append a number to the variable name.
+
+Here's an example using `MASS::mvrnorm()`, which returns draws from the multivariate normal distribution as a matrix. `MASS::mvrnorm()` determines the number of columns for the output data from the length of `mu` and the dimensions of the variance-covariance matrix `Sigma`.
 
 ```{r multicolumn_default}
 specify(a = ~ MASS::mvrnorm(6, 
@@ -98,7 +104,9 @@ specify(a = ~ MASS::mvrnorm(6,
 
 ```
 
-You can change the separator via `.sep`:
+The argument was named `a` in `specify()`, so `generate()` creates three variables named `a_1`, `a_2`, and `a_3`.
+
+You can change the separator between the argument name and the number via `.sep`. Here, we change it from the default `"_"` to `"."`:
 ```{r multicolumn_sep}
 specify(a = ~ MASS::mvrnorm(6, 
                             mu = rep(0, 3),
@@ -108,7 +116,7 @@ specify(a = ~ MASS::mvrnorm(6,
 
 ```
 
-Alternatively, you can set a two-sided formula to set names; the left hand side must use `c` or `cbind` and the argument name is ignored:
+Alternatively, you can give a two-sided formula to set names. The argument name is ignored, and the left hand side must use `c` or `cbind`.
 
 ```{r multicolumn_two_sided}
 specify(y = c(a, b, c) ~ MASS::mvrnorm(6, 
@@ -118,7 +126,7 @@ specify(y = c(a, b, c) ~ MASS::mvrnorm(6,
 
 ```
 
-If your expression already produces column names, those are used by default and the argument name is ignored:
+If your expression already produces column names, those are used by default. The argument name is again ignored:
 
 ```{r multicolumn_.use_names}
 specify(a = ~ MASS::mvrnorm(6, 
@@ -130,7 +138,7 @@ specify(a = ~ MASS::mvrnorm(6,
 
 This is useful for dealing with functions from other packages that already provide informative names (e.g., `lavaan::simulateData()`). You can turn this behavior off with `.use_names = FALSE`.
 
-Whatever method you use, you can still refer to these generated variables in later expressions:
+Whatever method you use, you can still refer to these generated variables in subsequent arguments to `specify()`:
 
 ```{r multicolumn_refer}
 specify(a = ~ MASS::mvrnorm(6, 
@@ -141,28 +149,30 @@ specify(a = ~ MASS::mvrnorm(6,
 ```
 
 ## `define()` parameters that you want to systematically vary
-`define()` creates metaparameters (also called simulation factors): values that you want to systematically vary.  An obvious choice is sample size:
+`define()` creates metaparameters (also called simulation factors): values that you want to systematically vary.  An obvious choice is sample size.
 
-```{r define_n}
-specify(a = ~ rnorm(n)) %>% 
-  define(n = c(10, 20)) %>% 
+Instead of writing a number for the `n` argument of `rnorm`, we write a placeholder value `samp_size` (this can be any valid R name), and we write a corresponding argument in `define()` that contains the possible values that `samp_size` can take on:
+
+```{r define_samp_size}
+specify(a = ~ rnorm(samp_size)) %>% 
+  define(samp_size = c(10, 20)) %>% 
   generate(1)
 ```
 
-Each argument to `define()` is a vector or list with the desired values to be used in the expressions in `specify().  `specify()` expressions can refer to the names of define arguments, and `generate()` will substitute the possible values that argument when generating data.
+Each argument to `define()` is a vector or list with the desired values to be used in the expressions in `specify()`.  `specify()` expressions can refer to the names of define arguments, and `generate()` will substitute the possible values that argument when generating data.
 
-When `define()` had multiple arguments, each possible combination is generated:
+When `define()` has multiple arguments, each possible combination is generated:
 
-```{r define_n_mu}
-specify(a = ~ rnorm(n, mu)) %>% 
-  define(n = c(10, 20),
+```{r define_samp_size_mu}
+specify(a = ~ rnorm(samp_size, mu)) %>% 
+  define(samp_size = c(10, 20),
          mu = c(0, 10)) %>% 
   generate(1)
 ```
 
 (If not all combinations are desired, see options for filtering at the `generate()` step, below.)
 
-`define()` can also take lists for any type of value used in `specify`. For instance, matrices:
+`define()` can also take lists for any type of value used in `specify`. For instance, the argument `s` is defined as a list with two variables representing two different possible correlation matrices, and we use that placeholder value `s` in the `specify()` statement:
 
 ```{r define_matrix}
 
@@ -173,9 +183,9 @@ specify(a = ~ MASS::mvrnorm(6, rep(0, 2), Sigma = s)) %>%
 
 ```
 
-Note that `simpr` creates a column `s_index` using the names of the list elements of `s` to make the results easier to view and filter.
+In the output, `simpr` creates a column `s_index` using the names of the list elements of `s` to make the results easier to view and filter.
 
-Functions can also be provided in `define()`:
+`define()` also supports lists of functions.  Here, the `specify` command has a placeholder function `distribution`, where `distribution` is defined to be either `rnorm()` or `rlnorm()` (the lognormal distribution):
 
 ```{r define_function}
 specify(y = ~ distribution(6)) %>%
@@ -185,7 +195,7 @@ specify(y = ~ distribution(6)) %>%
 ```
 
 ## `generate()` the simulation data
-The main argument to `generate()` is `reps`,  the number of repetitions for each combination of metaparameters in `define()`.
+The main argument to `generate()` is `.reps`,  the number of repetitions for each combination of metaparameters in `define()`.
 
 ```{r generate_n_mu_2}
 specify(a = ~ rnorm(n, mu)) %>% 
@@ -196,7 +206,7 @@ specify(a = ~ rnorm(n, mu)) %>%
 
 Since there are 4 possible combinations of `n` and `mu`, there are a total of 4 * 2 = 8 simulations generated, 2 for each possible combination.
 
-If some combination of variables is not desired, add filtering criteria to `generate()` using the same syntax as `dplyr::filter()`.
+If some combination of variables is not desired, add filtering criteria to `generate()` using the same syntax as `dplyr::filter()`. Here we arbitrarily filter to all combinations of `n` and `mu` where `n` is greater than `mu`, but any valid filtering criteria can be applied.
 
 ```{r generate_filter}
 specify(a = ~ rnorm(n, mu)) %>% 
@@ -205,13 +215,15 @@ specify(a = ~ rnorm(n, mu)) %>%
   generate(2, n > mu)
 ```
 
-To preserve reproducibility, a given simulation in the filtered version of `generate` is still the same as if all possible combinations were generated: note .sim_id skips 3 and 7 above.  See `vignette("reproducibility")` for more information.
+To preserve reproducibility, a given simulation in the filtered version of `generate` is still the same as if all possible combinations were generated.  This can be tracked using the `.sim_id` that `generate()` includes in the output data, which uniquely identifies the simulation run given the same inputs to `specify`, `define`, and `.reps`. Above, note that `.sim_id` skips 3 and 7  See `vignette("Reproducing simulations")` for more information on using `generate()` to filter.
 
-`generate()` by default continues with the next iteration if an error is produced, and returns a column `.sim_error` with the text of the error.  Alternative error handling mechanisms are available, see `vignette("simulation-errors")`.
+`generate()` by default continues with the next iteration if an error is produced, and returns a column `.sim_error` with the text of the error.  Alternative error handling mechanisms are available, see `vignette("Managing simulation errors")`.
 
-## `fit()` models with your data
+## `fit()` models to your data
 
 `fit()` uses similar syntax to `generate()`: you can write arbitrary R expressions to fit models. **Again, each argument should have a name and be prefixed with `~`, the tilde operator.**
+
+Below, we fit both a t-test and a linear model.
 
 ```{r fit_initial}
 specify(a = ~ rnorm(6),
@@ -223,32 +235,33 @@ specify(a = ~ rnorm(6),
 
 `fit()` adds columns to the overall tibble to contain each type of fit. Printing the object displays a preview of the first fit object in each column.
 
-Although the function is named `fit`, any arbitrary R expression can be used.
+Although the function is named `fit`, any arbitrary R expression can be used. Below, one fit column will include the mean of `a`, while the second will include vectors that are five larger than `a`.  The result is always a list-column, so any type of return object is allowed:
 
 ```{r fit_describe}
 specify(a = ~ rnorm(6)) %>% 
   generate(1) %>% 
   fit(mean = ~ mean(a),
       why_not = ~ a + 5)
-
-
 ```
 
-`fit()` is computed within each simulation, so usually you do not need to refer to the entire dataset.  If it is needed by your R function, you can refer to the entire dataset using `.`. The below code is equivalent to the previous example, but explicitly referencing the dataset:
+`fit()` is computed for each individual simulated dataset, so usually you do not need to refer to the dataset itself.  If a reference to the dataset is needed, use `.`.
+
+The below code is equivalent to the previous example, but explicitly referencing the dataset using `.` and `.$`:
 
 ```{r fit_explicit}
 specify(a = ~ rnorm(6),
         b = ~ a + rnorm(6)) %>% 
   generate(1) %>% 
+  ## .$ and data = . not actually required here
   fit(t_test = ~ t.test(.$a, .$b),
       lm = ~ lm(b ~ a, data = .))
 ```
 
 ### Advanced: pre-fit data munging with `per_sim()
 
-Sometimes, it's convenient to specify a data-generating process in a different way than R expects it for fitting.  After `generate()`, run `per_sim()` and then chain any `dplyr` or `tidyr` verbs that work on `data.frame`s or `tibble`s.  These verbs will be applied to every individual simulation.
+Sometimes data manipulation is required between `generate()` and `fit()`.  After `generate()`, run `per_sim()` and then chain any `dplyr` or `tidyr` verbs that work on `data.frame`s or `tibble`s.  These verbs will be applied to every individual simulated dataset.
 
-A common use-case is needing to reshape wide to long.  Consider an intervention study with a control group, an intervention group that does slightly better than the control, and a second intervention group that does much better.  This is easiest to specify in wide format, with separate variables for each group:
+A common use-case is needing to reshape wide to long.  Consider an intervention study with a control group, an intervention group that does slightly better than the control, and a second intervention group that does much better.  This is easiest to specify in wide format, with separate variables for each group and differing means by group:
 
 ```{r fit_reshape_1}
 wide_gen = specify(control = ~ rnorm(6, mean = 0),
@@ -259,7 +272,7 @@ wide_gen = specify(control = ~ rnorm(6, mean = 0),
 wide_gen
 ```
 
-But to run an ANOVA, we need the outcome in one column and the group name in another column. `per_sim()` and `tidyr::pivot_longer()` make this relatively easy:
+But to run an ANOVA, we need the outcome in one column and the group name in another column. We first run `per_sim()` to indicate we want to compute on individual simulated datasets, and then we can use `tidyr::pivot_longer()` to reshape each dataset into a format ready for analysis:
 
 ```{r fit_reshape_success}
 long_gen = wide_gen %>%  
@@ -281,6 +294,7 @@ long_fit = long_gen %>%
 long_fit
 ```
 
+
 ## `tidy_fits()` for further processing
 The output of `fit()` is not yet amenable to plotting or analysis.  `tidy_fits()` applies `broom::tidy()` to each fit object and binds them together in a single `tibble`:
 
@@ -296,7 +310,7 @@ specify(a = ~ rnorm(n),
 
 All the same metaparameter information appears in the left-hand column, and all the model information from `broom::tidy()` is provided. This is a convenient format for filtering, plotting, and calculating diagnostics.
 
-If more than one fit is present, `tidy_fits()` simply brings them together in the same `tibble` using `bind_rows`; this means there may be many NA values where one type of model has no values:
+If more than one kind of fit is present, `tidy_fits()` simply brings them together in the same `tibble` using `bind_rows`; this means there may be many `NA` values where one type of model has no values.  In the example below, `t.test` returns the column `estimate1`, but `lm` does not, so for the `lm` rows there are `NA` values.
 
 ```{r tidy_fits_complex}
 specify(a = ~ rnorm(n),
@@ -309,20 +323,19 @@ specify(a = ~ rnorm(n),
 
 ```
 
-Any option taken by the tidier can be passed through `tidy_fits()`:
+Any option taken by the tidier can be passed through `tidy_fits()`.  Below, we specify the `conf.level` and `conf.int` options for `broom::tidy.lm()`:
 
 ```{r tidy_fits_custom}
 specify(a = ~ rnorm(n),
         b = ~ a + rnorm(n)) %>% 
   define(n = c(6, 12)) %>% 
   generate(2) %>% 
-  fit(lm = ~ lm(b ~ a),
-      t_test = ~ t.test(a, b)) %>% 
+  fit(lm = ~ lm(b ~ a)) %>% 
   tidy_fits(conf.level = 0.99, conf.int = TRUE)
 
 ```
 
-`glance_fits()` analagously provides the one-row summary provided by `broom::glance()` for each simulation:
+`glance_fits()` analogously provides the one-row summary provided by `broom::glance()` for each simulation:
 
 ```{r glance_fits_simple}
 specify(a = ~ rnorm(n),
@@ -334,7 +347,9 @@ specify(a = ~ rnorm(n),
 
 ```
 
-`apply_fits` can take any arbitrary expression (preceded by `~`) or function and apply it to each fit object:
+`apply_fits` can take any arbitrary expression (preceded by `~`) or function and apply it to each fit object. The special value `.` indicates the current fit.
+
+Below, the maximum Cook's Distance for each simulated model fit is computed using `cooks.distance()`.
 
 ```{r apply_fits}
 specify(a = ~ rnorm(n),
@@ -342,10 +357,9 @@ specify(a = ~ rnorm(n),
   define(n = c(6, 12)) %>% 
   generate(2) %>% 
   fit(lm = ~ lm(b ~ a)) %>% 
-  apply_fits(~ summary(.)$r.squared)
+  apply_fits(~ max(cooks.distance(.)))
 ```
 
-Similar to `fit()`, the special value `.` indicates the current fit.
 
 
 

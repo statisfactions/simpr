@@ -96,22 +96,17 @@
 <span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">2001</span><span class="op">)</span></code></pre></div>
 <p>This vignette provides an overview of each step in the <code>simpr</code> workflow:</p>
 <ol style="list-style-type: decimal">
-<li>Specify your data-generating process for each of your variables with <code><a href="https://generics.r-lib.org/reference/specify.html">specify()</a></code>
-</li>
-<li>Define parameters that you want to systematically vary between different cells of your simulation design (e.g. <em>n</em>, effect size), with <code><a href="../reference/define.html">define()</a></code>
-</li>
-<li>Generate the simulation data with <code><a href="https://generics.r-lib.org/reference/generate.html">generate()</a></code>
-</li>
-<li>Fit models with your data (e.g. <code><a href="https://rdrr.io/r/stats/lm.html">lm()</a></code>), with <code><a href="https://generics.r-lib.org/reference/fit.html">fit()</a></code>
-</li>
-<li>Tidy the model output for further processing, such as computing power or Type I Error rates, with <code>tidy_fits</code>
-</li>
+<li><p><code><a href="https://generics.r-lib.org/reference/specify.html">specify()</a></code> your data-generating process</p></li>
+<li><p><code><a href="../reference/define.html">define()</a></code> parameters that you want to systematically vary across your simulation design (e.g. <em>n</em>, effect size)</p></li>
+<li><p><code><a href="https://generics.r-lib.org/reference/generate.html">generate()</a></code> the simulation data</p></li>
+<li><p><code><a href="https://generics.r-lib.org/reference/fit.html">fit()</a></code> models to your data (e.g. <code><a href="https://rdrr.io/r/stats/lm.html">lm()</a></code>)</p></li>
+<li><p><code><a href="../reference/tidy_fits.html">tidy_fits()</a></code> for further processing, such as computing power or Type I Error rates</p></li>
 </ol>
 <div id="specify-your-data-generating-process" class="section level2">
 <h2 class="hasAnchor">
 <a href="#specify-your-data-generating-process" class="anchor"></a><code>specify()</code> your data-generating process</h2>
 <p><code><a href="https://generics.r-lib.org/reference/specify.html">specify()</a></code> takes arbitrary R expressions that can be used for generating data. <strong>Each argument should have a name and be prefixed with <code><a href="https://rdrr.io/r/base/tilde.html">~</a></code>, the tilde operator.</strong> Order matters: later arguments can refer to earlier arguments, but not the other way around.</p>
-<p>Good:</p>
+<p>Good—<code>b</code> specification refers to <code>a</code> specification, and comes after <code>a</code>:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://generics.r-lib.org/reference/specify.html">specify</a></span><span class="op">(</span>a <span class="op">=</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span><span class="op">(</span><span class="fl">6</span><span class="op">)</span>, 
         b <span class="op">=</span> <span class="op">~</span> <span class="va">a</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="fl">6</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
@@ -134,7 +129,7 @@
 <span class="co">#&gt; 4 0.205  0.253</span>
 <span class="co">#&gt; 5 0.928  2.04 </span>
 <span class="co">#&gt; 6 0.989  1.99</span></code></pre></div>
-<p>Error:</p>
+<p>Error—<code>b</code> specification refers to <code>a</code> specification, but comes before <code>a</code>, so <code><a href="https://generics.r-lib.org/reference/generate.html">generate()</a></code> doesn’t know what <code>a</code> is:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://generics.r-lib.org/reference/specify.html">specify</a></span><span class="op">(</span>b <span class="op">=</span> <span class="op">~</span> <span class="va">a</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="fl">6</span><span class="op">)</span>,
         a <span class="op">=</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span><span class="op">(</span><span class="fl">6</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
@@ -148,7 +143,7 @@
 <span class="co">#&gt;     &lt;int&gt; &lt;int&gt; &lt;list&gt; &lt;chr&gt;                                        </span>
 <span class="co">#&gt; 1       1     1 &lt;NULL&gt; "Error in eval_fun(): object 'a' not found\n"</span></code></pre></div>
 <p>All arguments must imply the same number of rows. Arguments that imply 1 row are recycled.</p>
-<p>OK:</p>
+<p>OK—both <code>a</code> and <code>b</code> imply 6 rows:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://generics.r-lib.org/reference/specify.html">specify</a></span><span class="op">(</span>a <span class="op">=</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span><span class="op">(</span><span class="fl">6</span><span class="op">)</span>, 
         b <span class="op">=</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="fl">6</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
@@ -171,7 +166,7 @@
 <span class="co">#&gt; 4 0.744 -2.58 </span>
 <span class="co">#&gt; 5 0.267  0.484</span>
 <span class="co">#&gt; 6 0.182  0.713</span></code></pre></div>
-<p>OK, with recycling:</p>
+<p>OK—<code>a</code> implies 1 row and <code>b</code> implies 6 rows, so <code>a</code> is recycled:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://generics.r-lib.org/reference/specify.html">specify</a></span><span class="op">(</span>a <span class="op">=</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span>, 
         b <span class="op">=</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="fl">6</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
@@ -194,7 +189,7 @@
 <span class="co">#&gt; 4 0.638 -0.762</span>
 <span class="co">#&gt; 5 0.638 -0.101</span>
 <span class="co">#&gt; 6 0.638 -1.04</span></code></pre></div>
-<p>Error:</p>
+<p>Error—<code>a</code> implies 2 rows and <code>b</code> implies 6 rows:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://generics.r-lib.org/reference/specify.html">specify</a></span><span class="op">(</span>a <span class="op">=</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span>, 
         b <span class="op">=</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="fl">6</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
@@ -207,7 +202,7 @@
 <span class="co">#&gt;   .sim_id   rep sim    .sim_error                                               </span>
 <span class="co">#&gt;     &lt;int&gt; &lt;int&gt; &lt;list&gt; &lt;chr&gt;                                                    </span>
 <span class="co">#&gt; 1       1     1 &lt;NULL&gt; "Error: Can't recycle `..1` (size 2) to match `..2` (siz…</span></code></pre></div>
-<p>Using <code>x</code> as an argument to <code><a href="https://generics.r-lib.org/reference/specify.html">specify()</a></code> is not recommended, because for technical reasons <code>x</code> is always placed as the first argument. This means that if <code>x</code> refers to prior variables it will fail:</p>
+<p>Using <code>x</code> as an argument to <code><a href="https://generics.r-lib.org/reference/specify.html">specify()</a></code> is not recommended, because for technical reasons <code>x</code> is always placed as the first argument. This means that if <code>x</code> refers to prior variables it will return an error:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://generics.r-lib.org/reference/specify.html">specify</a></span><span class="op">(</span>y <span class="op">=</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span><span class="op">(</span><span class="fl">6</span><span class="op">)</span>,
         x <span class="op">=</span> <span class="op">~</span> <span class="va">y</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span><span class="op">(</span><span class="fl">6</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
@@ -223,7 +218,7 @@
 <span class="co">#&gt;   .sim_id   rep sim    .sim_error                                   </span>
 <span class="co">#&gt;     &lt;int&gt; &lt;int&gt; &lt;list&gt; &lt;chr&gt;                                        </span>
 <span class="co">#&gt; 1       1     1 &lt;NULL&gt; "Error in eval_fun(): object 'y' not found\n"</span></code></pre></div>
-<p>The same code works fine when <code>x</code> is renamed:</p>
+<p>The same specification works fine when <code>x</code> is renamed:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://generics.r-lib.org/reference/specify.html">specify</a></span><span class="op">(</span>y <span class="op">=</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span><span class="op">(</span><span class="fl">6</span><span class="op">)</span>,
         a <span class="op">=</span> <span class="op">~</span> <span class="va">y</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span><span class="op">(</span><span class="fl">6</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
@@ -249,7 +244,8 @@
 <div id="advanced-expressions-that-generate-multiple-columns" class="section level3">
 <h3 class="hasAnchor">
 <a href="#advanced-expressions-that-generate-multiple-columns" class="anchor"></a>Advanced: expressions that generate multiple columns</h3>
-<p><code><a href="https://generics.r-lib.org/reference/specify.html">specify()</a></code> accepts expressions that generate multiple columns simultaneously in a <code>matrix</code>, <code>data.frame</code>, or <code>tibble</code>. By default, the column names in the output append a number to the variable name. Here’s an example using <code><a href="https://rdrr.io/pkg/MASS/man/mvrnorm.html">MASS::mvrnorm()</a></code>, which produces draws form the multivariate normal distribution:</p>
+<p><code><a href="https://generics.r-lib.org/reference/specify.html">specify()</a></code> accepts expressions that generate multiple columns simultaneously in a <code>matrix</code>, <code>data.frame</code>, or <code>tibble</code>. By default, the column names in the output append a number to the variable name.</p>
+<p>Here’s an example using <code><a href="https://rdrr.io/pkg/MASS/man/mvrnorm.html">MASS::mvrnorm()</a></code>, which returns draws from the multivariate normal distribution as a matrix. <code><a href="https://rdrr.io/pkg/MASS/man/mvrnorm.html">MASS::mvrnorm()</a></code> determines the number of columns for the output data from the length of <code>mu</code> and the dimensions of the variance-covariance matrix <code>Sigma</code>.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://generics.r-lib.org/reference/specify.html">specify</a></span><span class="op">(</span>a <span class="op">=</span> <span class="op">~</span> <span class="fu">MASS</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/MASS/man/mvrnorm.html">mvrnorm</a></span><span class="op">(</span><span class="fl">6</span>, 
                             mu <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">3</span><span class="op">)</span>,
@@ -273,7 +269,8 @@
 <span class="co">#&gt; 4  1.55   0.724 -1.01 </span>
 <span class="co">#&gt; 5  0.340  0.712 -0.847</span>
 <span class="co">#&gt; 6  2.32   0.174 -2.04</span></code></pre></div>
-<p>You can change the separator via <code>.sep</code>:</p>
+<p>The argument was named <code>a</code> in <code><a href="https://generics.r-lib.org/reference/specify.html">specify()</a></code>, so <code><a href="https://generics.r-lib.org/reference/generate.html">generate()</a></code> creates three variables named <code>a_1</code>, <code>a_2</code>, and <code>a_3</code>.</p>
+<p>You can change the separator between the argument name and the number via <code>.sep</code>. Here, we change it from the default <code>"_"</code> to <code>"."</code>:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://generics.r-lib.org/reference/specify.html">specify</a></span><span class="op">(</span>a <span class="op">=</span> <span class="op">~</span> <span class="fu">MASS</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/MASS/man/mvrnorm.html">mvrnorm</a></span><span class="op">(</span><span class="fl">6</span>, 
                             mu <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">3</span><span class="op">)</span>,
@@ -298,7 +295,7 @@
 <span class="co">#&gt; 4  0.374   0.985  1.15 </span>
 <span class="co">#&gt; 5 -1.42   -0.232 -0.591</span>
 <span class="co">#&gt; 6 -0.114  -1.18  -0.665</span></code></pre></div>
-<p>Alternatively, you can set a two-sided formula to set names; the left hand side must use <code>c</code> or <code>cbind</code> and the argument name is ignored:</p>
+<p>Alternatively, you can give a two-sided formula to set names. The argument name is ignored, and the left hand side must use <code>c</code> or <code>cbind</code>.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://generics.r-lib.org/reference/specify.html">specify</a></span><span class="op">(</span>y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">a</span>, <span class="va">b</span>, <span class="va">c</span><span class="op">)</span> <span class="op">~</span> <span class="fu">MASS</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/MASS/man/mvrnorm.html">mvrnorm</a></span><span class="op">(</span><span class="fl">6</span>, 
                             mu <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">3</span><span class="op">)</span>,
@@ -322,7 +319,7 @@
 <span class="co">#&gt; 4 -0.0808 -0.611  0.334</span>
 <span class="co">#&gt; 5  1.13   -0.979  0.396</span>
 <span class="co">#&gt; 6 -0.0823  1.73  -1.21</span></code></pre></div>
-<p>If your expression already produces column names, those are used by default and the argument name is ignored:</p>
+<p>If your expression already produces column names, those are used by default. The argument name is again ignored:</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://generics.r-lib.org/reference/specify.html">specify</a></span><span class="op">(</span>a <span class="op">=</span> <span class="op">~</span> <span class="fu">MASS</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/MASS/man/mvrnorm.html">mvrnorm</a></span><span class="op">(</span><span class="fl">6</span>, 
                             mu <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">3</span><span class="op">)</span>,
@@ -348,7 +345,7 @@
 <span class="co">#&gt; 5 -0.195   0.0547  -0.575 </span>
 <span class="co">#&gt; 6  0.379  -0.878   -1.11</span></code></pre></div>
 <p>This is useful for dealing with functions from other packages that already provide informative names (e.g., <code><a href="https://rdrr.io/pkg/lavaan/man/simulateData.html">lavaan::simulateData()</a></code>). You can turn this behavior off with <code>.use_names = FALSE</code>.</p>
-<p>Whatever method you use, you can still refer to these generated variables in later expressions:</p>
+<p>Whatever method you use, you can still refer to these generated variables in subsequent arguments to <code><a href="https://generics.r-lib.org/reference/specify.html">specify()</a></code>:</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://generics.r-lib.org/reference/specify.html">specify</a></span><span class="op">(</span>a <span class="op">=</span> <span class="op">~</span> <span class="fu">MASS</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/MASS/man/mvrnorm.html">mvrnorm</a></span><span class="op">(</span><span class="fl">6</span>, 
                             mu <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">3</span><span class="op">)</span>,
@@ -378,18 +375,19 @@
 <div id="define-parameters-that-you-want-to-systematically-vary" class="section level2">
 <h2 class="hasAnchor">
 <a href="#define-parameters-that-you-want-to-systematically-vary" class="anchor"></a><code>define()</code> parameters that you want to systematically vary</h2>
-<p><code><a href="../reference/define.html">define()</a></code> creates metaparameters (also called simulation factors): values that you want to systematically vary. An obvious choice is sample size:</p>
+<p><code><a href="../reference/define.html">define()</a></code> creates metaparameters (also called simulation factors): values that you want to systematically vary. An obvious choice is sample size.</p>
+<p>Instead of writing a number for the <code>n</code> argument of <code>rnorm</code>, we write a placeholder value <code>samp_size</code> (this can be any valid R name), and we write a corresponding argument in <code><a href="../reference/define.html">define()</a></code> that contains the possible values that <code>samp_size</code> can take on:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://generics.r-lib.org/reference/specify.html">specify</a></span><span class="op">(</span>a <span class="op">=</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../reference/define.html">define</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">20</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+<code class="sourceCode R"><span class="fu"><a href="https://generics.r-lib.org/reference/specify.html">specify</a></span><span class="op">(</span>a <span class="op">=</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="va">samp_size</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../reference/define.html">define</a></span><span class="op">(</span>samp_size <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">20</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="https://generics.r-lib.org/reference/generate.html">generate</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span>
 <span class="co">#&gt; full tibble</span>
 <span class="co">#&gt; --------------------------</span>
 <span class="co">#&gt; # A tibble: 2 × 4</span>
-<span class="co">#&gt;   .sim_id     n   rep sim              </span>
-<span class="co">#&gt;     &lt;int&gt; &lt;dbl&gt; &lt;int&gt; &lt;list&gt;           </span>
-<span class="co">#&gt; 1       1    10     1 &lt;tibble [10 × 1]&gt;</span>
-<span class="co">#&gt; 2       2    20     1 &lt;tibble [20 × 1]&gt;</span>
+<span class="co">#&gt;   .sim_id samp_size   rep sim              </span>
+<span class="co">#&gt;     &lt;int&gt;     &lt;dbl&gt; &lt;int&gt; &lt;list&gt;           </span>
+<span class="co">#&gt; 1       1        10     1 &lt;tibble [10 × 1]&gt;</span>
+<span class="co">#&gt; 2       2        20     1 &lt;tibble [20 × 1]&gt;</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; sim[[1]]</span>
 <span class="co">#&gt; --------------------------</span>
@@ -406,22 +404,22 @@
 <span class="co">#&gt;  8 -0.863</span>
 <span class="co">#&gt;  9  0.910</span>
 <span class="co">#&gt; 10 -0.724</span></code></pre></div>
-<p>Each argument to <code><a href="../reference/define.html">define()</a></code> is a vector or list with the desired values to be used in the expressions in <code>specify().</code>specify()<code>expressions can refer to the names of define arguments, and</code>generate()` will substitute the possible values that argument when generating data.</p>
-<p>When <code><a href="../reference/define.html">define()</a></code> had multiple arguments, each possible combination is generated:</p>
+<p>Each argument to <code><a href="../reference/define.html">define()</a></code> is a vector or list with the desired values to be used in the expressions in <code><a href="https://generics.r-lib.org/reference/specify.html">specify()</a></code>. <code><a href="https://generics.r-lib.org/reference/specify.html">specify()</a></code> expressions can refer to the names of define arguments, and <code><a href="https://generics.r-lib.org/reference/generate.html">generate()</a></code> will substitute the possible values that argument when generating data.</p>
+<p>When <code><a href="../reference/define.html">define()</a></code> has multiple arguments, each possible combination is generated:</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://generics.r-lib.org/reference/specify.html">specify</a></span><span class="op">(</span>a <span class="op">=</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="va">n</span>, <span class="va">mu</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../reference/define.html">define</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">20</span><span class="op">)</span>,
+<code class="sourceCode R"><span class="fu"><a href="https://generics.r-lib.org/reference/specify.html">specify</a></span><span class="op">(</span>a <span class="op">=</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="va">samp_size</span>, <span class="va">mu</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../reference/define.html">define</a></span><span class="op">(</span>samp_size <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">20</span><span class="op">)</span>,
          mu <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">10</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="https://generics.r-lib.org/reference/generate.html">generate</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span>
 <span class="co">#&gt; full tibble</span>
 <span class="co">#&gt; --------------------------</span>
 <span class="co">#&gt; # A tibble: 4 × 5</span>
-<span class="co">#&gt;   .sim_id     n    mu   rep sim              </span>
-<span class="co">#&gt;     &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;list&gt;           </span>
-<span class="co">#&gt; 1       1    10     0     1 &lt;tibble [10 × 1]&gt;</span>
-<span class="co">#&gt; 2       2    20     0     1 &lt;tibble [20 × 1]&gt;</span>
-<span class="co">#&gt; 3       3    10    10     1 &lt;tibble [10 × 1]&gt;</span>
-<span class="co">#&gt; 4       4    20    10     1 &lt;tibble [20 × 1]&gt;</span>
+<span class="co">#&gt;   .sim_id samp_size    mu   rep sim              </span>
+<span class="co">#&gt;     &lt;int&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;list&gt;           </span>
+<span class="co">#&gt; 1       1        10     0     1 &lt;tibble [10 × 1]&gt;</span>
+<span class="co">#&gt; 2       2        20     0     1 &lt;tibble [20 × 1]&gt;</span>
+<span class="co">#&gt; 3       3        10    10     1 &lt;tibble [10 × 1]&gt;</span>
+<span class="co">#&gt; 4       4        20    10     1 &lt;tibble [20 × 1]&gt;</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; sim[[1]]</span>
 <span class="co">#&gt; --------------------------</span>
@@ -439,7 +437,7 @@
 <span class="co">#&gt;  9  1.75  </span>
 <span class="co">#&gt; 10  0.181</span></code></pre></div>
 <p>(If not all combinations are desired, see options for filtering at the <code><a href="https://generics.r-lib.org/reference/generate.html">generate()</a></code> step, below.)</p>
-<p><code><a href="../reference/define.html">define()</a></code> can also take lists for any type of value used in <code>specify</code>. For instance, matrices:</p>
+<p><code><a href="../reference/define.html">define()</a></code> can also take lists for any type of value used in <code>specify</code>. For instance, the argument <code>s</code> is defined as a list with two variables representing two different possible correlation matrices, and we use that placeholder value <code>s</code> in the <code><a href="https://generics.r-lib.org/reference/specify.html">specify()</a></code> statement:</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
 <span class="fu"><a href="https://generics.r-lib.org/reference/specify.html">specify</a></span><span class="op">(</span>a <span class="op">=</span> <span class="op">~</span> <span class="fu">MASS</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/MASS/man/mvrnorm.html">mvrnorm</a></span><span class="op">(</span><span class="fl">6</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">2</span><span class="op">)</span>, Sigma <span class="op">=</span> <span class="va">s</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
@@ -465,8 +463,8 @@
 <span class="co">#&gt; 4 -0.643 -0.465</span>
 <span class="co">#&gt; 5  1.15  -1.36 </span>
 <span class="co">#&gt; 6 -0.485  0.815</span></code></pre></div>
-<p>Note that <code>simpr</code> creates a column <code>s_index</code> using the names of the list elements of <code>s</code> to make the results easier to view and filter.</p>
-<p>Functions can also be provided in <code><a href="../reference/define.html">define()</a></code>:</p>
+<p>In the output, <code>simpr</code> creates a column <code>s_index</code> using the names of the list elements of <code>s</code> to make the results easier to view and filter.</p>
+<p><code><a href="../reference/define.html">define()</a></code> also supports lists of functions. Here, the <code>specify</code> command has a placeholder function <code>distribution</code>, where <code>distribution</code> is defined to be either <code><a href="https://rdrr.io/r/stats/Normal.html">rnorm()</a></code> or <code><a href="https://rdrr.io/r/stats/Lognormal.html">rlnorm()</a></code> (the lognormal distribution):</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://generics.r-lib.org/reference/specify.html">specify</a></span><span class="op">(</span>y <span class="op">=</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/stats/Distributions.html">distribution</a></span><span class="op">(</span><span class="fl">6</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="../reference/define.html">define</a></span><span class="op">(</span>distribution <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>normal <span class="op">=</span> <span class="va">rnorm</span>,
@@ -495,7 +493,7 @@
 <div id="generate-the-simulation-data" class="section level2">
 <h2 class="hasAnchor">
 <a href="#generate-the-simulation-data" class="anchor"></a><code>generate()</code> the simulation data</h2>
-<p>The main argument to <code><a href="https://generics.r-lib.org/reference/generate.html">generate()</a></code> is <code>reps</code>, the number of repetitions for each combination of metaparameters in <code><a href="../reference/define.html">define()</a></code>.</p>
+<p>The main argument to <code><a href="https://generics.r-lib.org/reference/generate.html">generate()</a></code> is <code>.reps</code>, the number of repetitions for each combination of metaparameters in <code><a href="../reference/define.html">define()</a></code>.</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://generics.r-lib.org/reference/specify.html">specify</a></span><span class="op">(</span>a <span class="op">=</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="va">n</span>, <span class="va">mu</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="../reference/define.html">define</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">6</span>, <span class="fl">12</span><span class="op">)</span>,
@@ -527,7 +525,7 @@
 <span class="co">#&gt; 5  0.780</span>
 <span class="co">#&gt; 6 -1.69</span></code></pre></div>
 <p>Since there are 4 possible combinations of <code>n</code> and <code>mu</code>, there are a total of 4 * 2 = 8 simulations generated, 2 for each possible combination.</p>
-<p>If some combination of variables is not desired, add filtering criteria to <code><a href="https://generics.r-lib.org/reference/generate.html">generate()</a></code> using the same syntax as <code><a href="https://dplyr.tidyverse.org/reference/filter.html">dplyr::filter()</a></code>.</p>
+<p>If some combination of variables is not desired, add filtering criteria to <code><a href="https://generics.r-lib.org/reference/generate.html">generate()</a></code> using the same syntax as <code><a href="https://dplyr.tidyverse.org/reference/filter.html">dplyr::filter()</a></code>. Here we arbitrarily filter to all combinations of <code>n</code> and <code>mu</code> where <code>n</code> is greater than <code>mu</code>, but any valid filtering criteria can be applied.</p>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://generics.r-lib.org/reference/specify.html">specify</a></span><span class="op">(</span>a <span class="op">=</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="va">n</span>, <span class="va">mu</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="../reference/define.html">define</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">6</span>, <span class="fl">12</span><span class="op">)</span>,
@@ -556,13 +554,14 @@
 <span class="co">#&gt; 4 -0.450</span>
 <span class="co">#&gt; 5 -0.492</span>
 <span class="co">#&gt; 6  1.66</span></code></pre></div>
-<p>To preserve reproducibility, a given simulation in the filtered version of <code>generate</code> is still the same as if all possible combinations were generated: note .sim_id skips 3 and 7 above. See <code><a href="../articles/reproducibility.html">vignette("reproducibility")</a></code> for more information.</p>
-<p><code><a href="https://generics.r-lib.org/reference/generate.html">generate()</a></code> by default continues with the next iteration if an error is produced, and returns a column <code>.sim_error</code> with the text of the error. Alternative error handling mechanisms are available, see <code><a href="../articles/simulation-errors.html">vignette("simulation-errors")</a></code>.</p>
+<p>To preserve reproducibility, a given simulation in the filtered version of <code>generate</code> is still the same as if all possible combinations were generated. This can be tracked using the <code>.sim_id</code> that <code><a href="https://generics.r-lib.org/reference/generate.html">generate()</a></code> includes in the output data, which uniquely identifies the simulation run given the same inputs to <code>specify</code>, <code>define</code>, and <code>.reps</code>. Above, note that <code>.sim_id</code> skips 3 and 7 See <code>vignette("Reproducing simulations")</code> for more information on using <code><a href="https://generics.r-lib.org/reference/generate.html">generate()</a></code> to filter.</p>
+<p><code><a href="https://generics.r-lib.org/reference/generate.html">generate()</a></code> by default continues with the next iteration if an error is produced, and returns a column <code>.sim_error</code> with the text of the error. Alternative error handling mechanisms are available, see <code>vignette("Managing simulation errors")</code>.</p>
 </div>
-<div id="fit-models-with-your-data" class="section level2">
+<div id="fit-models-to-your-data" class="section level2">
 <h2 class="hasAnchor">
-<a href="#fit-models-with-your-data" class="anchor"></a><code>fit()</code> models with your data</h2>
+<a href="#fit-models-to-your-data" class="anchor"></a><code>fit()</code> models to your data</h2>
 <p><code><a href="https://generics.r-lib.org/reference/fit.html">fit()</a></code> uses similar syntax to <code><a href="https://generics.r-lib.org/reference/generate.html">generate()</a></code>: you can write arbitrary R expressions to fit models. <strong>Again, each argument should have a name and be prefixed with <code><a href="https://rdrr.io/r/base/tilde.html">~</a></code>, the tilde operator.</strong></p>
+<p>Below, we fit both a t-test and a linear model.</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://generics.r-lib.org/reference/specify.html">specify</a></span><span class="op">(</span>a <span class="op">=</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="fl">6</span><span class="op">)</span>,
         b <span class="op">=</span> <span class="op">~</span> <span class="va">a</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="fl">6</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
@@ -613,7 +612,7 @@
 <span class="co">#&gt; (Intercept)            a  </span>
 <span class="co">#&gt;     -0.3413       0.8430</span></code></pre></div>
 <p><code><a href="https://generics.r-lib.org/reference/fit.html">fit()</a></code> adds columns to the overall tibble to contain each type of fit. Printing the object displays a preview of the first fit object in each column.</p>
-<p>Although the function is named <code>fit</code>, any arbitrary R expression can be used.</p>
+<p>Although the function is named <code>fit</code>, any arbitrary R expression can be used. Below, one fit column will include the mean of <code>a</code>, while the second will include vectors that are five larger than <code>a</code>. The result is always a list-column, so any type of return object is allowed:</p>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://generics.r-lib.org/reference/specify.html">specify</a></span><span class="op">(</span>a <span class="op">=</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="fl">6</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="https://generics.r-lib.org/reference/generate.html">generate</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span> <span class="op">%&gt;%</span> 
@@ -645,11 +644,13 @@
 <span class="co">#&gt; why_not[[1]]</span>
 <span class="co">#&gt; --------------------------</span>
 <span class="co">#&gt; [1] 6.026923 4.367594 5.264579 4.752820 4.499658 4.603462</span></code></pre></div>
-<p><code><a href="https://generics.r-lib.org/reference/fit.html">fit()</a></code> is computed within each simulation, so usually you do not need to refer to the entire dataset. If it is needed by your R function, you can refer to the entire dataset using <code>.</code>. The below code is equivalent to the previous example, but explicitly referencing the dataset:</p>
+<p><code><a href="https://generics.r-lib.org/reference/fit.html">fit()</a></code> is computed for each individual simulated dataset, so usually you do not need to refer to the dataset itself. If a reference to the dataset is needed, use <code>.</code>.</p>
+<p>The below code is equivalent to the previous example, but explicitly referencing the dataset using <code>.</code> and <code>.$</code>:</p>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://generics.r-lib.org/reference/specify.html">specify</a></span><span class="op">(</span>a <span class="op">=</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="fl">6</span><span class="op">)</span>,
         b <span class="op">=</span> <span class="op">~</span> <span class="va">a</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="fl">6</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="https://generics.r-lib.org/reference/generate.html">generate</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="co">## .$ and data = . not actually required here</span>
   <span class="fu"><a href="https://generics.r-lib.org/reference/fit.html">fit</a></span><span class="op">(</span>t_test <span class="op">=</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/stats/t.test.html">t.test</a></span><span class="op">(</span><span class="va">.</span><span class="op">$</span><span class="va">a</span>, <span class="va">.</span><span class="op">$</span><span class="va">b</span><span class="op">)</span>,
       lm <span class="op">=</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">b</span> <span class="op">~</span> <span class="va">a</span>, data <span class="op">=</span> <span class="va">.</span><span class="op">)</span><span class="op">)</span>
 <span class="co">#&gt; full tibble</span>
@@ -698,8 +699,8 @@
 <div id="advanced-pre-fit-data-munging-with-per_sim" class="section level3">
 <h3 class="hasAnchor">
 <a href="#advanced-pre-fit-data-munging-with-per_sim" class="anchor"></a>Advanced: pre-fit data munging with `per_sim()</h3>
-<p>Sometimes, it’s convenient to specify a data-generating process in a different way than R expects it for fitting. After <code><a href="https://generics.r-lib.org/reference/generate.html">generate()</a></code>, run <code><a href="../reference/per_sim.html">per_sim()</a></code> and then chain any <code>dplyr</code> or <code>tidyr</code> verbs that work on <code>data.frame</code>s or <code>tibble</code>s. These verbs will be applied to every individual simulation.</p>
-<p>A common use-case is needing to reshape wide to long. Consider an intervention study with a control group, an intervention group that does slightly better than the control, and a second intervention group that does much better. This is easiest to specify in wide format, with separate variables for each group:</p>
+<p>Sometimes data manipulation is required between <code><a href="https://generics.r-lib.org/reference/generate.html">generate()</a></code> and <code><a href="https://generics.r-lib.org/reference/fit.html">fit()</a></code>. After <code><a href="https://generics.r-lib.org/reference/generate.html">generate()</a></code>, run <code><a href="../reference/per_sim.html">per_sim()</a></code> and then chain any <code>dplyr</code> or <code>tidyr</code> verbs that work on <code>data.frame</code>s or <code>tibble</code>s. These verbs will be applied to every individual simulated dataset.</p>
+<p>A common use-case is needing to reshape wide to long. Consider an intervention study with a control group, an intervention group that does slightly better than the control, and a second intervention group that does much better. This is easiest to specify in wide format, with separate variables for each group and differing means by group:</p>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">wide_gen</span> <span class="op">=</span> <span class="fu"><a href="https://generics.r-lib.org/reference/specify.html">specify</a></span><span class="op">(</span>control <span class="op">=</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="fl">6</span>, mean <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>,
         intervention_1 <span class="op">=</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="fl">6</span>, mean <span class="op">=</span> <span class="fl">0.2</span><span class="op">)</span>,
@@ -726,7 +727,7 @@
 <span class="co">#&gt; 4 -0.497         -0.337           0.926</span>
 <span class="co">#&gt; 5  0.221          0.0949          3.10 </span>
 <span class="co">#&gt; 6  1.59          -0.135           1.64</span></code></pre></div>
-<p>But to run an ANOVA, we need the outcome in one column and the group name in another column. <code><a href="../reference/per_sim.html">per_sim()</a></code> and <code><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html">tidyr::pivot_longer()</a></code> make this relatively easy:</p>
+<p>But to run an ANOVA, we need the outcome in one column and the group name in another column. We first run <code><a href="../reference/per_sim.html">per_sim()</a></code> to indicate we want to compute on individual simulated datasets, and then we can use <code><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html">tidyr::pivot_longer()</a></code> to reshape each dataset into a format ready for analysis:</p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">long_gen</span> <span class="op">=</span> <span class="va">wide_gen</span> <span class="op">%&gt;%</span>  
   <span class="fu"><a href="../reference/per_sim.html">per_sim</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
@@ -852,7 +853,7 @@
 <span class="co">#&gt; 7       4    12     2 lm     (Intercept)  -0.281      0.261   -1.07   0.308   </span>
 <span class="co">#&gt; 8       4    12     2 lm     a             1.22       0.244    5.00   0.000537</span></code></pre></div>
 <p>All the same metaparameter information appears in the left-hand column, and all the model information from <code><a href="https://generics.r-lib.org/reference/tidy.html">broom::tidy()</a></code> is provided. This is a convenient format for filtering, plotting, and calculating diagnostics.</p>
-<p>If more than one fit is present, <code><a href="../reference/tidy_fits.html">tidy_fits()</a></code> simply brings them together in the same <code>tibble</code> using <code>bind_rows</code>; this means there may be many NA values where one type of model has no values:</p>
+<p>If more than one kind of fit is present, <code><a href="../reference/tidy_fits.html">tidy_fits()</a></code> simply brings them together in the same <code>tibble</code> using <code>bind_rows</code>; this means there may be many <code>NA</code> values where one type of model has no values. In the example below, <code>t.test</code> returns the column <code>estimate1</code>, but <code>lm</code> does not, so for the <code>lm</code> rows there are <code>NA</code> values.</p>
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://generics.r-lib.org/reference/specify.html">specify</a></span><span class="op">(</span>a <span class="op">=</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span>,
         b <span class="op">=</span> <span class="op">~</span> <span class="va">a</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
@@ -878,33 +879,27 @@
 <span class="co">#&gt; 12       4    12     2 t_test &lt;NA&gt;        -0.0821     NA      -0.145   0.886    </span>
 <span class="co">#&gt; # … with 7 more variables: estimate1 &lt;dbl&gt;, estimate2 &lt;dbl&gt;, parameter &lt;dbl&gt;,</span>
 <span class="co">#&gt; #   conf.low &lt;dbl&gt;, conf.high &lt;dbl&gt;, method &lt;chr&gt;, alternative &lt;chr&gt;</span></code></pre></div>
-<p>Any option taken by the tidier can be passed through <code><a href="../reference/tidy_fits.html">tidy_fits()</a></code>:</p>
+<p>Any option taken by the tidier can be passed through <code><a href="../reference/tidy_fits.html">tidy_fits()</a></code>. Below, we specify the <code>conf.level</code> and <code>conf.int</code> options for <code><a href="https://broom.tidymodels.org/reference/tidy.lm.html">broom::tidy.lm()</a></code>:</p>
 <div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://generics.r-lib.org/reference/specify.html">specify</a></span><span class="op">(</span>a <span class="op">=</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span>,
         b <span class="op">=</span> <span class="op">~</span> <span class="va">a</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="../reference/define.html">define</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">6</span>, <span class="fl">12</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="https://generics.r-lib.org/reference/generate.html">generate</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://generics.r-lib.org/reference/fit.html">fit</a></span><span class="op">(</span>lm <span class="op">=</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">b</span> <span class="op">~</span> <span class="va">a</span><span class="op">)</span>,
-      t_test <span class="op">=</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/stats/t.test.html">t.test</a></span><span class="op">(</span><span class="va">a</span>, <span class="va">b</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://generics.r-lib.org/reference/fit.html">fit</a></span><span class="op">(</span>lm <span class="op">=</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">b</span> <span class="op">~</span> <span class="va">a</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="../reference/tidy_fits.html">tidy_fits</a></span><span class="op">(</span>conf.level <span class="op">=</span> <span class="fl">0.99</span>, conf.int <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-<span class="co">#&gt; # A tibble: 12 × 16</span>
-<span class="co">#&gt;    .sim_id     n   rep Source term        estimate std.error statistic p.value</span>
-<span class="co">#&gt;      &lt;int&gt; &lt;dbl&gt; &lt;int&gt; &lt;chr&gt;  &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;</span>
-<span class="co">#&gt;  1       1     6     1 lm     (Intercept) -0.184       0.307   -0.601  0.580  </span>
-<span class="co">#&gt;  2       1     6     1 lm     a            0.968       0.333    2.90   0.0440 </span>
-<span class="co">#&gt;  3       1     6     1 t_test &lt;NA&gt;         0.173      NA        0.295  0.774  </span>
-<span class="co">#&gt;  4       2    12     1 lm     (Intercept)  0.402       0.276    1.45   0.177  </span>
-<span class="co">#&gt;  5       2    12     1 lm     a            0.719       0.447    1.61   0.139  </span>
-<span class="co">#&gt;  6       2    12     1 t_test &lt;NA&gt;        -0.329      NA       -1.04   0.313  </span>
-<span class="co">#&gt;  7       3     6     2 lm     (Intercept) -0.00991     0.708   -0.0140 0.990  </span>
-<span class="co">#&gt;  8       3     6     2 lm     a            0.514       0.465    1.11   0.331  </span>
-<span class="co">#&gt;  9       3     6     2 t_test &lt;NA&gt;         0.139      NA        0.142  0.890  </span>
-<span class="co">#&gt; 10       4    12     2 lm     (Intercept) -0.290       0.383   -0.758  0.466  </span>
-<span class="co">#&gt; 11       4    12     2 lm     a            1.13        0.326    3.46   0.00611</span>
-<span class="co">#&gt; 12       4    12     2 t_test &lt;NA&gt;         0.205      NA        0.385  0.704  </span>
-<span class="co">#&gt; # … with 7 more variables: conf.low &lt;dbl&gt;, conf.high &lt;dbl&gt;, estimate1 &lt;dbl&gt;,</span>
-<span class="co">#&gt; #   estimate2 &lt;dbl&gt;, parameter &lt;dbl&gt;, method &lt;chr&gt;, alternative &lt;chr&gt;</span></code></pre></div>
-<p><code><a href="../reference/glance_fits.html">glance_fits()</a></code> analagously provides the one-row summary provided by <code><a href="https://generics.r-lib.org/reference/glance.html">broom::glance()</a></code> for each simulation:</p>
+<span class="co">#&gt; # A tibble: 8 × 11</span>
+<span class="co">#&gt;   .sim_id     n   rep Source term  estimate std.error statistic p.value conf.low</span>
+<span class="co">#&gt;     &lt;int&gt; &lt;dbl&gt; &lt;int&gt; &lt;chr&gt;  &lt;chr&gt;    &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;</span>
+<span class="co">#&gt; 1       1     6     1 lm     (Int… -0.184       0.307   -0.601  0.580    -1.60  </span>
+<span class="co">#&gt; 2       1     6     1 lm     a      0.968       0.333    2.90   0.0440   -0.567 </span>
+<span class="co">#&gt; 3       2    12     1 lm     (Int…  0.402       0.276    1.45   0.177    -0.474 </span>
+<span class="co">#&gt; 4       2    12     1 lm     a      0.719       0.447    1.61   0.139    -0.698 </span>
+<span class="co">#&gt; 5       3     6     2 lm     (Int… -0.00991     0.708   -0.0140 0.990    -3.27  </span>
+<span class="co">#&gt; 6       3     6     2 lm     a      0.514       0.465    1.11   0.331    -1.63  </span>
+<span class="co">#&gt; 7       4    12     2 lm     (Int… -0.290       0.383   -0.758  0.466    -1.50  </span>
+<span class="co">#&gt; 8       4    12     2 lm     a      1.13        0.326    3.46   0.00611   0.0952</span>
+<span class="co">#&gt; # … with 1 more variable: conf.high &lt;dbl&gt;</span></code></pre></div>
+<p><code><a href="../reference/glance_fits.html">glance_fits()</a></code> analogously provides the one-row summary provided by <code><a href="https://generics.r-lib.org/reference/glance.html">broom::glance()</a></code> for each simulation:</p>
 <div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://generics.r-lib.org/reference/specify.html">specify</a></span><span class="op">(</span>a <span class="op">=</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span>,
         b <span class="op">=</span> <span class="op">~</span> <span class="va">a</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
@@ -921,22 +916,22 @@
 <span class="co">#&gt; 4       4    12     2 lm        0.587         0.545   1.06    14.2   0.00367</span>
 <span class="co">#&gt; # … with 7 more variables: df &lt;dbl&gt;, logLik &lt;dbl&gt;, AIC &lt;dbl&gt;, BIC &lt;dbl&gt;,</span>
 <span class="co">#&gt; #   deviance &lt;dbl&gt;, df.residual &lt;int&gt;, nobs &lt;int&gt;</span></code></pre></div>
-<p><code>apply_fits</code> can take any arbitrary expression (preceded by <code><a href="https://rdrr.io/r/base/tilde.html">~</a></code>) or function and apply it to each fit object:</p>
+<p><code>apply_fits</code> can take any arbitrary expression (preceded by <code><a href="https://rdrr.io/r/base/tilde.html">~</a></code>) or function and apply it to each fit object. The special value <code>.</code> indicates the current fit.</p>
+<p>Below, the maximum Cook’s Distance for each simulated model fit is computed using <code><a href="https://rdrr.io/r/stats/influence.measures.html">cooks.distance()</a></code>.</p>
 <div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://generics.r-lib.org/reference/specify.html">specify</a></span><span class="op">(</span>a <span class="op">=</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span>,
         b <span class="op">=</span> <span class="op">~</span> <span class="va">a</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="../reference/define.html">define</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">6</span>, <span class="fl">12</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="https://generics.r-lib.org/reference/generate.html">generate</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="https://generics.r-lib.org/reference/fit.html">fit</a></span><span class="op">(</span>lm <span class="op">=</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">b</span> <span class="op">~</span> <span class="va">a</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../reference/apply_fits.html">apply_fits</a></span><span class="op">(</span><span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">.</span><span class="op">)</span><span class="op">$</span><span class="va">r.squared</span><span class="op">)</span>
+  <span class="fu"><a href="../reference/apply_fits.html">apply_fits</a></span><span class="op">(</span><span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/influence.measures.html">cooks.distance</a></span><span class="op">(</span><span class="va">.</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
 <span class="co">#&gt; # A tibble: 4 × 5</span>
 <span class="co">#&gt;   .sim_id     n   rep Source value</span>
 <span class="co">#&gt;     &lt;int&gt; &lt;dbl&gt; &lt;int&gt; &lt;chr&gt;  &lt;dbl&gt;</span>
-<span class="co">#&gt; 1       1     6     1 lm     0.681</span>
-<span class="co">#&gt; 2       2    12     1 lm     0.627</span>
-<span class="co">#&gt; 3       3     6     2 lm     0.769</span>
-<span class="co">#&gt; 4       4    12     2 lm     0.519</span></code></pre></div>
-<p>Similar to <code><a href="https://generics.r-lib.org/reference/fit.html">fit()</a></code>, the special value <code>.</code> indicates the current fit.</p>
+<span class="co">#&gt; 1       1     6     1 lm     1.53 </span>
+<span class="co">#&gt; 2       2    12     1 lm     0.471</span>
+<span class="co">#&gt; 3       3     6     2 lm     1.26 </span>
+<span class="co">#&gt; 4       4    12     2 lm     0.361</span></code></pre></div>
 </div>
   </div>
 

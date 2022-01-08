@@ -138,9 +138,9 @@ define to produce simulated data." />
     <pre class="usage"><span class='co'># S3 method for simpr_spec</span>
 <span class='fu'><a href='https://generics.r-lib.org/reference/generate.html'>generate</a></span><span class='op'>(</span>
   <span class='va'>x</span>,
-  <span class='va'>reps</span>,
+  <span class='va'>.reps</span>,
   <span class='va'>...</span>,
-  sim_name <span class='op'>=</span> <span class='st'>"sim"</span>,
+  .sim_name <span class='op'>=</span> <span class='st'>"sim"</span>,
   .quiet <span class='op'>=</span> <span class='cn'>TRUE</span>,
   .warn_on_error <span class='op'>=</span> <span class='cn'>TRUE</span>,
   .stop_on_error <span class='op'>=</span> <span class='cn'>FALSE</span>,
@@ -160,7 +160,7 @@ by <code><a href='define.html'>define</a></code> or
 specifications of the simulation</p></td>
     </tr>
     <tr>
-      <th>reps</th>
+      <th>.reps</th>
       <td><p>number of replications to run (a
 whole number greater than 0)</p></td>
     </tr>
@@ -174,7 +174,7 @@ simulation without needing to redo the entire
 simulation.</p></td>
     </tr>
     <tr>
-      <th>sim_name</th>
+      <th>.sim_name</th>
       <td><p>name of the list-column to be
 created, containing simulation results.
 Default is <code>"sim"</code></p></td>
@@ -305,7 +305,7 @@ to do with how you specified the simulation in
 #&gt; <span style='color: #BCBCBC;'> 9</span>  0.218    0.071<span style='text-decoration: underline;'>5</span>
 #&gt; <span style='color: #BCBCBC;'>10</span> -<span style='color: #BB0000;'>0.266</span>   -<span style='color: #BB0000;'>0.536</span> 
 #&gt; </div><div class='input'>
- <span class='co'>## Changing reps will change the number of replications and thus the number of</span>
+ <span class='co'>## Changing .reps will change the number of replications and thus the number of</span>
  <span class='co'>## rows in the output</span>
  <span class='va'>meta_list_2</span> <span class='op'>=</span> <span class='fu'><a href='https://generics.r-lib.org/reference/specify.html'>specify</a></span><span class='op'>(</span>a <span class='op'>=</span> <span class='op'>~</span> <span class='fu'>MASS</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/MASS/man/mvrnorm.html'>mvrnorm</a></span><span class='op'>(</span><span class='va'>n</span>, <span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>2</span><span class='op'>)</span>, Sigma <span class='op'>=</span> <span class='va'>S</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
   <span class='fu'><a href='define.html'>define</a></span><span class='op'>(</span>n <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>10</span>, <span class='fl'>20</span>, <span class='fl'>30</span><span class='op'>)</span>,

@@ -160,8 +160,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">100</span>)</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>generate_default <span class="ot">=</span> buggy_spec <span class="sc">%&gt;%</span> </span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">generate</span>(<span class="dv">1</span>)</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in create_sim_results(specs = specs, x = x[c(&quot;meta_info&quot;, &quot;specify&quot;, : Simulation produced errors. See</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; column &#39;.sim_error&#39;.</span></span></code></pre></div>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in create_sim_results(specs = specs, x = x[c(&quot;meta_info&quot;, &quot;specify&quot;, : Simulation</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; produced errors. See column &#39;.sim_error&#39;.</span></span></code></pre></div>
 <p>The default is for R to produce a warning, but to still return the object. This lets us know that <code>simpr</code> hit some issues. We can follow the advice given and take a look at the returned object.</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>generate_default</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; tibble</span></span>
@@ -204,15 +204,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>Since the simulation with <code>size = -10</code> has <code>NULL</code> for the generated data, any model-fitting will usually produce errors as well.</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>fit_propagate <span class="ot">=</span> generate_no_warn <span class="sc">%&gt;%</span> </span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit</span>(<span class="at">t_test =</span> <span class="sc">~</span> <span class="fu">t.test</span>(y))</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in fit.simpr_tibble(., t_test = ~t.test(y)): fit() produced errors. See &#39;.fit_error_*&#39; column(s).</span></span></code></pre></div>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in fit.simpr_tibble(., t_test = ~t.test(y)): fit() produced errors. See</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; &#39;.fit_error_*&#39; column(s).</span></span></code></pre></div>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>fit_propagate</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; tibble</span></span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; --------------------------</span></span>
 <span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 2 × 7</span></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   .sim_id  size   rep sim               .sim_error                                  t_test  .fit_error_t_test    </span></span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     &lt;int&gt; &lt;dbl&gt; &lt;int&gt; &lt;list&gt;            &lt;chr&gt;                                       &lt;list&gt;  &lt;chr&gt;                </span></span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1       1   -10     1 &lt;NULL&gt;            &quot;Error in rnorm(size): invalid arguments\n&quot; &lt;NULL&gt;  &quot;Error in t.test(y):…</span></span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2       2    10     1 &lt;tibble [10 × 1]&gt;  &lt;NA&gt;                                       &lt;htest&gt;  &lt;NA&gt;                </span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   .sim_id  size   rep sim               .sim_error           t_test .fit_error_t_test      </span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     &lt;int&gt; &lt;dbl&gt; &lt;int&gt; &lt;list&gt;            &lt;chr&gt;                &lt;list&gt; &lt;chr&gt;                  </span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1       1   -10     1 &lt;NULL&gt;            &quot;Error in rnorm(siz… &lt;NULL&gt; &quot;Error in t.test(y): o…</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2       2    10     1 &lt;tibble [10 × 1]&gt;  &lt;NA&gt;                &lt;htes…  &lt;NA&gt;                  </span></span>
 <span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; t_test[[1]]</span></span>
 <span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; --------------------------</span></span>
@@ -221,17 +222,17 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>fit_multi_error <span class="ot">=</span> generate_no_warn <span class="sc">%&gt;%</span> </span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit</span>(<span class="at">t_test =</span> <span class="sc">~</span> <span class="fu">t.test</span>(y),</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>      <span class="at">chisq =</span> <span class="sc">~</span> <span class="fu">chisq.test</span>(y))</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in fit.simpr_tibble(., t_test = ~t.test(y), chisq = ~chisq.test(y)): fit() produced errors. See</span></span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; &#39;.fit_error_*&#39; column(s).</span></span></code></pre></div>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in fit.simpr_tibble(., t_test = ~t.test(y), chisq = ~chisq.test(y)): fit() produced</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; errors. See &#39;.fit_error_*&#39; column(s).</span></span></code></pre></div>
 <p>The first fit <code>t_test</code> failed on just the first row, with <code>size = -10</code>, but the second fit <code>chisq</code> was nonsensical either way and so two <code>.fit_error</code> columns are produced.</p>
 <div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>fit_multi_error</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; tibble</span></span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; --------------------------</span></span>
 <span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 2 × 9</span></span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   .sim_id  size   rep sim               .sim_error      t_test  .fit_error_t_test   chisq .fit_error_chisq       </span></span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     &lt;int&gt; &lt;dbl&gt; &lt;int&gt; &lt;list&gt;            &lt;chr&gt;           &lt;list&gt;  &lt;chr&gt;               &lt;lis&gt; &lt;chr&gt;                  </span></span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1       1   -10     1 &lt;NULL&gt;            &quot;Error in rnor… &lt;NULL&gt;  &quot;Error in t.test(y… &lt;NUL… &quot;Error in is.data.fram…</span></span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2       2    10     1 &lt;tibble [10 × 1]&gt;  &lt;NA&gt;           &lt;htest&gt;  &lt;NA&gt;               &lt;NUL… &quot;Error in chisq.test(y…</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   .sim_id  size   rep sim    .sim_error   t_test .fit_error_t_test chisq .fit_error_chisq  </span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     &lt;int&gt; &lt;dbl&gt; &lt;int&gt; &lt;list&gt; &lt;chr&gt;        &lt;list&gt; &lt;chr&gt;             &lt;lis&gt; &lt;chr&gt;             </span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1       1   -10     1 &lt;NULL&gt; &quot;Error in r… &lt;NULL&gt; &quot;Error in t.test… &lt;NUL… &quot;Error in is.data…</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2       2    10     1 &lt;tibb…  &lt;NA&gt;        &lt;htes…  &lt;NA&gt;             &lt;NUL… &quot;Error in chisq.t…</span></span>
 <span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; t_test[[1]]</span></span>
 <span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; --------------------------</span></span>
@@ -244,13 +245,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>fit_multi_error <span class="sc">%&gt;%</span> </span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  tidy_fits</span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 4 × 14</span></span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   .sim_id  size   rep .sim_error Source .fit_error estimate statistic p.value parameter conf.low conf.high method</span></span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     &lt;int&gt; &lt;dbl&gt; &lt;int&gt; &lt;chr&gt;      &lt;chr&gt;  &lt;chr&gt;         &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;chr&gt; </span></span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1       1   -10     1 &quot;Error in… t_test &quot;Error in…   NA        NA      NA            NA    NA       NA     &lt;NA&gt;  </span></span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2       1   -10     1 &quot;Error in… chisq  &quot;Error in…   NA        NA      NA            NA    NA       NA     &lt;NA&gt;  </span></span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3       2    10     1  &lt;NA&gt;      t_test  &lt;NA&gt;        -0.113    -0.281   0.785         9    -1.02     0.793 One S…</span></span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4       2    10     1  &lt;NA&gt;      chisq  &quot;Error in…   NA        NA      NA            NA    NA       NA     &lt;NA&gt;  </span></span>
-<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # … with 1 more variable: alternative &lt;chr&gt;</span></span></code></pre></div>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   .sim_id  size   rep .sim_error   Source .fit_error   estimate statistic p.value parameter</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     &lt;int&gt; &lt;dbl&gt; &lt;int&gt; &lt;chr&gt;        &lt;chr&gt;  &lt;chr&gt;           &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;     &lt;dbl&gt;</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1       1   -10     1 &quot;Error in r… t_test &quot;Error in t…   NA        NA      NA            NA</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2       1   -10     1 &quot;Error in r… chisq  &quot;Error in i…   NA        NA      NA            NA</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3       2    10     1  &lt;NA&gt;        t_test  &lt;NA&gt;          -0.113    -0.281   0.785         9</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4       2    10     1  &lt;NA&gt;        chisq  &quot;Error in c…   NA        NA      NA            NA</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # … with 4 more variables: conf.low &lt;dbl&gt;, conf.high &lt;dbl&gt;, method &lt;chr&gt;,</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   alternative &lt;chr&gt;</span></span></code></pre></div>
 </div>
 </div>
 <div id="debugging-simulations" class="section level2">

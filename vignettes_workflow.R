@@ -9,3 +9,6 @@ file.copy(dir("vignettes", full.names=TRUE), "inst/doc", overwrite=TRUE)
 
 ## Check package without deleting vignettes
 devtools::check(".", vignettes=FALSE)
+
+## Build site
+pkgdown::build_site()
