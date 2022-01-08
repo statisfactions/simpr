@@ -17,7 +17,7 @@
 #' to do with how you specified the simulation in
 #' \code{\link{specify}} and \code{\link{define}}.
 #'
-#' @param obj a \code{simpr_spec} object generated
+#' @param x a \code{simpr_spec} object generated
 #'   by \code{\link{define}} or
 #'   \code{\link{specify}}, containing the
 #'   specifications of the simulation
@@ -108,7 +108,7 @@
 #'
 #'
 #' @export
-generate = function(obj, reps, ..., sim_name = "sim",
+generate.simpr_spec = function(x, reps, ..., sim_name = "sim",
                     quiet = TRUE, warn_on_error = TRUE,
                     stop_on_error = FALSE,
                     debug = FALSE,
@@ -119,7 +119,7 @@ generate = function(obj, reps, ..., sim_name = "sim",
 
   ## Create specs from conditions, reps; add unique id as well.
   specs = dplyr::left_join(data.frame(rep = 1:reps),
-                           obj$conditions,
+                           x$conditions,
                            by = character()) %>%
     dplyr::mutate(.sim_id = 1:(dplyr::n())) %>%
     dplyr::relocate(.data$.sim_id) %>%
@@ -129,17 +129,17 @@ generate = function(obj, reps, ..., sim_name = "sim",
 
   excluded_sim_ids = specs$.sim_id[!(specs$.sim_id %in% specs_filter$.sim_id)]
 
-  if(!is.null(obj$meta_info$lookup)) {
+  if(!is.null(x$meta_info$lookup)) {
     ## If there are list elements, join cells representing those list-columns
     ## into specs
-    specs = purrr::reduce2(obj$meta_info$lookup,
+    specs = purrr::reduce2(x$meta_info$lookup,
                            dplyr::inner_join,
                            .init = specs,
-                           .y = names(obj$meta$lookup)) # the "by" argument to the join
+                           .y = names(x$meta$lookup)) # the "by" argument to the join
   }
 
   create_sim_results(specs = specs,
-                     x = obj[c("meta_info",
+                     x = x[c("meta_info",
                                "specify",
                                "variable_sep",
                                "use_names",
@@ -326,3 +326,7 @@ validate_reps = function(reps) {
     stop("reps should be at least 1")
   }
 }
+
+#' @importFrom generics generate
+#' @export
+generics::generate
