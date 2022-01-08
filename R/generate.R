@@ -80,10 +80,6 @@
 #'  ## View overall structure of the result and a single simulation output
 #'  meta_list_out
 #'
-#'  ## Tidyverse verbs change each simulation output
-#'  meta_list_out %>%
-#'    mutate(y = x_1 + x_2)
-#'
 #'  ## Changing reps will change the number of replications and thus the number of
 #'  ## rows in the output
 #'  meta_list_2 = specify(x = ~ MASS::mvrnorm(n, rep(0, 2), Sigma = S)) %>%
@@ -121,15 +117,12 @@ generate = function(obj, reps, ..., sim_name = "sim",
 
   validate_reps(reps)
 
-  ## Satisfying R CMD check
-  .sim_id = ""
-
   ## Create specs from conditions, reps; add unique id as well.
   specs = dplyr::left_join(data.frame(rep = 1:reps),
                            obj$conditions,
                            by = character()) %>%
     dplyr::mutate(.sim_id = 1:(dplyr::n())) %>%
-    dplyr::relocate(.sim_id) %>%
+    dplyr::relocate(.data$.sim_id) %>%
     dplyr::relocate(rep, .after = dplyr::everything())
 
   specs_filter = dplyr::filter(specs, ...)
@@ -284,9 +277,6 @@ create_sim_results <- function(specs, x, sim_name, quiet, warn_on_error, .progre
                                excluded_sim_ids) {
   ## Create simulation results from specification
 
-  ## define variable "." to satisfy R CMD Check
-  . = "Defining ."
-
   ## Generate all replications
   sim_results = specs %>%
     tibble::as_tibble() %>%
@@ -315,9 +305,9 @@ create_sim_results <- function(specs, x, sim_name, quiet, warn_on_error, .progre
   attr(sim_results, "sim_name") = sim_name
   attr(sim_results, "sim_total") = max(specs$.sim_id)
 
-  ## Add "simpr_sims" and "simpr_tibble" classes if there is still a sim column
+  ## Add "simpr_tibble" class if there is still a sim column
   if(get_sim_name(sim_results) %in% names(sim_results))
-    class(sim_results) = c("simpr_sims", "simpr_tibble", class(sim_results))
+    class(sim_results) = c("simpr_tibble", class(sim_results))
 
   sim_results
 }

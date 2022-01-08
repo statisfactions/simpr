@@ -22,6 +22,7 @@ whole_tibble = function(x) {
  UseMethod("whole_tibble")
 }
 
+#' @export
 whole_tibble.simpr_sims = function(x) {
   class(x) = setdiff(class(x), "simpr_sims")
 
@@ -30,7 +31,7 @@ whole_tibble.simpr_sims = function(x) {
 
 #' @export
 whole_tibble.simpr_tibble = function(x) {
-  warning(deparse(substitute(x)), "is already in whole_tibble mode; no change made")
+  warning(deparse(substitute(x)), " is already in whole_tibble mode; no change made")
   x
 }
 

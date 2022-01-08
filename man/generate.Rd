@@ -106,10 +106,6 @@ meta_list_out = specify(x = ~ MASS::mvrnorm(n, rep(0, 2), Sigma = S)) \%>\%
  ## View overall structure of the result and a single simulation output
  meta_list_out
 
- ## Tidyverse verbs change each simulation output
- meta_list_out \%>\%
-   mutate(y = x_1 + x_2)
-
  ## Changing reps will change the number of replications and thus the number of
  ## rows in the output
  meta_list_2 = specify(x = ~ MASS::mvrnorm(n, rep(0, 2), Sigma = S)) \%>\%

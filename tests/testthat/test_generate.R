@@ -85,5 +85,18 @@ test_that("Subsetting in generate is equivalent to subsetting afterwards", {
   expect_equivalent(sim_ref[3,], sim_filt_delay)
 })
 
+# Filtering works as expected on output from generate  -----
 
+test_that("Filtering works as expected on output from generate()", {
+
+  set.seed(500)
+  gen_3 = specify(a = ~ runif(20)) %>%
+    generate(3)
+
+  row_2 = gen_3[2,]
+  row_2_filter = gen_3 %>%
+    filter(.sim_id == 2)
+
+  expect_identical(row_2, row_2_filter)
+})
 
