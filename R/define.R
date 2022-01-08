@@ -43,7 +43,7 @@
 #' @param ... metaparameters: named arguments
 #'   containing vectors or unidimensional lists of
 #'   objects to be used in the simulation.
-#' @param suffix name of suffix to append onto
+#' @param .suffix name of suffix to append onto
 #'   index column for list metaparameters,
 #'   \code{"_index"} by default.  See
 #'   \emph{Details}.
@@ -79,9 +79,9 @@
 #' meta_list_out # generates S_index column
 #'
 #' @export
-define = function(.x = NULL, ..., suffix = "_index") {
-  if(!(is.character(suffix)) || length(suffix) != 1 || nchar(suffix) <= 0)
-    stop("suffix must be a string with at least 1 character")
+define = function(.x = NULL, ..., .suffix = "_index") {
+  if(!(is.character(.suffix)) || length(.suffix) != 1 || nchar(.suffix) <= 0)
+    stop(".suffix must be a string with at least 1 character")
 
   stopifnot(is.simpr_spec(.x))
 
@@ -107,14 +107,14 @@ define = function(.x = NULL, ..., suffix = "_index") {
       }
 
       lookup = tibble::tibble(index = index, value = x)
-      names(lookup) = c(paste0(n, suffix), n)
+      names(lookup) = c(paste0(n, .suffix), n)
 
       list(index = index,
            lookup = lookup)
     })
 
 
-    names(index_lookup) = paste0(names(index_lookup), suffix)
+    names(index_lookup) = paste0(names(index_lookup), .suffix)
     indices = purrr::map(index_lookup, "index")
 
     out$meta_info = list(indices = c(meta[!list_elements], purrr::map(index_lookup, "index")),

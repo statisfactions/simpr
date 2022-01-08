@@ -4,7 +4,7 @@
 \alias{define}
 \title{Define metaparameters to vary in simulation}
 \usage{
-define(.x = NULL, ..., suffix = "_index")
+define(.x = NULL, ..., .suffix = "_index")
 }
 \arguments{
 \item{.x}{a \code{simpr_spec} object (the output
@@ -14,7 +14,7 @@ of \code{\link{specify}})}
 containing vectors or unidimensional lists of
 objects to be used in the simulation.}
 
-\item{suffix}{name of suffix to append onto
+\item{.suffix}{name of suffix to append onto
 index column for list metaparameters,
 \code{"_index"} by default.  See
 \emph{Details}.}
