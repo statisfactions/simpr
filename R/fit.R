@@ -67,7 +67,7 @@
 #'   the metaparameter names, the simulated data
 #'   \code{sim}, with additional columns for the
 #'   function outputs specified in \code{\dots}.
-#'   If \code{\link{per_sim()}} was called
+#'   If \code{\link{per_sim}} was called
 #'   previously, \code{fit} returns the object to
 #'   default \code{simpr_tibble} mode.
 #'
