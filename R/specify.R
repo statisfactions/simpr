@@ -12,7 +12,7 @@
 #' generating a simulation, based on the
 #' \code{purrr} package.  When producing one
 #' variable, one can provide an expression such as
-#' \code{specify(x = ~ 3 + runif(10))} instead of
+#' \code{specify(a = ~ 3 + runif(10))} instead of
 #' defining a custom function.
 #'
 #' The results of these functions are brought
@@ -34,10 +34,10 @@
 #'   \code{use_names = TRUE}, the default.
 #'   Otherwise, simpr uses the argument name as a
 #'   base and auto-numbers the columns. For
-#'   instance, if the argument \code{x} generates
+#'   instance, if the argument \code{a} generates
 #'   a two-column matrix and \code{sep = "_"} (the
 #'   default) the columns will be named
-#'   \code{x_1}and \code{x_2}.
+#'   \code{a_1}and \code{a_2}.
 #'
 #'   Custom names can also be directly provided by
 #'   provide a double-sided formulas to provide
@@ -48,7 +48,7 @@
 #'   provided on the left-hand side are provided
 #'   using \code{cbind}, similar to multivariate
 #'   specifications elsewhere in R, e.g.
-#'   \code{specify(cbind(x, y) ~ MASS::mvrnorm(5,
+#'   \code{specify(cbind(a, b) ~ MASS::mvrnorm(5,
 #'   c(0, 0), Sigma = diag(2)))}.
 #'
 #' @param x leave this argument blank (NULL); this
@@ -58,7 +58,7 @@
 #'   variables. \code{x} is not recommended as a
 #'   name, since it is a formal argument and will
 #'   be automatically assumed to be the first
-#'   variable.
+#'   variable (a message will be displayed if \code{x} is used).
 #' @param sep Specify the separator for
 #'   auto-generating names.  See \emph{Column
 #'   naming}.
@@ -76,9 +76,9 @@
 #'
 #'   Also useful is the fact that one can refer to
 #'   variables in subsequent arguments.  So, one
-#'   could define another variable \code{y} that
-#'   depends on \code{x} very simply, e.g.
-#'   \code{specify(x = ~ 3 + runif(10), y = ~ 2 *
+#'   could define another variable \code{b} that
+#'   depends on \code{a} very simply, e.g.
+#'   \code{specify(a = ~ 3 + runif(10), b = ~ 2 *
 #'   x)}.
 #'
 #'   Finally, one can also refer to metaparameters
@@ -88,27 +88,27 @@
 #'
 #' @examples
 #' ## specify a variable and generate it in the simulation
-#' single_var = specify(x = ~ 1 + rnorm(5)) %>%
+#' single_var = specify(a = ~ 1 + rnorm(5)) %>%
 #'   generate(1) # generate a single repetition of the simulation
 #' single_var$sim[[1]] # peek at the simulation
 #'
-#' two_var = specify(x = ~ 1 + rnorm(5),
-#'                     y = ~ x + 2) %>%
+#' two_var = specify(a = ~ 1 + rnorm(5),
+#'                     b = ~ x + 2) %>%
 #'   generate(1)
 #' two_var$sim[[1]]
 #'
-#' ## Generates x_01 through x_10
-#' autonumber_var = specify(x = ~ MASS::mvrnorm(5, rep(0, 10), Sigma = diag(10))) %>%
+#' ## Generates a_01 through a_10
+#' autonumber_var = specify(a = ~ MASS::mvrnorm(5, rep(0, 10), Sigma = diag(10))) %>%
 #'   generate(1)
 #' autonumber_var$sim[[1]]
 #'
 #' # alternatively, you could use a two-sided formula for names
-#' multi_name = specify(cbind(x, y, z) ~ MASS::mvrnorm(5, rep(0, 3), Sigma = diag(3))) %>%
+#' multi_name = specify(cbind(a, b, c) ~ MASS::mvrnorm(5, rep(0, 3), Sigma = diag(3))) %>%
 #'   generate(1)
 #' multi_name$sim[[1]]
 #'
 #' # Simple example of setting a metaparameter
-#' simple_meta = specify(x = ~ 1 + rnorm(n)) %>%
+#' simple_meta = specify(a = ~ 1 + rnorm(n)) %>%
 #'   define(n = c(5, 10)) %>% # without this line you would get an error!
 #'   generate(1)
 #'

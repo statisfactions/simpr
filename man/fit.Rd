@@ -86,24 +86,24 @@ the data. The functions are computed within
 each simulation cell, so dataset names are
 often unnecessary: for instance, to compute
 regressions on each cell, you could specify
-\code{fit(linear_model = ~lm(y ~ x + z)}.  If
+\code{fit(linear_model = ~lm(c ~ a + b)}.  If
 your modeling function requires a reference to
 the full dataset, use \code{.}, e.g.
-\code{fit(linear_model = ~lm(y ~ x + z, data =
+\code{fit(linear_model = ~lm(c ~ a + b, data =
 .)}. These equivalent specifications would compute linear models on each
-simulation cell if there are variables x, y,
-and z specified in \code{specify}.
+simulation cell if there are variables a, b,
+and c specified in \code{specify}.
 }
 \examples{
 ## Generate data to fit models
-simple_linear_data = specify(x1 = ~ 2 + rnorm(n),
-                               y = ~ 5 + 3*x1 + rnorm(n, 0, sd = 0.5)) \%>\%
+simple_linear_data = specify(a = ~ 2 + rnorm(n),
+                               b = ~ 5 + 3*a + rnorm(n, 0, sd = 0.5)) \%>\%
   define(n = 100:101) \%>\%
   generate(2)
 
 ## Fit with a single linear term
 linear_fit = simple_linear_data \%>\%
-  fit(linear = ~lm(y ~ x1, data = .))
+  fit(linear = ~lm(b ~ a, data = .))
 
 linear_fit # first fit element also prints
 
@@ -112,8 +112,8 @@ linear_fit$linear
 
 ## We can fit multiple models to the same data
 multi_fit = simple_linear_data \%>\%
-  fit(linear = ~lm(y ~ x1, data = .),
-      quadratic = ~lm(y ~ x1 + I(x1^2), data = .))
+  fit(linear = ~lm(b ~ a, data = .),
+      quadratic = ~lm(b ~ a + I(a^2), data = .))
 
 ## Two columns, one for each model
 multi_fit

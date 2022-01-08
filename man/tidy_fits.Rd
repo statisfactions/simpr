@@ -52,21 +52,21 @@ features of the model such as R-squared, use
 \code{\link{glance_fits}}.
 }
 \examples{
-simple_linear_data = specify(x1 = ~ 2 + rnorm(n),
-          y = ~ 5 + 3 * x1 + rnorm(n, 0, sd = 0.5)) \%>\%
+simple_linear_data = specify(a = ~ 2 + rnorm(n),
+          b = ~ 5 + 3 * x1 + rnorm(n, 0, sd = 0.5)) \%>\%
   define(n = 100:101) \%>\%
   generate(2)
 
 ## Can show tidy output for multiple competing models,
 compare_degree = simple_linear_data \%>\%
-  fit(linear = ~lm(y ~ x1, data = .),
-      quadratic = ~lm(y ~ x1 + I(x1^2), data = .)) \%>\%
+  fit(linear = ~lm(a ~ b, data = .),
+      quadratic = ~lm(a ~ b + I(b^2), data = .)) \%>\%
   tidy_fits
 
 ## Models can be of different types -- anything supported by broom::tidy.
 cor_vs_lm = simple_linear_data \%>\%
-  fit(linear = ~lm(y ~ x1, data = .),
-      cor = ~ cor.test(.$y, .$x1)) \%>\%
+  fit(linear = ~lm(a ~ b, data = .),
+      cor = ~ cor.test(.$a, .$b)) \%>\%
   tidy_fits
 
 cor_vs_lm # has NA for non-matching terms
@@ -75,15 +75,15 @@ cor_vs_lm # has NA for non-matching terms
 \donttest{
 set.seed(100)
 simpr_tidy = ## Specify the simulation
-  specify(x1 = ~ 2 + rnorm(n),
-            x2 = ~ 3 + 2*x1 + rnorm(n, 0, sd = 0.5),
-            y = ~ 5 + x1 + x2 + g1*x1*x2 + 10 * rnorm(n)) \%>\%
+  specify(a = ~ 2 + rnorm(n),
+            b = ~ 3 + 2*a + rnorm(n, 0, sd = 0.5),
+            c = ~ 5 + a + b + g1*a*b + 10 * rnorm(n)) \%>\%
   define(n = seq(100, 300, by = 20),
        g1 = seq(-1, 1, by = 0.5)) \%>\%
   ## Generate the data
   generate(10) \%>\%
   ## Fit models
-  fit(lm = ~lm(y ~ x1*x2, data = .)) \%>\%
+  fit(lm = ~lm(c ~ a*b, data = .)) \%>\%
   ## Calculate the output
   tidy_fits
 
@@ -91,7 +91,7 @@ simpr_tidy = ## Specify the simulation
 library(dplyr)
 library(ggplot2)
 simpr_tidy \%>\%
-  filter(term \%in\% "x1:x2") \%>\%
+  filter(term \%in\% "a:b") \%>\%
   group_by(n, g1) \%>\%
   summarize(power = mean(p.value < 0.05)) \%>\%
   ggplot(aes(n, power)) +

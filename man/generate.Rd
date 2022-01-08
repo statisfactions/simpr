@@ -98,7 +98,7 @@ to do with how you specified the simulation in
 \code{\link{specify}} and \code{\link{define}}.
 }
 \examples{
-meta_list_out = specify(x = ~ MASS::mvrnorm(n, rep(0, 2), Sigma = S)) \%>\%
+meta_list_out = specify(a = ~ MASS::mvrnorm(n, rep(0, 2), Sigma = S)) \%>\%
   define(n = c(10, 20, 30),
        S = list(independent = diag(2), correlated = diag(2) + 2)) \%>\%
   generate(3)
@@ -108,7 +108,7 @@ meta_list_out = specify(x = ~ MASS::mvrnorm(n, rep(0, 2), Sigma = S)) \%>\%
 
  ## Changing reps will change the number of replications and thus the number of
  ## rows in the output
- meta_list_2 = specify(x = ~ MASS::mvrnorm(n, rep(0, 2), Sigma = S)) \%>\%
+ meta_list_2 = specify(a = ~ MASS::mvrnorm(n, rep(0, 2), Sigma = S)) \%>\%
   define(n = c(10, 20, 30),
        S = list(independent = diag(2), correlated = diag(2) + 2)) \%>\%
   generate(4)
@@ -118,10 +118,10 @@ meta_list_out = specify(x = ~ MASS::mvrnorm(n, rep(0, 2), Sigma = S)) \%>\%
  ## Fitting, tidying functions can be included in this step by running those functions and then
  ## generate.  This can save computation time when doing large
  ## simulations, especially with parallel processing
- meta_list_generate_after = specify(x = ~ MASS::mvrnorm(n, rep(0, 2), Sigma = S)) \%>\%
+ meta_list_generate_after = specify(a = ~ MASS::mvrnorm(n, rep(0, 2), Sigma = S)) \%>\%
   define(n = c(10, 20, 30),
        S = list(independent = diag(2), correlated = diag(2) + 2)) \%>\%
-  fit(lm = ~ lm(x_2 ~ x_1, data = .)) \%>\%
+  fit(lm = ~ lm(a_2 ~ a_1, data = .)) \%>\%
   tidy_fits \%>\%
   generate(4)
 
@@ -129,7 +129,7 @@ meta_list_out = specify(x = ~ MASS::mvrnorm(n, rep(0, 2), Sigma = S)) \%>\%
 
   ## This is equivalent, but may be slower / more memory-intensive
   meta_list_generate_before = meta_list_2 \%>\%
-  fit(lm = ~ lm(x_2 ~ x_1, data = .)) \%>\%
+  fit(lm = ~ lm(a_2 ~ a_1, data = .)) \%>\%
   tidy_fits
 
 
