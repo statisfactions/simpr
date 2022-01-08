@@ -6,9 +6,9 @@
 \usage{
 \method{generate}{simpr_spec}(
   x,
-  reps,
+  .reps,
   ...,
-  sim_name = "sim",
+  .sim_name = "sim",
   .quiet = TRUE,
   .warn_on_error = TRUE,
   .stop_on_error = FALSE,
@@ -23,7 +23,7 @@ by \code{\link{define}} or
 \code{\link{specify}}, containing the
 specifications of the simulation}
 
-\item{reps}{number of replications to run (a
+\item{.reps}{number of replications to run (a
 whole number greater than 0)}
 
 \item{\dots}{filtering criteria for which rows
@@ -33,7 +33,7 @@ for reproducing just a few selected rows of a
 simulation without needing to redo the entire
 simulation.}
 
-\item{sim_name}{name of the list-column to be
+\item{.sim_name}{name of the list-column to be
 created, containing simulation results.
 Default is \code{"sim"}}
 
@@ -106,7 +106,7 @@ meta_list_out = specify(a = ~ MASS::mvrnorm(n, rep(0, 2), Sigma = S)) \%>\%
  ## View overall structure of the result and a single simulation output
  meta_list_out
 
- ## Changing reps will change the number of replications and thus the number of
+ ## Changing .reps will change the number of replications and thus the number of
  ## rows in the output
  meta_list_2 = specify(a = ~ MASS::mvrnorm(n, rep(0, 2), Sigma = S)) \%>\%
   define(n = c(10, 20, 30),

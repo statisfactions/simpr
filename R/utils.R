@@ -8,7 +8,7 @@ furrr::furrr_options
 
 ## Get the name of the simulation result column
 get_sim_name = function(obj) {
-  attr(obj, "sim_name")
+  attr(obj, ".sim_name")
 }
 
 ## Get/set the total number of simulations

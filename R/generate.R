@@ -21,7 +21,7 @@
 #'   by \code{\link{define}} or
 #'   \code{\link{specify}}, containing the
 #'   specifications of the simulation
-#' @param reps number of replications to run (a
+#' @param .reps number of replications to run (a
 #'   whole number greater than 0)
 #' @param \dots filtering criteria for which rows
 #'   to simulate, passed to
@@ -29,7 +29,7 @@
 #'   for reproducing just a few selected rows of a
 #'   simulation without needing to redo the entire
 #'   simulation.
-#' @param sim_name name of the list-column to be
+#' @param .sim_name name of the list-column to be
 #'   created, containing simulation results.
 #'   Default is \code{"sim"}
 #' @param .quiet Should simulation errors be
@@ -80,7 +80,7 @@
 #'  ## View overall structure of the result and a single simulation output
 #'  meta_list_out
 #'
-#'  ## Changing reps will change the number of replications and thus the number of
+#'  ## Changing .reps will change the number of replications and thus the number of
 #'  ## rows in the output
 #'  meta_list_2 = specify(a = ~ MASS::mvrnorm(n, rep(0, 2), Sigma = S)) %>%
 #'   define(n = c(10, 20, 30),
@@ -108,17 +108,17 @@
 #'
 #'
 #' @export
-generate.simpr_spec = function(x, reps, ..., sim_name = "sim",
+generate.simpr_spec = function(x, .reps, ..., .sim_name = "sim",
                     .quiet = TRUE, .warn_on_error = TRUE,
                     .stop_on_error = FALSE,
                     .debug = FALSE,
                     .progress = FALSE,
                     .options = furrr_options(seed = TRUE)) {
 
-  validate_reps(reps)
+  validate_reps(.reps)
 
-  ## Create specs from conditions, reps; add unique id as well.
-  specs = dplyr::left_join(data.frame(rep = 1:reps),
+  ## Create specs from conditions, .reps; add unique id as well.
+  specs = dplyr::left_join(data.frame(rep = 1:.reps),
                            x$conditions,
                            by = character()) %>%
     dplyr::mutate(.sim_id = 1:(dplyr::n())) %>%
@@ -144,7 +144,7 @@ generate.simpr_spec = function(x, reps, ..., sim_name = "sim",
                                "variable_sep",
                                ".use_names",
                                "include_calls")],
-                     sim_name = sim_name,
+                     .sim_name = .sim_name,
                      .quiet = .quiet,
                      .debug = .debug,
                      .warn_on_error = .warn_on_error,
@@ -211,7 +211,7 @@ generate_sim = function(y, eval_environment, variable_sep, .use_names, .debug, .
 }
 
 generate_row = function(variables, ..., variable_sep, .use_names,
-                             include_calls, meta_indices, sim_name, .quiet,
+                             include_calls, meta_indices, .sim_name, .quiet,
                         .debug, .stop_on_error,
                         excluded_sim_ids) {
 
@@ -240,7 +240,7 @@ generate_row = function(variables, ..., variable_sep, .use_names,
   df_full = purrr::map(meta_values, ~ if(length(.) == 1 && purrr::is_vector(.)) return(.) else return(list(.))) %>%
     tibble::as_tibble(.rows = 1)
 
-  df_full[[sim_name]] = list(sim_list$result)
+  df_full[[.sim_name]] = list(sim_list$result)
 
   if(!is.null(sim_list$error))
     df_full[[".sim_error"]] = as.character(sim_list$error)
@@ -254,7 +254,7 @@ generate_row = function(variables, ..., variable_sep, .use_names,
 
     ## identify which variables are meta variables
     attr(df_full, "meta") = meta_indices
-    attr(df_full, "sim_name") = sim_name
+    attr(df_full, ".sim_name") = .sim_name
 
     df_eval = purrr::reduce(.x = include_calls, .f = eval_pipe, .init = df_full) %>%
       tibble::as_tibble()
@@ -272,7 +272,7 @@ eval_pipe = function(lhs, rhs) {
   eval(call("%>%", lhs = lhs, rhs = rhs))
 }
 
-create_sim_results <- function(specs, x, sim_name, .quiet, .warn_on_error, .progress, .options,
+create_sim_results <- function(specs, x, .sim_name, .quiet, .warn_on_error, .progress, .options,
                                .debug, .stop_on_error,
                                excluded_sim_ids) {
   ## Create simulation results from specification
@@ -288,7 +288,7 @@ create_sim_results <- function(specs, x, sim_name, .quiet, .warn_on_error, .prog
                 meta_indices = names(x$meta_info$indices),
                 .debug = .debug,
                 .stop_on_error = .stop_on_error,
-                sim_name = sim_name,
+                .sim_name = .sim_name,
                 .quiet = .quiet,
                 .progress = .progress,
                 .options = .options,
@@ -302,7 +302,7 @@ create_sim_results <- function(specs, x, sim_name, .quiet, .warn_on_error, .prog
   ## Add some attributes to the tibble to track meta and variables
   attr(sim_results, "meta") = names(x$meta_info$indices)
   attr(sim_results, "variables") = purrr::map(x$variables, ~ attr(., "varnames")) %>% unlist
-  attr(sim_results, "sim_name") = sim_name
+  attr(sim_results, ".sim_name") = .sim_name
   attr(sim_results, "sim_total") = max(specs$.sim_id)
 
   ## Add "simpr_tibble" class if there is still a sim column
@@ -312,18 +312,18 @@ create_sim_results <- function(specs, x, sim_name, .quiet, .warn_on_error, .prog
   sim_results
 }
 
-validate_reps = function(reps) {
-  ## Check reps argument is a whole number > 0
-  if(length(reps) > 1) {
-    reps = reps[1]
-    warning("reps has length > 1, using only first element")
+validate_reps = function(.reps) {
+  ## Check .reps argument is a whole number > 0
+  if(length(.reps) > 1) {
+    .reps = .reps[1]
+    warning(".reps has length > 1, using only first element")
   }
-  if(reps != round(reps)) {
-    reps = round(reps)
-    warning("reps not a whole number, rounding to nearest whole number")
+  if(.reps != round(.reps)) {
+    .reps = round(.reps)
+    warning(".reps not a whole number, rounding to nearest whole number")
   }
-  if(reps < 1) {
-    stop("reps should be at least 1")
+  if(.reps < 1) {
+    stop(".reps should be at least 1")
   }
 }
 
