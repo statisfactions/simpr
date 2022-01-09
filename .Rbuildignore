@@ -13,3 +13,7 @@
 ^doc$
 ^Meta$
 ^vignettes/articles$
+^omitted\.R$
+^sem\.R$
+^showcase\.R$
+^example\.R$
