@@ -40,7 +40,8 @@
 
 
 <meta property="og:title" content="Generate simulated data from specification — generate.simpr_spec" />
-<meta property="og:description" content="Use specification from specify or
+<meta property="og:description" content="Use specification from
+specify or
 define to produce simulated data." />
 
 
@@ -139,7 +140,8 @@ define to produce simulated data." />
     </div>
 
     <div class="ref-description">
-    <p>Use specification from <code><a href='specify.formula.html'>specify</a></code> or
+    <p>Use specification from
+<code><a href='specify.formula.html'>specify</a></code> or
 <code><a href='define.html'>define</a></code> to produce simulated data.</p>
     </div>
 
@@ -164,8 +166,9 @@ define to produce simulated data." />
       <th>x</th>
       <td><p>a <code>simpr_spec</code> object generated
 by <code><a href='define.html'>define</a></code> or
-<code><a href='specify.formula.html'>specify</a></code>, containing the
-specifications of the simulation</p></td>
+<code><a href='specify.formula.html'>specify</a></code>,
+containing the specifications of the
+simulation</p></td>
     </tr>
     <tr>
       <th>.reps</th>
@@ -179,7 +182,8 @@ to simulate, passed to
 <code><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></code>.  This is useful
 for reproducing just a few selected rows of a
 simulation without needing to redo the entire
-simulation.</p></td>
+simulation, see <code>vignette("Reproducing
+simulations")</code>,</p></td>
     </tr>
     <tr>
       <th>.sim_name</th>
@@ -195,12 +199,15 @@ broadcast to the user as they occur?</p></td>
     <tr>
       <th>.warn_on_error</th>
       <td><p>Should there be a warning
-when simulation errors occur?</p></td>
+when simulation errors occur? See
+<code>vignette("Managing simulation
+errors")</code>.</p></td>
     </tr>
     <tr>
       <th>.stop_on_error</th>
-      <td><p>Should the simulation stop
-immediately when simulation errors occur?</p></td>
+      <td><p>Should the simulation
+stop immediately when simulation errors
+occur?</p></td>
     </tr>
     <tr>
       <th>.debug</th>
@@ -232,10 +239,10 @@ to
   repetition (a total of <code>rep</code>
   repetitions) for each combination of
   metaparameters and some extra metadata used
-  by <code><a href='fit.simpr_tibble.html'>fit</a></code>.  The columns are
-  <code>rep</code> for the repetition number, the
-  names of the metaparameters, and a
-  list-column (named by the argument
+  by <code><a href='fit.simpr_tibble.html'>fit</a></code>.  The
+  columns are <code>rep</code> for the repetition
+  number, the names of the metaparameters, and
+  a list-column (named by the argument
   <code>sim_name</code>) containing the dataset for
   each repetition and metaparameter
   combination. <code>simpr_sims</code> objects can be
@@ -246,23 +253,26 @@ to
 
     <p>This is the third step in the simulation
 process: after specifying the population model
-and defining the metaparameters,
+and defining the metaparameters, if any,
 <code>generate</code> is the workhorse function that
 actually generates the simulated datasets, one
-for each replication, for each combination of
+for each replication and combination of
 metaparameters. You likely want to use the
 output of <code>generate</code> to fit model(s) with
 <code><a href='fit.simpr_tibble.html'>fit</a></code>.</p>
 <p>Errors you get using this function usually have
 to do with how you specified the simulation in
-<code><a href='specify.formula.html'>specify</a></code> and <code><a href='define.html'>define</a></code>.</p>
+<code><a href='specify.formula.html'>specify</a></code> and
+<code><a href='define.html'>define</a></code>.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p><code><a href='specify.formula.html'>specify</a></code> and
   <code><a href='define.html'>define</a></code> for examples of how
   these functions affect the output of
-  <code>generate</code>. See the <code>furrr</code> website
-  for more information on working with futures:
+  <code>generate</code>. See
+  <code>vignette("Optimization")</code> and the
+  <code>furrr</code> website for more information on
+  working with futures:
   <a href='https://furrr.futureverse.org/'>https://furrr.futureverse.org/</a></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -300,18 +310,18 @@ to do with how you specified the simulation in
 #&gt; sim[[1]]
 #&gt; --------------------------
 #&gt; <span style='color: #949494;'># A tibble: 10 × 2</span>
-#&gt;         a_1     a_2
-#&gt;       <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>   <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>
-#&gt; <span style='color: #BCBCBC;'> 1</span> -<span style='color: #BB0000;'>0.324</span>    0.458 
-#&gt; <span style='color: #BCBCBC;'> 2</span>  0.572    1.31  
-#&gt; <span style='color: #BCBCBC;'> 3</span>  0.622   -<span style='color: #BB0000;'>1.46</span>  
-#&gt; <span style='color: #BCBCBC;'> 4</span>  1.63    -<span style='color: #BB0000;'>1.72</span>  
-#&gt; <span style='color: #BCBCBC;'> 5</span> -<span style='color: #BB0000;'>0.008</span><span style='color: #BB0000; text-decoration: underline;'>86</span>  0.673 
-#&gt; <span style='color: #BCBCBC;'> 6</span>  0.468    1.59  
-#&gt; <span style='color: #BCBCBC;'> 7</span> -<span style='color: #BB0000;'>0.349</span>    0.905 
-#&gt; <span style='color: #BCBCBC;'> 8</span> -<span style='color: #BB0000;'>0.411</span>   -<span style='color: #BB0000;'>0.612</span> 
-#&gt; <span style='color: #BCBCBC;'> 9</span>  0.218    0.071<span style='text-decoration: underline;'>5</span>
-#&gt; <span style='color: #BCBCBC;'>10</span> -<span style='color: #BB0000;'>0.266</span>   -<span style='color: #BB0000;'>0.536</span> 
+#&gt;        a_1     a_2
+#&gt;      <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>   <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>
+#&gt; <span style='color: #BCBCBC;'> 1</span>  0.015<span style='text-decoration: underline;'>8</span> -<span style='color: #BB0000;'>1.13</span>  
+#&gt; <span style='color: #BCBCBC;'> 2</span> -<span style='color: #BB0000;'>1.32</span>    0.030<span style='text-decoration: underline;'>0</span>
+#&gt; <span style='color: #BCBCBC;'> 3</span>  0.253   1.14  
+#&gt; <span style='color: #BCBCBC;'> 4</span>  0.240  -<span style='color: #BB0000;'>1.01</span>  
+#&gt; <span style='color: #BCBCBC;'> 5</span>  1.53    0.280 
+#&gt; <span style='color: #BCBCBC;'> 6</span>  0.129  -<span style='color: #BB0000;'>0.346</span> 
+#&gt; <span style='color: #BCBCBC;'> 7</span>  0.120  -<span style='color: #BB0000;'>1.18</span>  
+#&gt; <span style='color: #BCBCBC;'> 8</span> -<span style='color: #BB0000;'>0.755</span>   0.825 
+#&gt; <span style='color: #BCBCBC;'> 9</span>  1.03   -<span style='color: #BB0000;'>0.023</span><span style='color: #BB0000; text-decoration: underline;'>6</span>
+#&gt; <span style='color: #BCBCBC;'>10</span> -<span style='color: #BB0000;'>0.666</span>  -<span style='color: #BB0000;'>1.06</span>  
 #&gt; </div><div class='input'>
  <span class='co'>## Changing .reps will change the number of replications and thus the number of</span>
  <span class='co'>## rows in the output</span>
@@ -341,18 +351,18 @@ to do with how you specified the simulation in
 #&gt; sim[[1]]
 #&gt; --------------------------
 #&gt; <span style='color: #949494;'># A tibble: 10 × 2</span>
-#&gt;        a_1     a_2
-#&gt;      <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>   <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>
-#&gt; <span style='color: #BCBCBC;'> 1</span> -<span style='color: #BB0000;'>1.03</span>    0.150 
-#&gt; <span style='color: #BCBCBC;'> 2</span>  0.904   0.955 
-#&gt; <span style='color: #BCBCBC;'> 3</span> -<span style='color: #BB0000;'>0.702</span>  -<span style='color: #BB0000;'>0.231</span> 
-#&gt; <span style='color: #BCBCBC;'> 4</span> -<span style='color: #BB0000;'>0.077</span><span style='color: #BB0000; text-decoration: underline;'>0</span> -<span style='color: #BB0000;'>0.096</span><span style='color: #BB0000; text-decoration: underline;'>2</span>
-#&gt; <span style='color: #BCBCBC;'> 5</span>  1.51    0.215 
-#&gt; <span style='color: #BCBCBC;'> 6</span>  0.311   0.387 
-#&gt; <span style='color: #BCBCBC;'> 7</span>  2.34   -<span style='color: #BB0000;'>0.053</span><span style='color: #BB0000; text-decoration: underline;'>3</span>
-#&gt; <span style='color: #BCBCBC;'> 8</span> -<span style='color: #BB0000;'>3.02</span>    0.982 
-#&gt; <span style='color: #BCBCBC;'> 9</span> -<span style='color: #BB0000;'>1.65</span>   -<span style='color: #BB0000;'>0.267</span> 
-#&gt; <span style='color: #BCBCBC;'>10</span> -<span style='color: #BB0000;'>0.172</span>  -<span style='color: #BB0000;'>0.820</span> 
+#&gt;        a_1      a_2
+#&gt;      <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>    <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>
+#&gt; <span style='color: #BCBCBC;'> 1</span> -<span style='color: #BB0000;'>0.664</span>   0.526  
+#&gt; <span style='color: #BCBCBC;'> 2</span>  0.190  -<span style='color: #BB0000;'>1.07</span>   
+#&gt; <span style='color: #BCBCBC;'> 3</span> -<span style='color: #BB0000;'>1.03</span>   -<span style='color: #BB0000;'>1.29</span>   
+#&gt; <span style='color: #BCBCBC;'> 4</span> -<span style='color: #BB0000;'>0.827</span>  -<span style='color: #BB0000;'>0.653</span>  
+#&gt; <span style='color: #BCBCBC;'> 5</span>  0.144  -<span style='color: #BB0000;'>0.322</span>  
+#&gt; <span style='color: #BCBCBC;'> 6</span>  1.02    0.076<span style='text-decoration: underline;'>4</span> 
+#&gt; <span style='color: #BCBCBC;'> 7</span> -<span style='color: #BB0000;'>0.936</span>  -<span style='color: #BB0000;'>2.38</span>   
+#&gt; <span style='color: #BCBCBC;'> 8</span> -<span style='color: #BB0000;'>0.444</span>   0.279  
+#&gt; <span style='color: #BCBCBC;'> 9</span> -<span style='color: #BB0000;'>1.54</span>    0.003<span style='text-decoration: underline;'>21</span>
+#&gt; <span style='color: #BCBCBC;'>10</span>  0.070<span style='text-decoration: underline;'>9</span> -<span style='color: #BB0000;'>0.289</span>  
 #&gt; </div><div class='input'>
  <span class='co'>## Fitting, tidying functions can be included in this step by running those functions and then</span>
  <span class='co'>## generate.  This can save computation time when doing large</span>
@@ -368,24 +378,17 @@ to do with how you specified the simulation in
 </div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 48 × 10</span>
 #&gt;    .sim_id     n S_index   rep Source term  estimate std.error statistic p.value
 #&gt;      <span style='color: #949494; font-style: italic;'>&lt;int&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>   <span style='color: #949494; font-style: italic;'>&lt;int&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>  <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>    <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>     <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>     <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>   <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>
-#&gt; <span style='color: #BCBCBC;'> 1</span>       1    10 indepe…     1 lm     (Int… -<span style='color: #BB0000;'>0.251</span>       0.260   -<span style='color: #BB0000;'>0.964</span>  3.64<span style='color: #949494;'>e</span><span style='color: #BB0000;'>-1</span>
-#&gt; <span style='color: #BCBCBC;'> 2</span>       1    10 indepe…     1 lm     a_1   -<span style='color: #BB0000;'>0.268</span>       0.331   -<span style='color: #BB0000;'>0.810</span>  4.42<span style='color: #949494;'>e</span><span style='color: #BB0000;'>-1</span>
-#&gt; <span style='color: #BCBCBC;'> 3</span>       2    20 indepe…     1 lm     (Int…  0.364       0.172    2.12   4.86<span style='color: #949494;'>e</span><span style='color: #BB0000;'>-2</span>
-#&gt; <span style='color: #BCBCBC;'> 4</span>       2    20 indepe…     1 lm     a_1   -<span style='color: #BB0000;'>0.407</span>       0.184   -<span style='color: #BB0000;'>2.21</span>   4.04<span style='color: #949494;'>e</span><span style='color: #BB0000;'>-2</span>
-#&gt; <span style='color: #BCBCBC;'> 5</span>       3    30 indepe…     1 lm     (Int…  0.008<span style='text-decoration: underline;'>81</span>     0.171    0.051<span style='text-decoration: underline;'>4</span> 9.59<span style='color: #949494;'>e</span><span style='color: #BB0000;'>-1</span>
-#&gt; <span style='color: #BCBCBC;'> 6</span>       3    30 indepe…     1 lm     a_1   -<span style='color: #BB0000;'>0.321</span>       0.172   -<span style='color: #BB0000;'>1.87</span>   7.24<span style='color: #949494;'>e</span><span style='color: #BB0000;'>-2</span>
-#&gt; <span style='color: #BCBCBC;'> 7</span>       4    10 correl…     1 lm     (Int… -<span style='color: #BB0000;'>0.577</span>       0.451   -<span style='color: #BB0000;'>1.28</span>   2.37<span style='color: #949494;'>e</span><span style='color: #BB0000;'>-1</span>
-#&gt; <span style='color: #BCBCBC;'> 8</span>       4    10 correl…     1 lm     a_1    0.332       0.460    0.722  4.91<span style='color: #949494;'>e</span><span style='color: #BB0000;'>-1</span>
-#&gt; <span style='color: #BCBCBC;'> 9</span>       5    20 correl…     1 lm     (Int… -<span style='color: #BB0000;'>0.049</span><span style='color: #BB0000; text-decoration: underline;'>3</span>      0.206   -<span style='color: #BB0000;'>0.239</span>  8.14<span style='color: #949494;'>e</span><span style='color: #BB0000;'>-1</span>
-#&gt; <span style='color: #BCBCBC;'>10</span>       5    20 correl…     1 lm     a_1    0.741       0.120    6.17   8.02<span style='color: #949494;'>e</span><span style='color: #BB0000;'>-6</span>
-#&gt; <span style='color: #949494;'># … with 38 more rows</span></div><div class='input'>
-  <span class='co'>## This is equivalent, but may be slower / more memory-intensive</span>
-  <span class='va'>meta_list_generate_before</span> <span class='op'>=</span> <span class='va'>meta_list_2</span> <span class='op'>%&gt;%</span>
-  <span class='fu'><a href='https://generics.r-lib.org/reference/fit.html'>fit</a></span><span class='op'>(</span>lm <span class='op'>=</span> <span class='op'>~</span> <span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span><span class='op'>(</span><span class='va'>a_2</span> <span class='op'>~</span> <span class='va'>a_1</span>, data <span class='op'>=</span> <span class='va'>.</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
-  <span class='va'>tidy_fits</span>
-
-
-</div></pre>
+#&gt; <span style='color: #BCBCBC;'> 1</span>       1    10 indepe…     1 lm     (Int…   0.439      0.411     1.07  3.17<span style='color: #949494;'>e</span><span style='color: #BB0000;'>-1</span>
+#&gt; <span style='color: #BCBCBC;'> 2</span>       1    10 indepe…     1 lm     a_1    -<span style='color: #BB0000;'>0.390</span>      0.497    -<span style='color: #BB0000;'>0.784</span> 4.55<span style='color: #949494;'>e</span><span style='color: #BB0000;'>-1</span>
+#&gt; <span style='color: #BCBCBC;'> 3</span>       2    20 indepe…     1 lm     (Int…  -<span style='color: #BB0000;'>0.033</span><span style='color: #BB0000; text-decoration: underline;'>2</span>     0.218    -<span style='color: #BB0000;'>0.152</span> 8.81<span style='color: #949494;'>e</span><span style='color: #BB0000;'>-1</span>
+#&gt; <span style='color: #BCBCBC;'> 4</span>       2    20 indepe…     1 lm     a_1    -<span style='color: #BB0000;'>0.295</span>      0.216    -<span style='color: #BB0000;'>1.36</span>  1.89<span style='color: #949494;'>e</span><span style='color: #BB0000;'>-1</span>
+#&gt; <span style='color: #BCBCBC;'> 5</span>       3    30 indepe…     1 lm     (Int…   0.252      0.206     1.23  2.30<span style='color: #949494;'>e</span><span style='color: #BB0000;'>-1</span>
+#&gt; <span style='color: #BCBCBC;'> 6</span>       3    30 indepe…     1 lm     a_1    -<span style='color: #BB0000;'>0.056</span><span style='color: #BB0000; text-decoration: underline;'>8</span>     0.186    -<span style='color: #BB0000;'>0.306</span> 7.62<span style='color: #949494;'>e</span><span style='color: #BB0000;'>-1</span>
+#&gt; <span style='color: #BCBCBC;'> 7</span>       4    10 correl…     1 lm     (Int…   0.138      0.422     0.327 7.52<span style='color: #949494;'>e</span><span style='color: #BB0000;'>-1</span>
+#&gt; <span style='color: #BCBCBC;'> 8</span>       4    10 correl…     1 lm     a_1     1.10       0.303     3.64  6.57<span style='color: #949494;'>e</span><span style='color: #BB0000;'>-3</span>
+#&gt; <span style='color: #BCBCBC;'> 9</span>       5    20 correl…     1 lm     (Int…  -<span style='color: #BB0000;'>0.421</span>      0.316    -<span style='color: #BB0000;'>1.33</span>  1.99<span style='color: #949494;'>e</span><span style='color: #BB0000;'>-1</span>
+#&gt; <span style='color: #BCBCBC;'>10</span>       5    20 correl…     1 lm     a_1     0.863      0.195     4.43  3.20<span style='color: #949494;'>e</span><span style='color: #BB0000;'>-4</span>
+#&gt; <span style='color: #949494;'># … with 38 more rows</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

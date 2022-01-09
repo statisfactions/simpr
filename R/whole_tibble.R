@@ -1,7 +1,7 @@
 #' Convert a simpr_sims object back to a
-#' simpr_tibble or bare tibble
+#' simpr_tibble
 #'
-#' Undoes per_sim to allow access to simulation
+#' Undoes \code{\link{per_sim}} to allow access to simulation
 #' results as a tibble, with simulations available
 #' as a list-column.
 #'

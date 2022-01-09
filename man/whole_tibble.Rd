@@ -4,7 +4,7 @@
 \alias{whole_tibble}
 \alias{simpr_tibble}
 \title{Convert a simpr_sims object back to a
-simpr_tibble or bare tibble}
+simpr_tibble}
 \usage{
 whole_tibble(x)
 }
@@ -16,7 +16,7 @@ A tibble with the metaparameters and
   simulation results
 }
 \description{
-Undoes per_sim to allow access to simulation
+Undoes \code{\link{per_sim}} to allow access to simulation
 results as a tibble, with simulations available
 as a list-column.
 }

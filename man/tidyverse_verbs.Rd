@@ -1086,7 +1086,7 @@
 \description{
 These are simpr-compatible methods for generic
 \code{dplyr} and \code{tidyr} verbs. The user
-is not expected to call these directly.
+is not expected to call these methods directly.
 }
 \details{
 See original function documentation for details

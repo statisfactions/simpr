@@ -1,26 +1,29 @@
 #' Generate simulated data from specification
 #'
-#' Use specification from \code{\link[=specify.formula]{specify}} or
+#' Use specification from
+#' \code{\link[=specify.formula]{specify}} or
 #' \code{\link{define}} to produce simulated data.
 #'
 #' This is the third step in the simulation
 #' process: after specifying the population model
-#' and defining the metaparameters,
+#' and defining the metaparameters, if any,
 #' \code{generate} is the workhorse function that
 #' actually generates the simulated datasets, one
-#' for each replication, for each combination of
+#' for each replication and combination of
 #' metaparameters. You likely want to use the
 #' output of \code{generate} to fit model(s) with
 #' \code{\link[=fit.simpr_tibble]{fit}}.
 #'
 #' Errors you get using this function usually have
 #' to do with how you specified the simulation in
-#' \code{\link[=specify.formula]{specify}} and \code{\link{define}}.
+#' \code{\link[=specify.formula]{specify}} and
+#' \code{\link{define}}.
 #'
 #' @param x a \code{simpr_spec} object generated
 #'   by \code{\link{define}} or
-#'   \code{\link[=specify.formula]{specify}}, containing the
-#'   specifications of the simulation
+#'   \code{\link[=specify.formula]{specify}},
+#'   containing the specifications of the
+#'   simulation
 #' @param .reps number of replications to run (a
 #'   whole number greater than 0)
 #' @param \dots filtering criteria for which rows
@@ -28,16 +31,20 @@
 #'   \code{\link[dplyr]{filter}}.  This is useful
 #'   for reproducing just a few selected rows of a
 #'   simulation without needing to redo the entire
-#'   simulation.
+#'   simulation, see \code{vignette("Reproducing
+#'   simulations")},
 #' @param .sim_name name of the list-column to be
 #'   created, containing simulation results.
 #'   Default is \code{"sim"}
 #' @param .quiet Should simulation errors be
 #'   broadcast to the user as they occur?
 #' @param .warn_on_error Should there be a warning
-#'   when simulation errors occur?
-#' @param .stop_on_error Should the simulation stop
-#'   immediately when simulation errors occur?
+#'   when simulation errors occur? See
+#'   \code{vignette("Managing simulation
+#'   errors")}.
+#' @param .stop_on_error Should the simulation
+#'   stop immediately when simulation errors
+#'   occur?
 #' @param .debug Run simulation in debug mode,
 #'   allowing objects, etc. to be explored for
 #'   each generated variable specification.
@@ -50,21 +57,24 @@
 #'   to
 #'   \code{\link[furrr:furrr_options]{furrr_options(seed
 #'    = TRUE)}}.
-#' @seealso \code{\link[=specify.formula]{specify}} and
+#' @seealso
+#'   \code{\link[=specify.formula]{specify}} and
 #'   \code{\link{define}} for examples of how
 #'   these functions affect the output of
-#'   \code{generate}. See the \code{furrr} website
-#'   for more information on working with futures:
+#'   \code{generate}. See
+#'   \code{vignette("Optimization")} and the
+#'   \code{furrr} website for more information on
+#'   working with futures:
 #'   \url{https://furrr.futureverse.org/}
 #' @return a \code{\link{simpr_sims}} object,
 #'   which is a tibble with a row for each
 #'   repetition (a total of \code{rep}
 #'   repetitions) for each combination of
 #'   metaparameters and some extra metadata used
-#'   by \code{\link[=fit.simpr_tibble]{fit}}.  The columns are
-#'   \code{rep} for the repetition number, the
-#'   names of the metaparameters, and a
-#'   list-column (named by the argument
+#'   by \code{\link[=fit.simpr_tibble]{fit}}.  The
+#'   columns are \code{rep} for the repetition
+#'   number, the names of the metaparameters, and
+#'   a list-column (named by the argument
 #'   \code{sim_name}) containing the dataset for
 #'   each repetition and metaparameter
 #'   combination. \code{simpr_sims} objects can be
@@ -100,13 +110,6 @@
 #'   generate(4)
 #'
 #'   meta_list_generate_after
-#'
-#'   ## This is equivalent, but may be slower / more memory-intensive
-#'   meta_list_generate_before = meta_list_2 %>%
-#'   fit(lm = ~ lm(a_2 ~ a_1, data = .)) %>%
-#'   tidy_fits
-#'
-#'
 #' @export
 generate.simpr_spec = function(x, .reps, ..., .sim_name = "sim",
                     .quiet = TRUE, .warn_on_error = TRUE,

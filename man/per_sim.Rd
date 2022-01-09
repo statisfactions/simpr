@@ -39,3 +39,25 @@ return to the default behavior to access
 list_column for simulation results again, run
 \code{\link{whole_tibble}}.
 }
+\examples{
+## Often most convenient to specify simulations for 'wide' data
+data_wide = specify(a = ~ runif(5, min = 0, max = 1),
+                    b = ~ runif(5, min = 0, max = 2)) \%>\%
+  generate(2)
+
+data_wide
+
+## Any dplyr or tidyr verbs can be applied after per_sim()
+data_long = data_wide \%>\%
+  per_sim() \%>\%
+  pivot_longer(everything(), names_to = "name",
+               values_to = "value")
+data_long
+
+## Now, ready for analysis
+data_long \%>\%
+  fit(lm = ~lm(value ~ name)) \%>\%
+  tidy_fits
+
+
+}

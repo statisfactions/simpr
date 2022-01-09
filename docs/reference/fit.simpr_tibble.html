@@ -41,8 +41,9 @@
 
 <meta property="og:title" content="Fit models to the simulated data — fit.simpr_tibble" />
 <meta property="og:description" content="Takes simulated data from
-generate and applies functions to
-it, usually model-fitting functions." />
+generate
+and applies functions to it, usually
+model-fitting functions." />
 
 
 
@@ -141,8 +142,9 @@ it, usually model-fitting functions." />
 
     <div class="ref-description">
     <p>Takes simulated data from
-<code><a href='generate.simpr_spec.html'>generate</a></code> and applies functions to
-it, usually model-fitting functions.</p>
+<code><a href='generate.simpr_spec.html'>generate</a></code>
+and applies functions to it, usually
+model-fitting functions.</p>
     </div>
 
     <pre class="usage"><span class='co'># S3 method for simpr_tibble</span>
@@ -176,12 +178,13 @@ it, usually model-fitting functions.</p>
       <th>object</th>
       <td><p>a <code>simpr_tibble</code> object--the
 simulated data from
-<code><a href='generate.simpr_spec.html'>generate</a></code>--or an
-<code>simpr_spec</code> object not yet generated.</p></td>
+<code><a href='generate.simpr_spec.html'>generate</a></code>--or
+an <code>simpr_spec</code> object not yet
+generated.</p></td>
     </tr>
     <tr>
       <th>...</th>
-      <td><p><code>purrr</code>-style formula functions
+      <td><p><code>purrr</code>-style lambda functions
 used for computing on the simulated data. See
 <em>Details</em> and <em>Examples</em>.</p></td>
     </tr>
@@ -193,7 +196,8 @@ broadcast to the user as they occur?</p></td>
     <tr>
       <th>.warn_on_error</th>
       <td><p>Should there be a warning
-when simulation errors occur?</p></td>
+when simulation errors occur? See
+<code>vignette("Managing simulation errors")</code>.</p></td>
     </tr>
     <tr>
       <th>.stop_on_error</th>
@@ -205,7 +209,7 @@ occur?</p></td>
       <th>.debug</th>
       <td><p>Run simulation in debug mode,
 allowing objects, etc. to be explored for
-each generated variable specification.</p></td>
+each attempt to fit objects.</p></td>
     </tr>
     <tr>
       <th>.progress</th>
@@ -228,7 +232,8 @@ to
     <p>a <code>simpr_tibble</code> object with
   additional list-columns for the output of the
   provided functions (e.g. model outputs). Just
-  like the output of <code><a href='generate.simpr_spec.html'>generate</a></code>,
+  like the output of
+  <code><a href='generate.simpr_spec.html'>generate</a></code>,
   there is one row per repetition per
   combination of metaparameters, and the
   columns are the repetition number <code>rep</code>,
@@ -246,25 +251,22 @@ apply functions such as fitting a statistical
 model to the data. The output is often then
 passed to <code><a href='tidy_fits.html'>tidy_fits</a></code> or
 <code><a href='glance_fits.html'>glance_fits</a></code> to extract relevant
-parameters from the object, based on
-<code><a href='https://generics.r-lib.org/reference/tidy.html'>tidy</a></code> and
-<code><a href='https://generics.r-lib.org/reference/glance.html'>glance</a></code> from the
-<code>broom</code> package.</p>
-<p>Similar to <code><a href='specify.formula.html'>specify</a></code>, the
-<code>...</code> arguments uses <code>purrr</code>-style
-formula functions to specify fitting models to
-the data. The functions are computed within
-each simulation cell, so dataset names are
-often unnecessary: for instance, to compute
-regressions on each cell, you could specify
-<code>fit(linear_model = ~lm(c ~ a + b)</code>.  If
+model estimates from the object.</p>
+<p>Similar to
+<code><a href='specify.formula.html'>specify</a></code>, the
+model-fitting <code>...</code> arguments can be
+arbitrary R expressions (<code>purrr</code>-style
+lambda functions, see
+<code><a href='https://purrr.tidyverse.org/reference/as_mapper.html'>as_mapper</a></code>) to specify
+fitting models to the data. The functions are
+computed within each simulation cell, so
+dataset names are generally unnecessary: e.g.,
+to compute regressions on each cell,
+<code>fit(linear_model = ~ lm(c ~ a + b)</code>.  If
 your modeling function requires a reference to
 the full dataset, use <code>.</code>, e.g.
 <code>fit(linear_model = ~lm(c ~ a + b, data =
-.)</code>. These equivalent specifications would
-compute linear models on each simulation cell
-if there are variables a, b, and c specified in
-<code>specify</code>.</p>
+.)</code>.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'>## Generate data to fit models</span>
@@ -293,16 +295,16 @@ if there are variables a, b, and c specified in
 #&gt; <span style='color: #949494;'># A tibble: 100 × 2</span>
 #&gt;        a     b
 #&gt;    <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>
-#&gt; <span style='color: #BCBCBC;'> 1</span> 1.88   9.89
-#&gt; <span style='color: #BCBCBC;'> 2</span> 2.86  14.1 
-#&gt; <span style='color: #BCBCBC;'> 3</span> 1.57   9.88
-#&gt; <span style='color: #BCBCBC;'> 4</span> 3.38  15.1 
-#&gt; <span style='color: #BCBCBC;'> 5</span> 2.26  11.6 
-#&gt; <span style='color: #BCBCBC;'> 6</span> 1.29   8.71
-#&gt; <span style='color: #BCBCBC;'> 7</span> 0.729  7.13
-#&gt; <span style='color: #BCBCBC;'> 8</span> 3.04  14.4 
-#&gt; <span style='color: #BCBCBC;'> 9</span> 1.43  10.4 
-#&gt; <span style='color: #BCBCBC;'>10</span> 1.47  10.7 
+#&gt; <span style='color: #BCBCBC;'> 1</span> 1.12   7.74
+#&gt; <span style='color: #BCBCBC;'> 2</span> 4.62  18.3 
+#&gt; <span style='color: #BCBCBC;'> 3</span> 2.41  12.7 
+#&gt; <span style='color: #BCBCBC;'> 4</span> 2.96  14.1 
+#&gt; <span style='color: #BCBCBC;'> 5</span> 0.711  6.87
+#&gt; <span style='color: #BCBCBC;'> 6</span> 2.06  10.5 
+#&gt; <span style='color: #BCBCBC;'> 7</span> 2.08  12.0 
+#&gt; <span style='color: #BCBCBC;'> 8</span> 2.56  12.7 
+#&gt; <span style='color: #BCBCBC;'> 9</span> 2.56  12.8 
+#&gt; <span style='color: #BCBCBC;'>10</span> 0.180  5.80
 #&gt; <span style='color: #949494;'># … with 90 more rows</span>
 #&gt; 
 #&gt; linear[[1]]
@@ -313,7 +315,7 @@ if there are variables a, b, and c specified in
 #&gt; 
 #&gt; Coefficients:
 #&gt; (Intercept)            a  
-#&gt;       4.981        3.032  
+#&gt;       5.091        2.961  
 #&gt; 
 #&gt; </div><div class='input'>
 <span class='co'>## Each element of $linear is a model object</span>
@@ -325,7 +327,7 @@ if there are variables a, b, and c specified in
 #&gt; 
 #&gt; Coefficients:
 #&gt; (Intercept)            a  
-#&gt;       4.981        3.032  
+#&gt;       5.091        2.961  
 #&gt; 
 #&gt; 
 #&gt; [[2]]
@@ -335,7 +337,7 @@ if there are variables a, b, and c specified in
 #&gt; 
 #&gt; Coefficients:
 #&gt; (Intercept)            a  
-#&gt;       5.198        2.929  
+#&gt;       4.994        3.001  
 #&gt; 
 #&gt; 
 #&gt; [[3]]
@@ -345,7 +347,7 @@ if there are variables a, b, and c specified in
 #&gt; 
 #&gt; Coefficients:
 #&gt; (Intercept)            a  
-#&gt;       4.922        3.055  
+#&gt;       4.834        3.020  
 #&gt; 
 #&gt; 
 #&gt; [[4]]
@@ -355,7 +357,7 @@ if there are variables a, b, and c specified in
 #&gt; 
 #&gt; Coefficients:
 #&gt; (Intercept)            a  
-#&gt;       5.122        2.940  
+#&gt;       5.121        2.958  
 #&gt; 
 #&gt; </div><div class='input'>
 <span class='co'>## We can fit multiple models to the same data</span>
@@ -380,16 +382,16 @@ if there are variables a, b, and c specified in
 #&gt; <span style='color: #949494;'># A tibble: 100 × 2</span>
 #&gt;        a     b
 #&gt;    <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>
-#&gt; <span style='color: #BCBCBC;'> 1</span> 1.88   9.89
-#&gt; <span style='color: #BCBCBC;'> 2</span> 2.86  14.1 
-#&gt; <span style='color: #BCBCBC;'> 3</span> 1.57   9.88
-#&gt; <span style='color: #BCBCBC;'> 4</span> 3.38  15.1 
-#&gt; <span style='color: #BCBCBC;'> 5</span> 2.26  11.6 
-#&gt; <span style='color: #BCBCBC;'> 6</span> 1.29   8.71
-#&gt; <span style='color: #BCBCBC;'> 7</span> 0.729  7.13
-#&gt; <span style='color: #BCBCBC;'> 8</span> 3.04  14.4 
-#&gt; <span style='color: #BCBCBC;'> 9</span> 1.43  10.4 
-#&gt; <span style='color: #BCBCBC;'>10</span> 1.47  10.7 
+#&gt; <span style='color: #BCBCBC;'> 1</span> 1.12   7.74
+#&gt; <span style='color: #BCBCBC;'> 2</span> 4.62  18.3 
+#&gt; <span style='color: #BCBCBC;'> 3</span> 2.41  12.7 
+#&gt; <span style='color: #BCBCBC;'> 4</span> 2.96  14.1 
+#&gt; <span style='color: #BCBCBC;'> 5</span> 0.711  6.87
+#&gt; <span style='color: #BCBCBC;'> 6</span> 2.06  10.5 
+#&gt; <span style='color: #BCBCBC;'> 7</span> 2.08  12.0 
+#&gt; <span style='color: #BCBCBC;'> 8</span> 2.56  12.7 
+#&gt; <span style='color: #BCBCBC;'> 9</span> 2.56  12.8 
+#&gt; <span style='color: #BCBCBC;'>10</span> 0.180  5.80
 #&gt; <span style='color: #949494;'># … with 90 more rows</span>
 #&gt; 
 #&gt; linear[[1]]
@@ -400,7 +402,7 @@ if there are variables a, b, and c specified in
 #&gt; 
 #&gt; Coefficients:
 #&gt; (Intercept)            a  
-#&gt;       4.981        3.032  
+#&gt;       5.091        2.961  
 #&gt; 
 #&gt; 
 #&gt; quadratic[[1]]
@@ -411,7 +413,7 @@ if there are variables a, b, and c specified in
 #&gt; 
 #&gt; Coefficients:
 #&gt; (Intercept)            a       I(a^2)  
-#&gt;      4.6417       3.4438      -0.1019  
+#&gt;    5.112322     2.936397     0.005839  
 #&gt; 
 #&gt; </div><div class='input'>
 <span class='co'>## Again, each element is a model object</span>
@@ -423,7 +425,7 @@ if there are variables a, b, and c specified in
 #&gt; 
 #&gt; Coefficients:
 #&gt; (Intercept)            a       I(a^2)  
-#&gt;      4.6417       3.4438      -0.1019  
+#&gt;    5.112322     2.936397     0.005839  
 #&gt; 
 #&gt; 
 #&gt; [[2]]
@@ -433,7 +435,7 @@ if there are variables a, b, and c specified in
 #&gt; 
 #&gt; Coefficients:
 #&gt; (Intercept)            a       I(a^2)  
-#&gt;     5.17210      2.99702     -0.02076  
+#&gt;     5.07532      2.88165      0.03077  
 #&gt; 
 #&gt; 
 #&gt; [[3]]
@@ -443,7 +445,7 @@ if there are variables a, b, and c specified in
 #&gt; 
 #&gt; Coefficients:
 #&gt; (Intercept)            a       I(a^2)  
-#&gt;     4.74306      3.30813     -0.06536  
+#&gt;     4.77436      3.10303     -0.02093  
 #&gt; 
 #&gt; 
 #&gt; [[4]]
@@ -453,7 +455,7 @@ if there are variables a, b, and c specified in
 #&gt; 
 #&gt; Coefficients:
 #&gt; (Intercept)            a       I(a^2)  
-#&gt;     5.23040      2.80192      0.03401  
+#&gt;    5.128320     2.947735     0.002846  
 #&gt; 
 #&gt; </div><div class='input'>
 <span class='co'>## Can view terms more nicely with tidy_fits</span>
@@ -462,47 +464,47 @@ if there are variables a, b, and c specified in
 </div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 20 × 9</span>
 #&gt;    .sim_id     n   rep Source    term      estimate std.error statistic  p.value
 #&gt;      <span style='color: #949494; font-style: italic;'>&lt;int&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;int&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;int&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>     <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>        <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>     <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>     <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>    <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>
-#&gt; <span style='color: #BCBCBC;'> 1</span>       1   100     1 linear    (Interce…   4.98      0.135     37.0   2.05<span style='color: #949494;'>e</span><span style='color: #BB0000;'>-59</span>
-#&gt; <span style='color: #BCBCBC;'> 2</span>       1   100     1 linear    a           3.03      0.061<span style='text-decoration: underline;'>3</span>    49.5   3.93<span style='color: #949494;'>e</span><span style='color: #BB0000;'>-71</span>
-#&gt; <span style='color: #BCBCBC;'> 3</span>       1   100     1 quadratic (Interce…   4.64      0.199     23.4   1.23<span style='color: #949494;'>e</span><span style='color: #BB0000;'>-41</span>
-#&gt; <span style='color: #BCBCBC;'> 4</span>       1   100     1 quadratic a           3.44      0.190     18.1   6.50<span style='color: #949494;'>e</span><span style='color: #BB0000;'>-33</span>
-#&gt; <span style='color: #BCBCBC;'> 5</span>       1   100     1 quadratic I(a^2)     -<span style='color: #BB0000;'>0.102</span>     0.044<span style='text-decoration: underline;'>6</span>    -<span style='color: #BB0000;'>2.28</span>  2.46<span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 2</span>
-#&gt; <span style='color: #BCBCBC;'> 6</span>       2   101     1 linear    (Interce…   5.20      0.095<span style='text-decoration: underline;'>7</span>    54.3   1.66<span style='color: #949494;'>e</span><span style='color: #BB0000;'>-75</span>
-#&gt; <span style='color: #BCBCBC;'> 7</span>       2   101     1 linear    a           2.93      0.042<span style='text-decoration: underline;'>3</span>    69.2   1.12<span style='color: #949494;'>e</span><span style='color: #BB0000;'>-85</span>
-#&gt; <span style='color: #BCBCBC;'> 8</span>       2   101     1 quadratic (Interce…   5.17      0.101     51.2   1.46<span style='color: #949494;'>e</span><span style='color: #BB0000;'>-72</span>
-#&gt; <span style='color: #BCBCBC;'> 9</span>       2   101     1 quadratic a           3.00      0.092<span style='text-decoration: underline;'>8</span>    32.3   4.92<span style='color: #949494;'>e</span><span style='color: #BB0000;'>-54</span>
-#&gt; <span style='color: #BCBCBC;'>10</span>       2   101     1 quadratic I(a^2)     -<span style='color: #BB0000;'>0.020</span><span style='color: #BB0000; text-decoration: underline;'>8</span>    0.025<span style='text-decoration: underline;'>0</span>    -<span style='color: #BB0000;'>0.829</span> 4.09<span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 1</span>
-#&gt; <span style='color: #BCBCBC;'>11</span>       3   100     2 linear    (Interce…   4.92      0.110     44.7   5.28<span style='color: #949494;'>e</span><span style='color: #BB0000;'>-67</span>
-#&gt; <span style='color: #BCBCBC;'>12</span>       3   100     2 linear    a           3.06      0.052<span style='text-decoration: underline;'>0</span>    58.8   3.04<span style='color: #949494;'>e</span><span style='color: #BB0000;'>-78</span>
-#&gt; <span style='color: #BCBCBC;'>13</span>       3   100     2 quadratic (Interce…   4.74      0.148     32.0   2.58<span style='color: #949494;'>e</span><span style='color: #BB0000;'>-53</span>
-#&gt; <span style='color: #BCBCBC;'>14</span>       3   100     2 quadratic a           3.31      0.151     21.9   2.62<span style='color: #949494;'>e</span><span style='color: #BB0000;'>-39</span>
-#&gt; <span style='color: #BCBCBC;'>15</span>       3   100     2 quadratic I(a^2)     -<span style='color: #BB0000;'>0.065</span><span style='color: #BB0000; text-decoration: underline;'>4</span>    0.036<span style='text-decoration: underline;'>7</span>    -<span style='color: #BB0000;'>1.78</span>  7.84<span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 2</span>
-#&gt; <span style='color: #BCBCBC;'>16</span>       4   101     2 linear    (Interce…   5.12      0.118     43.4   2.93<span style='color: #949494;'>e</span><span style='color: #BB0000;'>-66</span>
-#&gt; <span style='color: #BCBCBC;'>17</span>       4   101     2 linear    a           2.94      0.051<span style='text-decoration: underline;'>5</span>    57.1   1.51<span style='color: #949494;'>e</span><span style='color: #BB0000;'>-77</span>
-#&gt; <span style='color: #BCBCBC;'>18</span>       4   101     2 quadratic (Interce…   5.23      0.178     29.4   1.78<span style='color: #949494;'>e</span><span style='color: #BB0000;'>-50</span>
-#&gt; <span style='color: #BCBCBC;'>19</span>       4   101     2 quadratic a           2.80      0.177     15.9   7.96<span style='color: #949494;'>e</span><span style='color: #BB0000;'>-29</span>
-#&gt; <span style='color: #BCBCBC;'>20</span>       4   101     2 quadratic I(a^2)      0.034<span style='text-decoration: underline;'>0</span>    0.041<span style='text-decoration: underline;'>5</span>     0.819 4.15<span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 1</span></div><div class='input'>
+#&gt; <span style='color: #BCBCBC;'> 1</span>       1   100     1 linear    (Interce…  5.09       0.127    40.1    1.33<span style='color: #949494;'>e</span><span style='color: #BB0000;'>-62</span>
+#&gt; <span style='color: #BCBCBC;'> 2</span>       1   100     1 linear    a          2.96       0.057<span style='text-decoration: underline;'>7</span>   51.3    1.29<span style='color: #949494;'>e</span><span style='color: #BB0000;'>-72</span>
+#&gt; <span style='color: #BCBCBC;'> 3</span>       1   100     1 quadratic (Interce…  5.11       0.195    26.2    9.06<span style='color: #949494;'>e</span><span style='color: #BB0000;'>-46</span>
+#&gt; <span style='color: #BCBCBC;'> 4</span>       1   100     1 quadratic a          2.94       0.181    16.3    1.93<span style='color: #949494;'>e</span><span style='color: #BB0000;'>-29</span>
+#&gt; <span style='color: #BCBCBC;'> 5</span>       1   100     1 quadratic I(a^2)     0.005<span style='text-decoration: underline;'>84</span>    0.040<span style='text-decoration: underline;'>7</span>    0.143  8.86<span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 1</span>
+#&gt; <span style='color: #BCBCBC;'> 6</span>       2   101     1 linear    (Interce…  4.99       0.099<span style='text-decoration: underline;'>4</span>   50.3    2.82<span style='color: #949494;'>e</span><span style='color: #BB0000;'>-72</span>
+#&gt; <span style='color: #BCBCBC;'> 7</span>       2   101     1 linear    a          3.00       0.046<span style='text-decoration: underline;'>3</span>   64.9    6.14<span style='color: #949494;'>e</span><span style='color: #BB0000;'>-83</span>
+#&gt; <span style='color: #BCBCBC;'> 8</span>       2   101     1 quadratic (Interce…  5.08       0.133    38.1    1.61<span style='color: #949494;'>e</span><span style='color: #BB0000;'>-60</span>
+#&gt; <span style='color: #BCBCBC;'> 9</span>       2   101     1 quadratic a          2.88       0.138    20.9    8.19<span style='color: #949494;'>e</span><span style='color: #BB0000;'>-38</span>
+#&gt; <span style='color: #BCBCBC;'>10</span>       2   101     1 quadratic I(a^2)     0.030<span style='text-decoration: underline;'>8</span>     0.033<span style='text-decoration: underline;'>5</span>    0.917  3.61<span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 1</span>
+#&gt; <span style='color: #BCBCBC;'>11</span>       3   100     2 linear    (Interce…  4.83       0.112    43.1    1.62<span style='color: #949494;'>e</span><span style='color: #BB0000;'>-65</span>
+#&gt; <span style='color: #BCBCBC;'>12</span>       3   100     2 linear    a          3.02       0.049<span style='text-decoration: underline;'>6</span>   60.8    1.18<span style='color: #949494;'>e</span><span style='color: #BB0000;'>-79</span>
+#&gt; <span style='color: #BCBCBC;'>13</span>       3   100     2 quadratic (Interce…  4.77       0.153    31.2    2.38<span style='color: #949494;'>e</span><span style='color: #BB0000;'>-52</span>
+#&gt; <span style='color: #BCBCBC;'>14</span>       3   100     2 quadratic a          3.10       0.152    20.4    6.16<span style='color: #949494;'>e</span><span style='color: #BB0000;'>-37</span>
+#&gt; <span style='color: #BCBCBC;'>15</span>       3   100     2 quadratic I(a^2)    -<span style='color: #BB0000;'>0.020</span><span style='color: #BB0000; text-decoration: underline;'>9</span>     0.036<span style='text-decoration: underline;'>1</span>   -<span style='color: #BB0000;'>0.579</span>  5.64<span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 1</span>
+#&gt; <span style='color: #BCBCBC;'>16</span>       4   101     2 linear    (Interce…  5.12       0.103    49.7    7.48<span style='color: #949494;'>e</span><span style='color: #BB0000;'>-72</span>
+#&gt; <span style='color: #BCBCBC;'>17</span>       4   101     2 linear    a          2.96       0.048<span style='text-decoration: underline;'>3</span>   61.3    1.48<span style='color: #949494;'>e</span><span style='color: #BB0000;'>-80</span>
+#&gt; <span style='color: #BCBCBC;'>18</span>       4   101     2 quadratic (Interce…  5.13       0.142    36.0    2.38<span style='color: #949494;'>e</span><span style='color: #BB0000;'>-58</span>
+#&gt; <span style='color: #BCBCBC;'>19</span>       4   101     2 quadratic a          2.95       0.154    19.2    5.53<span style='color: #949494;'>e</span><span style='color: #BB0000;'>-35</span>
+#&gt; <span style='color: #BCBCBC;'>20</span>       4   101     2 quadratic I(a^2)     0.002<span style='text-decoration: underline;'>85</span>    0.039<span style='text-decoration: underline;'>1</span>    0.072<span style='text-decoration: underline;'>8</span> 9.42<span style='color: #949494;'>e</span><span style='color: #BB0000;'>- 1</span></div><div class='input'>
 <span class='co'>## Can view model summaries with glance_fits</span>
 <span class='va'>multi_fit</span> <span class='op'>%&gt;%</span>
   <span class='va'>glance_fits</span>
 </div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 8 × 16</span>
 #&gt;   .sim_id     n   rep Source    r.squared adj.r.squared sigma statistic  p.value
 #&gt;     <span style='color: #949494; font-style: italic;'>&lt;int&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;int&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;int&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>         <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>         <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>     <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>    <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>
-#&gt; <span style='color: #BCBCBC;'>1</span>       1   100     1 linear        0.962         0.961 0.531     <span style='text-decoration: underline;'>2</span>448. 3.93<span style='color: #949494;'>e</span><span style='color: #BB0000;'>-71</span>
-#&gt; <span style='color: #BCBCBC;'>2</span>       1   100     1 quadratic     0.963         0.963 0.520     <span style='text-decoration: underline;'>1</span>279. 1.93<span style='color: #949494;'>e</span><span style='color: #BB0000;'>-70</span>
-#&gt; <span style='color: #BCBCBC;'>3</span>       2   101     1 linear        0.980         0.980 0.498     <span style='text-decoration: underline;'>4</span>795. 1.12<span style='color: #949494;'>e</span><span style='color: #BB0000;'>-85</span>
-#&gt; <span style='color: #BCBCBC;'>4</span>       2   101     1 quadratic     0.980         0.980 0.498     <span style='text-decoration: underline;'>2</span>391. 6.95<span style='color: #949494;'>e</span><span style='color: #BB0000;'>-84</span>
-#&gt; <span style='color: #BCBCBC;'>5</span>       3   100     2 linear        0.972         0.972 0.518     <span style='text-decoration: underline;'>3</span>458. 3.04<span style='color: #949494;'>e</span><span style='color: #BB0000;'>-78</span>
-#&gt; <span style='color: #BCBCBC;'>6</span>       3   100     2 quadratic     0.973         0.973 0.512     <span style='text-decoration: underline;'>1</span>769. 4.75<span style='color: #949494;'>e</span><span style='color: #BB0000;'>-77</span>
-#&gt; <span style='color: #BCBCBC;'>7</span>       4   101     2 linear        0.970         0.970 0.502     <span style='text-decoration: underline;'>3</span>255. 1.51<span style='color: #949494;'>e</span><span style='color: #BB0000;'>-77</span>
-#&gt; <span style='color: #BCBCBC;'>8</span>       4   101     2 quadratic     0.971         0.970 0.503     <span style='text-decoration: underline;'>1</span>622. 7.73<span style='color: #949494;'>e</span><span style='color: #BB0000;'>-76</span>
+#&gt; <span style='color: #BCBCBC;'>1</span>       1   100     1 linear        0.964         0.964 0.509     <span style='text-decoration: underline;'>2</span>632. 1.29<span style='color: #949494;'>e</span><span style='color: #BB0000;'>-72</span>
+#&gt; <span style='color: #BCBCBC;'>2</span>       1   100     1 quadratic     0.964         0.963 0.511     <span style='text-decoration: underline;'>1</span>303. 8.25<span style='color: #949494;'>e</span><span style='color: #BB0000;'>-71</span>
+#&gt; <span style='color: #BCBCBC;'>3</span>       2   101     1 linear        0.977         0.977 0.490     <span style='text-decoration: underline;'>4</span>210. 6.14<span style='color: #949494;'>e</span><span style='color: #BB0000;'>-83</span>
+#&gt; <span style='color: #BCBCBC;'>4</span>       2   101     1 quadratic     0.977         0.977 0.491     <span style='text-decoration: underline;'>2</span>102. 3.30<span style='color: #949494;'>e</span><span style='color: #BB0000;'>-81</span>
+#&gt; <span style='color: #BCBCBC;'>5</span>       3   100     2 linear        0.974         0.974 0.511     <span style='text-decoration: underline;'>3</span>702. 1.18<span style='color: #949494;'>e</span><span style='color: #BB0000;'>-79</span>
+#&gt; <span style='color: #BCBCBC;'>6</span>       3   100     2 quadratic     0.974         0.974 0.513     <span style='text-decoration: underline;'>1</span>839. 7.60<span style='color: #949494;'>e</span><span style='color: #BB0000;'>-78</span>
+#&gt; <span style='color: #BCBCBC;'>7</span>       4   101     2 linear        0.974         0.974 0.477     <span style='text-decoration: underline;'>3</span>759. 1.48<span style='color: #949494;'>e</span><span style='color: #BB0000;'>-80</span>
+#&gt; <span style='color: #BCBCBC;'>8</span>       4   101     2 quadratic     0.974         0.974 0.480     <span style='text-decoration: underline;'>1</span>860. 1.14<span style='color: #949494;'>e</span><span style='color: #BB0000;'>-78</span>
 #&gt; <span style='color: #949494;'># … with 7 more variables: df &lt;dbl&gt;, logLik &lt;dbl&gt;, AIC &lt;dbl&gt;, BIC &lt;dbl&gt;,</span>
 #&gt; <span style='color: #949494;'>#   deviance &lt;dbl&gt;, df.residual &lt;int&gt;, nobs &lt;int&gt;</span></div><div class='input'>
 <span class='co'>## Fit functions do not actually need to be any particular kind of model, they</span>
 <span class='co'>## can be any arbitrary function. However, not all functions will lead to useful</span>
 <span class='co'>## output with tidy_fits and glance_fits.</span>
 <span class='va'>add_five_data</span> <span class='op'>=</span> <span class='va'>simple_linear_data</span> <span class='op'>%&gt;%</span>
-  <span class='fu'><a href='https://generics.r-lib.org/reference/fit.html'>fit</a></span><span class='op'>(</span>add_five <span class='op'>=</span> <span class='op'>~</span> <span class='va'>.</span> <span class='op'>+</span> <span class='fl'>5</span><span class='op'>)</span>
+  <span class='fu'><a href='https://generics.r-lib.org/reference/fit.html'>fit</a></span><span class='op'>(</span>add_five <span class='op'>=</span> <span class='op'>~</span> <span class='va'>.</span> <span class='op'>+</span> <span class='fl'>5</span><span class='op'>)</span>  <span class='co'>## adds 5 to every value in dataset</span>
 
 <span class='va'>add_five_data</span>
 </div><div class='output co'>#&gt; full tibble
@@ -520,16 +522,16 @@ if there are variables a, b, and c specified in
 #&gt; <span style='color: #949494;'># A tibble: 100 × 2</span>
 #&gt;        a     b
 #&gt;    <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>
-#&gt; <span style='color: #BCBCBC;'> 1</span> 1.88   9.89
-#&gt; <span style='color: #BCBCBC;'> 2</span> 2.86  14.1 
-#&gt; <span style='color: #BCBCBC;'> 3</span> 1.57   9.88
-#&gt; <span style='color: #BCBCBC;'> 4</span> 3.38  15.1 
-#&gt; <span style='color: #BCBCBC;'> 5</span> 2.26  11.6 
-#&gt; <span style='color: #BCBCBC;'> 6</span> 1.29   8.71
-#&gt; <span style='color: #BCBCBC;'> 7</span> 0.729  7.13
-#&gt; <span style='color: #BCBCBC;'> 8</span> 3.04  14.4 
-#&gt; <span style='color: #BCBCBC;'> 9</span> 1.43  10.4 
-#&gt; <span style='color: #BCBCBC;'>10</span> 1.47  10.7 
+#&gt; <span style='color: #BCBCBC;'> 1</span> 1.12   7.74
+#&gt; <span style='color: #BCBCBC;'> 2</span> 4.62  18.3 
+#&gt; <span style='color: #BCBCBC;'> 3</span> 2.41  12.7 
+#&gt; <span style='color: #BCBCBC;'> 4</span> 2.96  14.1 
+#&gt; <span style='color: #BCBCBC;'> 5</span> 0.711  6.87
+#&gt; <span style='color: #BCBCBC;'> 6</span> 2.06  10.5 
+#&gt; <span style='color: #BCBCBC;'> 7</span> 2.08  12.0 
+#&gt; <span style='color: #BCBCBC;'> 8</span> 2.56  12.7 
+#&gt; <span style='color: #BCBCBC;'> 9</span> 2.56  12.8 
+#&gt; <span style='color: #BCBCBC;'>10</span> 0.180  5.80
 #&gt; <span style='color: #949494;'># … with 90 more rows</span>
 #&gt; 
 #&gt; add_five[[1]]
@@ -537,19 +539,18 @@ if there are variables a, b, and c specified in
 #&gt; <span style='color: #949494;'># A tibble: 100 × 2</span>
 #&gt;        a     b
 #&gt;    <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>
-#&gt; <span style='color: #BCBCBC;'> 1</span>  6.88  14.9
-#&gt; <span style='color: #BCBCBC;'> 2</span>  7.86  19.1
-#&gt; <span style='color: #BCBCBC;'> 3</span>  6.57  14.9
-#&gt; <span style='color: #BCBCBC;'> 4</span>  8.38  20.1
-#&gt; <span style='color: #BCBCBC;'> 5</span>  7.26  16.6
-#&gt; <span style='color: #BCBCBC;'> 6</span>  6.29  13.7
-#&gt; <span style='color: #BCBCBC;'> 7</span>  5.73  12.1
-#&gt; <span style='color: #BCBCBC;'> 8</span>  8.04  19.4
-#&gt; <span style='color: #BCBCBC;'> 9</span>  6.43  15.4
-#&gt; <span style='color: #BCBCBC;'>10</span>  6.47  15.7
+#&gt; <span style='color: #BCBCBC;'> 1</span>  6.12  12.7
+#&gt; <span style='color: #BCBCBC;'> 2</span>  9.62  23.3
+#&gt; <span style='color: #BCBCBC;'> 3</span>  7.41  17.7
+#&gt; <span style='color: #BCBCBC;'> 4</span>  7.96  19.1
+#&gt; <span style='color: #BCBCBC;'> 5</span>  5.71  11.9
+#&gt; <span style='color: #BCBCBC;'> 6</span>  7.06  15.5
+#&gt; <span style='color: #BCBCBC;'> 7</span>  7.08  17.0
+#&gt; <span style='color: #BCBCBC;'> 8</span>  7.56  17.7
+#&gt; <span style='color: #BCBCBC;'> 9</span>  7.56  17.8
+#&gt; <span style='color: #BCBCBC;'>10</span>  5.18  10.8
 #&gt; <span style='color: #949494;'># … with 90 more rows</span>
 #&gt; </div><div class='input'>
-
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

@@ -40,9 +40,10 @@
 
 
 <meta property="og:title" content="Define metaparameters to vary in simulation — define" />
-<meta property="og:description" content="Takes the output of specify (a
+<meta property="og:description" content="Takes the output of
+specify (a
 simpr_spec object) and defines the
-metaparameters for simulation." />
+metaparameters (i.e. simulation factors)." />
 
 
 
@@ -140,9 +141,10 @@ metaparameters for simulation." />
     </div>
 
     <div class="ref-description">
-    <p>Takes the output of <code><a href='specify.formula.html'>specify</a></code> (a
+    <p>Takes the output of
+<code><a href='specify.formula.html'>specify</a></code> (a
 <code>simpr_spec</code> object) and defines the
-metaparameters for simulation.</p>
+metaparameters (i.e. simulation factors).</p>
     </div>
 
     <pre class="usage"><span class='fu'>define</span><span class='op'>(</span>.x <span class='op'>=</span> <span class='cn'>NULL</span>, <span class='va'>...</span>, .suffix <span class='op'>=</span> <span class='st'>"_index"</span><span class='op'>)</span></pre>
@@ -153,12 +155,13 @@ metaparameters for simulation.</p>
     <tr>
       <th>.x</th>
       <td><p>a <code>simpr_spec</code> object (the
-output of <code><a href='specify.formula.html'>specify</a></code>)</p></td>
+output of
+<code><a href='specify.formula.html'>specify</a></code>)</p></td>
     </tr>
     <tr>
       <th>...</th>
       <td><p>metaparameters: named arguments
-containing vectors or unidimensional lists of
+containing vectors or lists of
 objects to be used in the simulation.</p></td>
     </tr>
     <tr>
@@ -172,30 +175,29 @@ index column for list metaparameters,
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>a <code>simpr_define</code> object to pass
-  onto <code>generate</code> for the
-  simulation. This is also a tibble containing
-  all simulation conditions that can be
-  examined or altered directly (in case a fully
-  crossed design is not desired).</p>
+    <p>a <code>simpr_spec</code> object to pass
+  onto
+  <code><a href='generate.simpr_spec.html'>generate</a></code>
+  for the simulation.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>This is the second step in the simulation
 process, after specifying the simulated data
-using <code><a href='specify.formula.html'>specify</a></code>.  The output of
-<code>define</code> is then passed to
-<code><a href='generate.simpr_spec.html'>generate</a></code> to actually generate the
-simulation.</p>
-<p>Metaparameters are named arguments that are
-used in the simulation.  Usually, a
-metaparameter is some kind of vector or list,
+using <code><a href='specify.formula.html'>specify</a></code>.
+The output of <code>define</code> is then
+passed to
+<code><a href='generate.simpr_spec.html'>generate</a></code> to
+actually generate the simulation.</p>
+<p>Metaparameters are named arguments, passed to
+<code>...</code>, that are used in the simulation.
+A metaparameter is some kind of vector or list,
 representing something that is to be
 systematically varied as a part of the
-simulation design. Any metaparameter would also
-appear in the formulas of
-<code><a href='specify.formula.html'>specify</a></code>, and thus the simulation
-changes depending on the value of the
-metaparameter.</p>
+simulation design. Any metaparameter should
+also appear in the formulas of
+<code><a href='specify.formula.html'>specify</a></code>, and
+thus the simulation changes depending on the
+value of the metaparameter.</p>
 <p>When creating the simulation, simulations for
 all possible combinations of metaparameters are
 generated, resulting in a fully crossed
@@ -205,15 +207,16 @@ filtering options available in
 <code><a href='generate.simpr_spec.html'>generate</a></code>.</p>
 <p>When one of <code>...</code> is a list, a new
 column is generated in the output to
-<code><a href='generate.simpr_spec.html'>generate</a></code> to serve as the index of the
-list.  This new column will be the name of the
-list argument,  with the <code>suffix</code> argument
-appended onto the end.  So if <code>Y = list(a
-= 1:2, b = letters[2:3])</code>, and <code>suffix =
-"_index"</code>, the default, a column named
-<code>Y_index</code> would be added to the output of
-<code><a href='generate.simpr_spec.html'>generate</a></code> with values <code>"a"</code> and
-<code>"b"</code>.</p>
+<code><a href='generate.simpr_spec.html'>generate</a></code> to
+serve as the index of the list.  This new
+column will be the name of the list argument,
+with the <code>suffix</code> argument appended onto
+the end.  So if <code>Y = list(a = 1:2, b =
+letters[2:3])</code>, and <code>suffix = "_index"</code>,
+the default, a column named <code>Y_index</code>
+would be added to the output of
+<code><a href='generate.simpr_spec.html'>generate</a></code>
+with values <code>"a"</code> and <code>"b"</code>.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># Simple example of setting a metaparameter</span>
@@ -235,11 +238,11 @@ appended onto the end.  So if <code>Y = list(a
 #&gt; <span style='color: #949494;'># A tibble: 5 × 1</span>
 #&gt;       a
 #&gt;   <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>
-#&gt; <span style='color: #BCBCBC;'>1</span>  1.04
-#&gt; <span style='color: #BCBCBC;'>2</span>  2.12
-#&gt; <span style='color: #BCBCBC;'>3</span>  2.25
-#&gt; <span style='color: #BCBCBC;'>4</span>  1.75
-#&gt; <span style='color: #BCBCBC;'>5</span>  2.21
+#&gt; <span style='color: #BCBCBC;'>1</span> 0.377
+#&gt; <span style='color: #BCBCBC;'>2</span> 0.667
+#&gt; <span style='color: #BCBCBC;'>3</span> 1.90 
+#&gt; <span style='color: #BCBCBC;'>4</span> 0.141
+#&gt; <span style='color: #BCBCBC;'>5</span> 0.283
 #&gt; </div><div class='input'>
 <span class='va'>multi_meta</span> <span class='op'>=</span> <span class='fu'><a href='https://generics.r-lib.org/reference/specify.html'>specify</a></span><span class='op'>(</span>a <span class='op'>=</span> <span class='op'>~</span> <span class='va'>mu</span> <span class='op'>+</span> <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='va'>n</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
   <span class='fu'>define</span><span class='op'>(</span>n <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>5</span>, <span class='fl'>10</span><span class='op'>)</span>,
@@ -262,13 +265,13 @@ appended onto the end.  So if <code>Y = list(a
 #&gt; sim[[1]]
 #&gt; --------------------------
 #&gt; <span style='color: #949494;'># A tibble: 5 × 1</span>
-#&gt;         a
-#&gt;     <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>
-#&gt; <span style='color: #BCBCBC;'>1</span> -<span style='color: #BB0000;'>1.56</span>  
-#&gt; <span style='color: #BCBCBC;'>2</span>  0.071<span style='text-decoration: underline;'>6</span>
-#&gt; <span style='color: #BCBCBC;'>3</span> -<span style='color: #BB0000;'>1.26</span>  
-#&gt; <span style='color: #BCBCBC;'>4</span> -<span style='color: #BB0000;'>0.971</span> 
-#&gt; <span style='color: #BCBCBC;'>5</span>  0.187 
+#&gt;        a
+#&gt;    <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>
+#&gt; <span style='color: #BCBCBC;'>1</span> -<span style='color: #BB0000;'>0.114</span>
+#&gt; <span style='color: #BCBCBC;'>2</span> -<span style='color: #BB0000;'>0.807</span>
+#&gt; <span style='color: #BCBCBC;'>3</span> -<span style='color: #BB0000;'>0.863</span>
+#&gt; <span style='color: #BCBCBC;'>4</span>  0.488
+#&gt; <span style='color: #BCBCBC;'>5</span> -<span style='color: #BB0000;'>1.45</span> 
 #&gt; </div><div class='input'>
 
 <span class='co'># meta can handle lists which can contain multiple matrices, etc.</span>
@@ -293,18 +296,18 @@ appended onto the end.  So if <code>Y = list(a
 #&gt; sim[[1]]
 #&gt; --------------------------
 #&gt; <span style='color: #949494;'># A tibble: 10 × 2</span>
-#&gt;        a_1    a_2
-#&gt;      <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>  <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>
-#&gt; <span style='color: #BCBCBC;'> 1</span> -<span style='color: #BB0000;'>0.211</span>  -<span style='color: #BB0000;'>0.916</span>
-#&gt; <span style='color: #BCBCBC;'> 2</span> -<span style='color: #BB0000;'>0.467</span>   1.14 
-#&gt; <span style='color: #BCBCBC;'> 3</span>  0.162  -<span style='color: #BB0000;'>0.178</span>
-#&gt; <span style='color: #BCBCBC;'> 4</span>  0.912  -<span style='color: #BB0000;'>3.23</span> 
-#&gt; <span style='color: #BCBCBC;'> 5</span> -<span style='color: #BB0000;'>0.036</span><span style='color: #BB0000; text-decoration: underline;'>9</span> -<span style='color: #BB0000;'>0.294</span>
-#&gt; <span style='color: #BCBCBC;'> 6</span> -<span style='color: #BB0000;'>0.221</span>  -<span style='color: #BB0000;'>0.580</span>
-#&gt; <span style='color: #BCBCBC;'> 7</span> -<span style='color: #BB0000;'>3.37</span>   -<span style='color: #BB0000;'>1.48</span> 
-#&gt; <span style='color: #BCBCBC;'> 8</span> -<span style='color: #BB0000;'>1.60</span>   -<span style='color: #BB0000;'>0.834</span>
-#&gt; <span style='color: #BCBCBC;'> 9</span> -<span style='color: #BB0000;'>0.413</span>   0.106
-#&gt; <span style='color: #BCBCBC;'>10</span>  0.998  -<span style='color: #BB0000;'>1.36</span> 
+#&gt;       a_1    a_2
+#&gt;     <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>  <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>
+#&gt; <span style='color: #BCBCBC;'> 1</span> -<span style='color: #BB0000;'>1.00</span>   1.82 
+#&gt; <span style='color: #BCBCBC;'> 2</span>  1.44  -<span style='color: #BB0000;'>0.358</span>
+#&gt; <span style='color: #BCBCBC;'> 3</span> -<span style='color: #BB0000;'>0.180</span>  1.07 
+#&gt; <span style='color: #BCBCBC;'> 4</span>  2.14  -<span style='color: #BB0000;'>1.14</span> 
+#&gt; <span style='color: #BCBCBC;'> 5</span>  0.169  0.862
+#&gt; <span style='color: #BCBCBC;'> 6</span> -<span style='color: #BB0000;'>1.29</span>   1.56 
+#&gt; <span style='color: #BCBCBC;'> 7</span>  2.19   0.533
+#&gt; <span style='color: #BCBCBC;'> 8</span> -<span style='color: #BB0000;'>1.58</span>  -<span style='color: #BB0000;'>0.739</span>
+#&gt; <span style='color: #BCBCBC;'> 9</span>  1.80  -<span style='color: #BB0000;'>0.376</span>
+#&gt; <span style='color: #BCBCBC;'>10</span>  0.219 -<span style='color: #BB0000;'>0.139</span>
 #&gt; </div><div class='input'>
 </div></pre>
   </div>

@@ -7,9 +7,26 @@
 #' \code{\link{define}} to specify the simulation
 #' variables, which is produced by
 #' \code{\link[=generate.simpr_spec]{generate}}.
+#' The print method provides an overview of the
+#' specification, including the conditions.
 #'
 #' @param x a \code{simpr_spec} object
 #' @param \dots ignored
+#' @examples
+#' empty = new_simpr_spec()
+#' print(empty)
+#'
+#' ## Easiest to create a simpr_spec with specify
+#' simple_spec = specify(a = ~ rbinom(n, size, prob))
+#' print(simple_spec)
+#'
+#' ## Adding on define adds all possible combinations
+#' ## of conditions and more info in output.
+#' defined_spec = specify(a = ~ rbinom(n, size, prob)) %>%
+#'   define(n = c(10, 20),
+#'          size = c(20, 40),
+#'          prob = c(0.2, 0.4))
+#' print(defined_spec)
 #'
 #' @rdname simpr_spec
 #' @export

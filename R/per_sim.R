@@ -27,6 +27,27 @@
 #' @param obj A \code{simpr_tibble} or \code{simpr_spec} object.
 #' @return A \code{simpr_sims} object for use with dplyr and tidyr verbs.
 #' @aliases simpr_sims
+#' @examples
+#' ## Often most convenient to specify simulations for 'wide' data
+#' data_wide = specify(a = ~ runif(5, min = 0, max = 1),
+#'                     b = ~ runif(5, min = 0, max = 2)) %>%
+#'   generate(2)
+#'
+#' data_wide
+#'
+#' ## Any dplyr or tidyr verbs can be applied after per_sim()
+#' data_long = data_wide %>%
+#'   per_sim() %>%
+#'   pivot_longer(everything(), names_to = "name",
+#'                values_to = "value")
+#' data_long
+#'
+#' ## Now, ready for analysis
+#' data_long %>%
+#'   fit(lm = ~lm(value ~ name)) %>%
+#'   tidy_fits
+#'
+#'
 #' @export
 per_sim = function(obj) {
  UseMethod("per_sim")

@@ -6,8 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Tidy simpr_gen simulated model results output
-into tibble of components — tidy_fits • simpr</title>
+<title>Tidy fits into a tidy tibble — tidy_fits • simpr</title>
 
 
 <!-- jquery -->
@@ -40,12 +39,11 @@ into tibble of components — tidy_fits • simpr</title>
 
 
 
-<meta property="og:title" content="Tidy simpr_gen simulated model results output
-into tibble of components — tidy_fits" />
-<meta property="og:description" content="Turn fitted model of simulated data (from
-fit) into a tidy tibble of model
-components (via
-generics::tidy)." />
+<meta property="og:title" content="Tidy fits into a tidy tibble — tidy_fits" />
+<meta property="og:description" content="Turn models fit to simulated data (from
+fit) into a
+tidy tibble of model estimates (via
+broom::tidy)." />
 
 
 
@@ -137,17 +135,16 @@ generics::tidy)." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Tidy simpr_gen simulated model results output
-into tibble of components</h1>
+    <h1>Tidy fits into a tidy tibble</h1>
     <small class="dont-index">Source: <a href='https://github.com/statisfactions/simpr/blob/master/R/tidy_fits.R'><code>R/tidy_fits.R</code></a></small>
     <div class="hidden name"><code>tidy_fits.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Turn fitted model of simulated data (from
-<code><a href='fit.simpr_tibble.html'>fit</a></code>) into a tidy tibble of model
-components (via
-<code>generics::<a href='https://generics.r-lib.org/reference/tidy.html'>tidy</a></code>).</p>
+    <p>Turn models fit to simulated data (from
+<code><a href='fit.simpr_tibble.html'>fit</a></code>) into a
+tidy tibble of model estimates (via
+<code>broom::<a href='https://generics.r-lib.org/reference/tidy.html'>tidy</a></code>).</p>
     </div>
 
     <pre class="usage"><span class='fu'>tidy_fits</span><span class='op'>(</span><span class='va'>obj</span>, <span class='va'>...</span>, .progress <span class='op'>=</span> <span class='cn'>FALSE</span>, .options <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/pkg/furrr/man/furrr_options.html'>furrr_options</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span></pre>
@@ -157,13 +154,14 @@ components (via
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>obj</th>
-      <td><p>tibble with repetition number,
-metaparameters, simulated data, and fitted
-models, from <code><a href='fit.simpr_tibble.html'>fit</a></code></p></td>
+      <td><p>a <code>simpr_tibble</code> with fitted
+models, from
+<code><a href='fit.simpr_tibble.html'>fit</a></code></p></td>
     </tr>
     <tr>
       <th>...</th>
-      <td><p>Additional arguments to <code><a href='https://generics.r-lib.org/reference/tidy.html'>generics::tidy</a></code>.</p></td>
+      <td><p>Additional arguments to the
+<code>broom::<a href='https://generics.r-lib.org/reference/tidy.html'>tidy</a></code> method.</p></td>
     </tr>
     <tr>
       <th>.progress</th>
@@ -184,23 +182,25 @@ to
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>a tibble with the output of the
-  <code>generics::<a href='https://generics.r-lib.org/reference/tidy.html'>tidy</a></code> method
-  for the given object.</p>
+  <code>broom::<a href='https://generics.r-lib.org/reference/tidy.html'>tidy</a></code> method
+  applied to each model fit and then bound into
+  a single tibble.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>This is part of the fifth step of the
-simulation process: after fitting the model
-with <code><a href='fit.simpr_tibble.html'>fit</a></code>, now tidy the model
-output for further analysis such as evaluating
-power.  All model objects should be supported
-by <code>generics::<a href='https://generics.r-lib.org/reference/tidy.html'>tidy</a></code>,
-primarily via the <code>broom</code> package.</p>
+    <p>This the fifth step of the simulation process:
+after fitting the model with
+<code><a href='fit.simpr_tibble.html'>fit</a></code>, now tidy
+the model output for further analysis such as
+evaluating power.  All model objects should be
+supported by
+<code>broom::<a href='https://generics.r-lib.org/reference/tidy.html'>tidy</a></code>. See
+<code><a href='apply_fits.html'>apply_fits</a></code> for applying any
+arbitrary function to the data, including other
+tidiers.</p>
 <p>The output of this function is quite useful for
-calculating things such as power for specific
-tests within an overall model; see
-<em>Examples</em>. For looking at overall
-features of the model such as R-squared, use
-<code><a href='glance_fits.html'>glance_fits</a></code>.</p>
+diagnosing bias, precision, and power. For
+looking at overall features of the model (e.g.,
+R-squared), use <code><a href='glance_fits.html'>glance_fits</a></code>.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p><code><a href='glance_fits.html'>glance_fits</a></code> to view
@@ -220,7 +220,19 @@ features of the model such as R-squared, use
       quadratic <span class='op'>=</span> <span class='op'>~</span><span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span><span class='op'>(</span><span class='va'>a</span> <span class='op'>~</span> <span class='va'>b</span> <span class='op'>+</span> <span class='fu'><a href='https://rdrr.io/r/base/AsIs.html'>I</a></span><span class='op'>(</span><span class='va'>b</span><span class='op'>^</span><span class='fl'>2</span><span class='op'>)</span>, data <span class='op'>=</span> <span class='va'>.</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
   <span class='va'>tidy_fits</span>
 </div><div class='output co'>#&gt; <span class='warning'>Warning: fit() produced errors.  See '.fit_error_*' column(s).</span></div><div class='input'>
-<span class='co'>## Models can be of different types -- anything supported by broom::tidy.</span>
+<span class='va'>compare_degree</span>
+</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 8 × 6</span>
+#&gt;   .sim_id     n   rep .sim_error              Source  .fit_error                
+#&gt;     <span style='color: #949494; font-style: italic;'>&lt;int&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;int&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;int&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>                   <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>   <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>                     
+#&gt; <span style='color: #BCBCBC;'>1</span>       1   100     1 <span style='color: #949494;'>"</span>Error in eval_fun(): … linear  <span style='color: #949494;'>"</span>Error in eval(predvars, …
+#&gt; <span style='color: #BCBCBC;'>2</span>       1   100     1 <span style='color: #949494;'>"</span>Error in eval_fun(): … quadra… <span style='color: #949494;'>"</span>Error in eval(predvars, …
+#&gt; <span style='color: #BCBCBC;'>3</span>       2   101     1 <span style='color: #949494;'>"</span>Error in eval_fun(): … linear  <span style='color: #949494;'>"</span>Error in eval(predvars, …
+#&gt; <span style='color: #BCBCBC;'>4</span>       2   101     1 <span style='color: #949494;'>"</span>Error in eval_fun(): … quadra… <span style='color: #949494;'>"</span>Error in eval(predvars, …
+#&gt; <span style='color: #BCBCBC;'>5</span>       3   100     2 <span style='color: #949494;'>"</span>Error in eval_fun(): … linear  <span style='color: #949494;'>"</span>Error in eval(predvars, …
+#&gt; <span style='color: #BCBCBC;'>6</span>       3   100     2 <span style='color: #949494;'>"</span>Error in eval_fun(): … quadra… <span style='color: #949494;'>"</span>Error in eval(predvars, …
+#&gt; <span style='color: #BCBCBC;'>7</span>       4   101     2 <span style='color: #949494;'>"</span>Error in eval_fun(): … linear  <span style='color: #949494;'>"</span>Error in eval(predvars, …
+#&gt; <span style='color: #BCBCBC;'>8</span>       4   101     2 <span style='color: #949494;'>"</span>Error in eval_fun(): … quadra… <span style='color: #949494;'>"</span>Error in eval(predvars, …</div><div class='input'>
+<span class='co'>## Models can be anything supported by broom::tidy.</span>
 <span class='va'>cor_vs_lm</span> <span class='op'>=</span> <span class='va'>simple_linear_data</span> <span class='op'>%&gt;%</span>
   <span class='fu'><a href='https://generics.r-lib.org/reference/fit.html'>fit</a></span><span class='op'>(</span>linear <span class='op'>=</span> <span class='op'>~</span><span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span><span class='op'>(</span><span class='va'>a</span> <span class='op'>~</span> <span class='va'>b</span>, data <span class='op'>=</span> <span class='va'>.</span><span class='op'>)</span>,
       cor <span class='op'>=</span> <span class='op'>~</span> <span class='fu'><a href='https://rdrr.io/r/stats/cor.test.html'>cor.test</a></span><span class='op'>(</span><span class='va'>.</span><span class='op'>$</span><span class='va'>a</span>, <span class='va'>.</span><span class='op'>$</span><span class='va'>b</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
@@ -237,35 +249,7 @@ features of the model such as R-squared, use
 #&gt; <span style='color: #BCBCBC;'>5</span>       3   100     2 <span style='color: #949494;'>"</span>Error in eval_fun():… linear <span style='color: #949494;'>"</span>Error in eval(predvars, da…
 #&gt; <span style='color: #BCBCBC;'>6</span>       3   100     2 <span style='color: #949494;'>"</span>Error in eval_fun():… cor    <span style='color: #949494;'>"</span>Error in cor.test.default(…
 #&gt; <span style='color: #BCBCBC;'>7</span>       4   101     2 <span style='color: #949494;'>"</span>Error in eval_fun():… linear <span style='color: #949494;'>"</span>Error in eval(predvars, da…
-#&gt; <span style='color: #BCBCBC;'>8</span>       4   101     2 <span style='color: #949494;'>"</span>Error in eval_fun():… cor    <span style='color: #949494;'>"</span>Error in cor.test.default(…</div><div class='input'>
-<span class='co'>## Example power analysis to detect an interaction (g1)</span>
-<span class='co'># \donttest{</span>
-<span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span><span class='op'>(</span><span class='fl'>100</span><span class='op'>)</span>
-<span class='va'>simpr_tidy</span> <span class='op'>=</span> <span class='co'>## Specify the simulation</span>
-  <span class='fu'><a href='https://generics.r-lib.org/reference/specify.html'>specify</a></span><span class='op'>(</span>a <span class='op'>=</span> <span class='op'>~</span> <span class='fl'>2</span> <span class='op'>+</span> <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='va'>n</span><span class='op'>)</span>,
-            b <span class='op'>=</span> <span class='op'>~</span> <span class='fl'>3</span> <span class='op'>+</span> <span class='fl'>2</span><span class='op'>*</span><span class='va'>a</span> <span class='op'>+</span> <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='va'>n</span>, <span class='fl'>0</span>, sd <span class='op'>=</span> <span class='fl'>0.5</span><span class='op'>)</span>,
-            c <span class='op'>=</span> <span class='op'>~</span> <span class='fl'>5</span> <span class='op'>+</span> <span class='va'>a</span> <span class='op'>+</span> <span class='va'>b</span> <span class='op'>+</span> <span class='va'>g1</span><span class='op'>*</span><span class='va'>a</span><span class='op'>*</span><span class='va'>b</span> <span class='op'>+</span> <span class='fl'>10</span> <span class='op'>*</span> <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='va'>n</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
-  <span class='fu'><a href='define.html'>define</a></span><span class='op'>(</span>n <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span><span class='fl'>100</span>, <span class='fl'>300</span>, by <span class='op'>=</span> <span class='fl'>20</span><span class='op'>)</span>,
-       g1 <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span><span class='op'>-</span><span class='fl'>1</span>, <span class='fl'>1</span>, by <span class='op'>=</span> <span class='fl'>0.5</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
-  <span class='co'>## Generate the data</span>
-  <span class='fu'><a href='https://generics.r-lib.org/reference/generate.html'>generate</a></span><span class='op'>(</span><span class='fl'>10</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
-  <span class='co'>## Fit models</span>
-  <span class='fu'><a href='https://generics.r-lib.org/reference/fit.html'>fit</a></span><span class='op'>(</span>lm <span class='op'>=</span> <span class='op'>~</span><span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span><span class='op'>(</span><span class='va'>c</span> <span class='op'>~</span> <span class='va'>a</span><span class='op'>*</span><span class='va'>b</span>, data <span class='op'>=</span> <span class='va'>.</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
-  <span class='co'>## Calculate the output</span>
-  <span class='va'>tidy_fits</span>
-
-<span class='co'>## Now we can easily calculate and plot power</span>
-<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://dplyr.tidyverse.org'>dplyr</a></span><span class='op'>)</span>
-<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://ggplot2.tidyverse.org'>ggplot2</a></span><span class='op'>)</span>
-<span class='va'>simpr_tidy</span> <span class='op'>%&gt;%</span>
-  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>term</span> <span class='op'>%in%</span> <span class='st'>"a:b"</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
-  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span><span class='op'>(</span><span class='va'>n</span>, <span class='va'>g1</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
-  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/summarise.html'>summarize</a></span><span class='op'>(</span>power <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span><span class='op'>(</span><span class='va'>p.value</span> <span class='op'>&lt;</span> <span class='fl'>0.05</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span><span class='va'>n</span>, <span class='va'>power</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span>
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_path.html'>geom_line</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span>
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/facet_grid.html'>facet_grid</a></span><span class='op'>(</span><span class='op'>~</span><span class='va'>g1</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>`summarise()` has grouped output by 'n'. You can override using the `.groups` argument.</span></div><div class='img'><img src='tidy_fits-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='co'># }</span>
-</div></pre>
+#&gt; <span style='color: #BCBCBC;'>8</span>       4   101     2 <span style='color: #949494;'>"</span>Error in eval_fun():… cor    <span style='color: #949494;'>"</span>Error in cor.test.default(…</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

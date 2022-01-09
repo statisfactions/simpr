@@ -1,26 +1,28 @@
 #' Define metaparameters to vary in simulation
 #'
-#' Takes the output of \code{\link[=specify.formula]{specify}} (a
+#' Takes the output of
+#' \code{\link[=specify.formula]{specify}} (a
 #' \code{simpr_spec} object) and defines the
-#' metaparameters for simulation.
+#' metaparameters (i.e. simulation factors).
 #'
 #' This is the second step in the simulation
 #' process, after specifying the simulated data
-#' using \code{\link[=specify.formula]{specify}}.  The output of
-#' \code{\link{define}} is then passed to
-#' \code{\link[=generate.simpr_spec]{generate}} to actually generate the
-#' simulation.
+#' using \code{\link[=specify.formula]{specify}}.
+#' The output of \code{\link{define}} is then
+#' passed to
+#' \code{\link[=generate.simpr_spec]{generate}} to
+#' actually generate the simulation.
 #'
-#' Metaparameters are named arguments that are
-#' used in the simulation.  Usually, a
-#' metaparameter is some kind of vector or list,
+#' Metaparameters are named arguments, passed to
+#' \code{\dots}, that are used in the simulation.
+#' A metaparameter is some kind of vector or list,
 #' representing something that is to be
 #' systematically varied as a part of the
-#' simulation design. Any metaparameter would also
-#' appear in the formulas of
-#' \code{\link[=specify.formula]{specify}}, and thus the simulation
-#' changes depending on the value of the
-#' metaparameter.
+#' simulation design. Any metaparameter should
+#' also appear in the formulas of
+#' \code{\link[=specify.formula]{specify}}, and
+#' thus the simulation changes depending on the
+#' value of the metaparameter.
 #'
 #' When creating the simulation, simulations for
 #' all possible combinations of metaparameters are
@@ -32,31 +34,31 @@
 #'
 #' When one of \code{\dots} is a list, a new
 #' column is generated in the output to
-#' \code{\link[=generate.simpr_spec]{generate}} to serve as the index of the
-#' list.  This new column will be the name of the
-#' list argument,  with the \code{suffix} argument
-#' appended onto the end.  So if \code{Y = list(a
-#' = 1:2, b = letters[2:3])}, and \code{suffix =
-#' "_index"}, the default, a column named
-#' \code{Y_index} would be added to the output of
-#' \code{\link[=generate.simpr_spec]{generate}} with values \code{"a"} and
-#' \code{"b"}.
+#' \code{\link[=generate.simpr_spec]{generate}} to
+#' serve as the index of the list.  This new
+#' column will be the name of the list argument,
+#' with the \code{suffix} argument appended onto
+#' the end.  So if \code{Y = list(a = 1:2, b =
+#' letters[2:3])}, and \code{suffix = "_index"},
+#' the default, a column named \code{Y_index}
+#' would be added to the output of
+#' \code{\link[=generate.simpr_spec]{generate}}
+#' with values \code{"a"} and \code{"b"}.
 #'
 #' @param .x a \code{simpr_spec} object (the
-#'   output of \code{\link[=specify.formula]{specify}})
+#'   output of
+#'   \code{\link[=specify.formula]{specify}})
 #' @param ... metaparameters: named arguments
-#'   containing vectors or unidimensional lists of
+#'   containing vectors or lists of
 #'   objects to be used in the simulation.
 #' @param .suffix name of suffix to append onto
 #'   index column for list metaparameters,
 #'   \code{"_index"} by default.  See
 #'   \emph{Details}.
-#' @return a \code{simpr_define} object to pass
-#'   onto \code{\link[generate.simpr_spec]{generate}} for the
-#'   simulation. This is also a tibble containing
-#'   all simulation conditions that can be
-#'   examined or altered directly (in case a fully
-#'   crossed design is not desired).
+#' @return a \code{simpr_spec} object to pass
+#'   onto
+#'   \code{\link[=generate.simpr_spec]{generate}}
+#'   for the simulation.
 #'
 #' @examples
 #' # Simple example of setting a metaparameter

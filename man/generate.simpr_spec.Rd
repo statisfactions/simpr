@@ -20,8 +20,9 @@
 \arguments{
 \item{x}{a \code{simpr_spec} object generated
 by \code{\link{define}} or
-\code{\link[=specify.formula]{specify}}, containing the
-specifications of the simulation}
+\code{\link[=specify.formula]{specify}},
+containing the specifications of the
+simulation}
 
 \item{.reps}{number of replications to run (a
 whole number greater than 0)}
@@ -31,7 +32,8 @@ to simulate, passed to
 \code{\link[dplyr]{filter}}.  This is useful
 for reproducing just a few selected rows of a
 simulation without needing to redo the entire
-simulation.}
+simulation, see \code{vignette("Reproducing
+simulations")},}
 
 \item{.sim_name}{name of the list-column to be
 created, containing simulation results.
@@ -41,10 +43,13 @@ Default is \code{"sim"}}
 broadcast to the user as they occur?}
 
 \item{.warn_on_error}{Should there be a warning
-when simulation errors occur?}
+when simulation errors occur? See
+\code{vignette("Managing simulation
+errors")}.}
 
-\item{.stop_on_error}{Should the simulation stop
-immediately when simulation errors occur?}
+\item{.stop_on_error}{Should the simulation
+stop immediately when simulation errors
+occur?}
 
 \item{.debug}{Run simulation in debug mode,
 allowing objects, etc. to be explored for
@@ -67,10 +72,10 @@ a \code{\link{simpr_sims}} object,
   repetition (a total of \code{rep}
   repetitions) for each combination of
   metaparameters and some extra metadata used
-  by \code{\link[=fit.simpr_tibble]{fit}}.  The columns are
-  \code{rep} for the repetition number, the
-  names of the metaparameters, and a
-  list-column (named by the argument
+  by \code{\link[=fit.simpr_tibble]{fit}}.  The
+  columns are \code{rep} for the repetition
+  number, the names of the metaparameters, and
+  a list-column (named by the argument
   \code{sim_name}) containing the dataset for
   each repetition and metaparameter
   combination. \code{simpr_sims} objects can be
@@ -79,23 +84,25 @@ a \code{\link{simpr_sims}} object,
   each element of the simulation list-column.
 }
 \description{
-Use specification from \code{\link[=specify.formula]{specify}} or
+Use specification from
+\code{\link[=specify.formula]{specify}} or
 \code{\link{define}} to produce simulated data.
 }
 \details{
 This is the third step in the simulation
 process: after specifying the population model
-and defining the metaparameters,
+and defining the metaparameters, if any,
 \code{generate} is the workhorse function that
 actually generates the simulated datasets, one
-for each replication, for each combination of
+for each replication and combination of
 metaparameters. You likely want to use the
 output of \code{generate} to fit model(s) with
 \code{\link[=fit.simpr_tibble]{fit}}.
 
 Errors you get using this function usually have
 to do with how you specified the simulation in
-\code{\link[=specify.formula]{specify}} and \code{\link{define}}.
+\code{\link[=specify.formula]{specify}} and
+\code{\link{define}}.
 }
 \examples{
 meta_list_out = specify(a = ~ MASS::mvrnorm(n, rep(0, 2), Sigma = S)) \%>\%
@@ -126,19 +133,14 @@ meta_list_out = specify(a = ~ MASS::mvrnorm(n, rep(0, 2), Sigma = S)) \%>\%
   generate(4)
 
   meta_list_generate_after
-
-  ## This is equivalent, but may be slower / more memory-intensive
-  meta_list_generate_before = meta_list_2 \%>\%
-  fit(lm = ~ lm(a_2 ~ a_1, data = .)) \%>\%
-  tidy_fits
-
-
 }
 \seealso{
 \code{\link[=specify.formula]{specify}} and
   \code{\link{define}} for examples of how
   these functions affect the output of
-  \code{generate}. See the \code{furrr} website
-  for more information on working with futures:
+  \code{generate}. See
+  \code{vignette("Optimization")} and the
+  \code{furrr} website for more information on
+  working with futures:
   \url{https://furrr.futureverse.org/}
 }

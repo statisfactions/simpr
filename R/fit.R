@@ -1,8 +1,9 @@
 #' Fit models to the simulated data
 #'
 #' Takes simulated data from
-#' \code{\link[=generate.simpr_spec]{generate}} and applies functions to
-#' it, usually model-fitting functions.
+#' \code{\link[=generate.simpr_spec]{generate}}
+#' and applies functions to it, usually
+#' model-fitting functions.
 #'
 #' This is the fourth step in the simulation
 #' process: after generating the simulation data,
@@ -10,44 +11,43 @@
 #' model to the data. The output is often then
 #' passed to \code{\link{tidy_fits}} or
 #' \code{\link{glance_fits}} to extract relevant
-#' parameters from the object, based on
-#' \code{\link[broom]{tidy}} and
-#' \code{\link[broom]{glance}} from the
-#' \code{broom} package.
+#' model estimates from the object.
 #'
-#' Similar to \code{\link[=specify.formula]{specify}}, the
-#' \code{\dots} arguments uses \code{purrr}-style
-#' formula functions to specify fitting models to
-#' the data. The functions are computed within
-#' each simulation cell, so dataset names are
-#' often unnecessary: for instance, to compute
-#' regressions on each cell, you could specify
-#' \code{fit(linear_model = ~lm(c ~ a + b)}.  If
+#' Similar to
+#' \code{\link[=specify.formula]{specify}}, the
+#' model-fitting \code{\dots} arguments can be
+#' arbitrary R expressions (\code{purrr}-style
+#' lambda functions, see
+#' \code{\link[purrr]{as_mapper}}) to specify
+#' fitting models to the data. The functions are
+#' computed within each simulation cell, so
+#' dataset names are generally unnecessary: e.g.,
+#' to compute regressions on each cell,
+#' \code{fit(linear_model = ~ lm(c ~ a + b)}.  If
 #' your modeling function requires a reference to
 #' the full dataset, use \code{.}, e.g.
 #' \code{fit(linear_model = ~lm(c ~ a + b, data =
-#' .)}. These equivalent specifications would
-#' compute linear models on each simulation cell
-#' if there are variables a, b, and c specified in
-#' \code{specify}.
+#' .)}.
 #'
 #' @param object a \code{simpr_tibble} object--the
 #'   simulated data from
-#'   \code{\link[=generate.simpr_spec]{generate}}--or an
-#'   \code{simpr_spec} object not yet generated.
-#' @param ... \code{purrr}-style formula functions
+#'   \code{\link[=generate.simpr_spec]{generate}}--or
+#'   an \code{simpr_spec} object not yet
+#'   generated.
+#' @param ... \code{purrr}-style lambda functions
 #'   used for computing on the simulated data. See
 #'   \emph{Details} and \emph{Examples}.
 #' @param .quiet Should simulation errors be
 #'   broadcast to the user as they occur?
 #' @param .warn_on_error Should there be a warning
-#'   when simulation errors occur?
+#'   when simulation errors occur? See
+#'   \code{vignette("Managing simulation errors")}.
 #' @param .stop_on_error Should the simulation
 #'   stop immediately when simulation errors
 #'   occur?
 #' @param .debug Run simulation in debug mode,
 #'   allowing objects, etc. to be explored for
-#'   each generated variable specification.
+#'   each attempt to fit objects.
 #' @param .progress	A logical, for whether or not
 #'   to print a progress bar for multiprocess,
 #'   multisession, and multicore plans .
@@ -60,7 +60,8 @@
 #' @return a \code{simpr_tibble} object with
 #'   additional list-columns for the output of the
 #'   provided functions (e.g. model outputs). Just
-#'   like the output of \code{\link[=generate.simpr_spec]{generate}},
+#'   like the output of
+#'   \code{\link[=generate.simpr_spec]{generate}},
 #'   there is one row per repetition per
 #'   combination of metaparameters, and the
 #'   columns are the repetition number \code{rep},
@@ -110,10 +111,9 @@
 #' ## can be any arbitrary function. However, not all functions will lead to useful
 #' ## output with tidy_fits and glance_fits.
 #' add_five_data = simple_linear_data %>%
-#'   fit(add_five = ~ . + 5)
+#'   fit(add_five = ~ . + 5)  ## adds 5 to every value in dataset
 #'
 #' add_five_data
-#'
 #'
 #' @export
 fit.simpr_tibble = function(object, ...,

@@ -167,8 +167,93 @@
 <code><a href='specify.formula.html'>specify</a></code> and/or
 <code><a href='define.html'>define</a></code> to specify the simulation
 variables, which is produced by
-<code><a href='generate.simpr_spec.html'>generate</a></code>.</p>
+<code><a href='generate.simpr_spec.html'>generate</a></code>.
+The print method provides an overview of the
+specification, including the conditions.</p>
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='va'>empty</span> <span class='op'>=</span> <span class='fu'>new_simpr_spec</span><span class='op'>(</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>empty</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; $specify
+#&gt; NULL
+#&gt; 
+#&gt; $conditions
+#&gt; NULL
+#&gt; 
+#&gt; $meta_info
+#&gt; NULL
+#&gt; 
+#&gt; $include_calls
+#&gt; NULL
+#&gt; </div><div class='input'>
+<span class='co'>## Easiest to create a simpr_spec with specify</span>
+<span class='va'>simple_spec</span> <span class='op'>=</span> <span class='fu'><a href='https://generics.r-lib.org/reference/specify.html'>specify</a></span><span class='op'>(</span>a <span class='op'>=</span> <span class='op'>~</span> <span class='fu'><a href='https://rdrr.io/r/stats/Binomial.html'>rbinom</a></span><span class='op'>(</span><span class='va'>n</span>, <span class='va'>size</span>, <span class='va'>prob</span><span class='op'>)</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>simple_spec</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; specify
+#&gt; --------------------------
+#&gt; $a
+#&gt; ~rbinom(n, size, prob)
+#&gt; attr(,"varnames")
+#&gt; [1] "a"
+#&gt; &lt;environment: 0x7feffa39a390&gt;
+#&gt; 
+#&gt; </div><div class='output co'>#&gt; $specify
+#&gt; NULL
+#&gt; 
+#&gt; $conditions
+#&gt; NULL
+#&gt; 
+#&gt; $meta_info
+#&gt; NULL
+#&gt; 
+#&gt; $include_calls
+#&gt; NULL
+#&gt; </div><div class='input'>
+<span class='co'>## Adding on define adds all possible combinations</span>
+<span class='co'>## of conditions and more info in output.</span>
+<span class='va'>defined_spec</span> <span class='op'>=</span> <span class='fu'><a href='https://generics.r-lib.org/reference/specify.html'>specify</a></span><span class='op'>(</span>a <span class='op'>=</span> <span class='op'>~</span> <span class='fu'><a href='https://rdrr.io/r/stats/Binomial.html'>rbinom</a></span><span class='op'>(</span><span class='va'>n</span>, <span class='va'>size</span>, <span class='va'>prob</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='define.html'>define</a></span><span class='op'>(</span>n <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>10</span>, <span class='fl'>20</span><span class='op'>)</span>,
+         size <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>20</span>, <span class='fl'>40</span><span class='op'>)</span>,
+         prob <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0.2</span>, <span class='fl'>0.4</span><span class='op'>)</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>defined_spec</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; specify
+#&gt; --------------------------
+#&gt; $a
+#&gt; ~rbinom(n, size, prob)
+#&gt; attr(,"varnames")
+#&gt; [1] "a"
+#&gt; &lt;environment: 0x7feffa39a390&gt;
+#&gt; 
+#&gt; 
+#&gt; conditions
+#&gt; --------------------------
+#&gt; <span style='color: #949494;'># A tibble: 8 × 3</span>
+#&gt;       n  size  prob
+#&gt;   <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>
+#&gt; <span style='color: #BCBCBC;'>1</span>    10    20   0.2
+#&gt; <span style='color: #BCBCBC;'>2</span>    20    20   0.2
+#&gt; <span style='color: #BCBCBC;'>3</span>    10    40   0.2
+#&gt; <span style='color: #BCBCBC;'>4</span>    20    40   0.2
+#&gt; <span style='color: #BCBCBC;'>5</span>    10    20   0.4
+#&gt; <span style='color: #BCBCBC;'>6</span>    20    20   0.4
+#&gt; <span style='color: #BCBCBC;'>7</span>    10    40   0.4
+#&gt; <span style='color: #BCBCBC;'>8</span>    20    40   0.4
+#&gt; 
+#&gt; meta_info
+#&gt; --------------------------
+#&gt; </div><div class='output co'>#&gt; $specify
+#&gt; NULL
+#&gt; 
+#&gt; $conditions
+#&gt; NULL
+#&gt; 
+#&gt; $meta_info
+#&gt; NULL
+#&gt; 
+#&gt; $include_calls
+#&gt; NULL
+#&gt; </div><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

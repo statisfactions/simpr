@@ -2,7 +2,7 @@
 % Please edit documentation in R/apply_fits.R
 \name{apply_fits}
 \alias{apply_fits}
-\title{Run a given function on a simpr_mod object and
+\title{Run a given function or formula expression on a simpr_mod object and
 tidy the output.}
 \usage{
 apply_fits(obj, .f, ..., .progress = FALSE, .options = furrr_options())
@@ -14,7 +14,7 @@ data, and fitted models, from
 \code{\link[=fit.simpr_tibble]{fit}}}
 
 \item{.f}{A function or \code{purrr}-style
-formula function (see
+lambda function (see
 \code{\link[purrr]{as_mapper}}) used for
 computing on the fit object}
 
@@ -35,6 +35,30 @@ This function applies a given function to all
 fit objects and returns the result in a tidy
 tibble.  Any function or \code{purrr}-style
 lambda function can be used.
+}
+\examples{
+set.seed(100)
+logit_fit = specify(a = ~ sample(0:1, size = n, replace = TRUE),
+        b = ~ a + rlnorm(n)) \%>\%
+  define(n = c(40, 50)) \%>\%
+  generate(1) \%>\%
+  fit(logit = ~ glm(a ~ b, family = "binomial"))
+
+logit_fit \%>\%
+  apply_fits(broom::augment)
+
+## Arguments to the function can be passed in ...
+logit_fit \%>\%
+  apply_fits(broom::augment, se_fit = TRUE)
+
+## Equivalent to tidy_fits()
+logit_fit \%>\%
+  apply_fits(broom::tidy)
+
+## Using a purrr-style lambda function
+logit_fit \%>\%
+  apply_fits(~ summary(.)$cov.scaled)
+
 }
 \seealso{
 \code{\link{tidy_fits}},
