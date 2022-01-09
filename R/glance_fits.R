@@ -1,10 +1,10 @@
 #' Tidy simpr_gen simulated model results output into tibble of model summaries
 #'
-#' Turn fitted model of simulated data (from \code{\link{fit.simpr_tibble}}) into a tidy
+#' Turn fitted model of simulated data (from \code{\link[=fit.simpr_tibble]{fit}}) into a tidy
 #' tibble of model summaries (via \code{generics::\link[generics]{glance}}).
 #'
 #' This is part of the fifth step of the simulation process: after fitting the
-#' model with \code{\link{fit.simpr_tibble}}, now tidy the model output for further analysis
+#' model with \code{\link[=fit.simpr_tibble]{fit}}, now tidy the model output for further analysis
 #' such as evaluating power.  All model objects should be supported by
 #' \code{generics::\link[generics]{glance}}, primarily via the \code{broom}
 #' package.
@@ -14,7 +14,7 @@
 #' such as tests for individual parameter estimates, use \code{\link{tidy_fits}}.
 #'
 #' @param obj tibble with repetition number, metaparameters, simulated
-#'   data, and fitted models, from \code{\link{fit.simpr_tibble}}
+#'   data, and fitted models, from \code{\link[=fit.simpr_tibble]{fit}}
 #' @param \dots Additional arguments to \code{generics::glance}.
 #' @inheritParams fit.simpr_tibble
 #' @return a tibble with the output of the

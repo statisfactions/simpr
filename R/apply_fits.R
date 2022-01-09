@@ -7,14 +7,18 @@
 #' lambda function can be used.
 #'
 #'
-#' @param obj tibble with repetition number,
-#'   metaparameters, simulated data, and fitted
-#'   models, from \code{\link{fit.simpr_tibble}}
-#' @param .f A function or \code{purrr}-style formula function used for computing on the
-#'   fit object
+#' @param obj a \code{simpr_tibble} with
+#'   repetition number, metaparameters, simulated
+#'   data, and fitted models, from
+#'   \code{\link[=fit.simpr_tibble]{fit}}
+#' @param .f A function or \code{purrr}-style
+#'   formula function (see
+#'   \code{\link[purrr]{as_mapper}}) used for
+#'   computing on the fit object
 #' @param \dots Additional arguments to \code{.f}.
 #' @inheritParams fit.simpr_tibble
-#' @seealso \code{\link{tidy_fits}}, \code{\link{glance_fits}}
+#' @seealso \code{\link{tidy_fits}},
+#'   \code{\link{glance_fits}}
 #' @export
 apply_fits = function(obj, .f, ..., .progress = FALSE,
                       .options = furrr_options()) {

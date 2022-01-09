@@ -2,13 +2,13 @@
 #' into tibble of components
 #'
 #' Turn fitted model of simulated data (from
-#' \code{\link{fit.simpr_tibble}}) into a tidy tibble of model
+#' \code{\link[=fit.simpr_tibble]{fit}}) into a tidy tibble of model
 #' components (via
 #' \code{generics::\link[generics]{tidy}}).
 #'
 #' This is part of the fifth step of the
 #' simulation process: after fitting the model
-#' with \code{\link{fit.simpr_tibble}}, now tidy the model
+#' with \code{\link[=fit.simpr_tibble]{fit}}, now tidy the model
 #' output for further analysis such as evaluating
 #' power.  All model objects should be supported
 #' by \code{generics::\link[generics]{tidy}},
@@ -23,7 +23,7 @@
 #'
 #' @param obj tibble with repetition number,
 #'   metaparameters, simulated data, and fitted
-#'   models, from \code{\link{fit.simpr_tibble}}
+#'   models, from \code{\link[=fit.simpr_tibble]{fit}}
 #' @param \dots Additional arguments to \code{generics::tidy}.
 #' @inheritParams fit.simpr_tibble
 #' @return a tibble with the output of the

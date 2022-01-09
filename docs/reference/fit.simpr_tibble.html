@@ -141,7 +141,7 @@ it, usually model-fitting functions." />
 
     <div class="ref-description">
     <p>Takes simulated data from
-<code><a href='https://generics.r-lib.org/reference/generate.html'>generate</a></code> and applies functions to
+<code><a href='generate.simpr_spec.html'>generate</a></code> and applies functions to
 it, usually model-fitting functions.</p>
     </div>
 
@@ -176,7 +176,7 @@ it, usually model-fitting functions.</p>
       <th>object</th>
       <td><p>a <code>simpr_tibble</code> object--the
 simulated data from
-<code><a href='https://generics.r-lib.org/reference/generate.html'>generate</a></code>--or an
+<code><a href='generate.simpr_spec.html'>generate</a></code>--or an
 <code>simpr_spec</code> object not yet generated.</p></td>
     </tr>
     <tr>
@@ -228,7 +228,7 @@ to
     <p>a <code>simpr_tibble</code> object with
   additional list-columns for the output of the
   provided functions (e.g. model outputs). Just
-  like the output of <code><a href='https://generics.r-lib.org/reference/generate.html'>generate</a></code>,
+  like the output of <code><a href='generate.simpr_spec.html'>generate</a></code>,
   there is one row per repetition per
   combination of metaparameters, and the
   columns are the repetition number <code>rep</code>,
@@ -250,7 +250,7 @@ parameters from the object, based on
 <code><a href='https://generics.r-lib.org/reference/tidy.html'>tidy</a></code> and
 <code><a href='https://generics.r-lib.org/reference/glance.html'>glance</a></code> from the
 <code>broom</code> package.</p>
-<p>Similar to <code><a href='https://generics.r-lib.org/reference/specify.html'>specify</a></code>, the
+<p>Similar to <code><a href='specify.formula.html'>specify</a></code>, the
 <code>...</code> arguments uses <code>purrr</code>-style
 formula functions to specify fitting models to
 the data. The functions are computed within

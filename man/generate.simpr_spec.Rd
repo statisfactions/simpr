@@ -20,7 +20,7 @@
 \arguments{
 \item{x}{a \code{simpr_spec} object generated
 by \code{\link{define}} or
-\code{\link{specify}}, containing the
+\code{\link[=specify.formula]{specify}}, containing the
 specifications of the simulation}
 
 \item{.reps}{number of replications to run (a
@@ -67,7 +67,7 @@ a \code{\link{simpr_sims}} object,
   repetition (a total of \code{rep}
   repetitions) for each combination of
   metaparameters and some extra metadata used
-  by \code{\link{fit.simpr_tibble}}.  The columns are
+  by \code{\link[=fit.simpr_tibble]{fit}}.  The columns are
   \code{rep} for the repetition number, the
   names of the metaparameters, and a
   list-column (named by the argument
@@ -79,7 +79,7 @@ a \code{\link{simpr_sims}} object,
   each element of the simulation list-column.
 }
 \description{
-Use specification from \code{\link{specify}} or
+Use specification from \code{\link[=specify.formula]{specify}} or
 \code{\link{define}} to produce simulated data.
 }
 \details{
@@ -91,11 +91,11 @@ actually generates the simulated datasets, one
 for each replication, for each combination of
 metaparameters. You likely want to use the
 output of \code{generate} to fit model(s) with
-\code{\link{fit.simpr_tibble}}.
+\code{\link[=fit.simpr_tibble]{fit}}.
 
 Errors you get using this function usually have
 to do with how you specified the simulation in
-\code{\link{specify}} and \code{\link{define}}.
+\code{\link[=specify.formula]{specify}} and \code{\link{define}}.
 }
 \examples{
 meta_list_out = specify(a = ~ MASS::mvrnorm(n, rep(0, 2), Sigma = S)) \%>\%
@@ -135,7 +135,7 @@ meta_list_out = specify(a = ~ MASS::mvrnorm(n, rep(0, 2), Sigma = S)) \%>\%
 
 }
 \seealso{
-\code{\link{specify}} and
+\code{\link[=specify.formula]{specify}} and
   \code{\link{define}} for examples of how
   these functions affect the output of
   \code{generate}. See the \code{furrr} website

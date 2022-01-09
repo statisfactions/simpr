@@ -1,7 +1,7 @@
 #' Fit models to the simulated data
 #'
 #' Takes simulated data from
-#' \code{\link{generate}} and applies functions to
+#' \code{\link[=generate.simpr_spec]{generate}} and applies functions to
 #' it, usually model-fitting functions.
 #'
 #' This is the fourth step in the simulation
@@ -15,7 +15,7 @@
 #' \code{\link[broom]{glance}} from the
 #' \code{broom} package.
 #'
-#' Similar to \code{\link{specify}}, the
+#' Similar to \code{\link[=specify.formula]{specify}}, the
 #' \code{\dots} arguments uses \code{purrr}-style
 #' formula functions to specify fitting models to
 #' the data. The functions are computed within
@@ -33,7 +33,7 @@
 #'
 #' @param object a \code{simpr_tibble} object--the
 #'   simulated data from
-#'   \code{\link{generate}}--or an
+#'   \code{\link[=generate.simpr_spec]{generate}}--or an
 #'   \code{simpr_spec} object not yet generated.
 #' @param ... \code{purrr}-style formula functions
 #'   used for computing on the simulated data. See
@@ -60,7 +60,7 @@
 #' @return a \code{simpr_tibble} object with
 #'   additional list-columns for the output of the
 #'   provided functions (e.g. model outputs). Just
-#'   like the output of \code{\link{generate}},
+#'   like the output of \code{\link[=generate.simpr_spec]{generate}},
 #'   there is one row per repetition per
 #'   combination of metaparameters, and the
 #'   columns are the repetition number \code{rep},

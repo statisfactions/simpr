@@ -8,12 +8,15 @@ tidy the output.}
 apply_fits(obj, .f, ..., .progress = FALSE, .options = furrr_options())
 }
 \arguments{
-\item{obj}{tibble with repetition number,
-metaparameters, simulated data, and fitted
-models, from \code{\link{fit.simpr_tibble}}}
+\item{obj}{a \code{simpr_tibble} with
+repetition number, metaparameters, simulated
+data, and fitted models, from
+\code{\link[=fit.simpr_tibble]{fit}}}
 
-\item{.f}{A function or \code{purrr}-style formula function used for computing on the
-fit object}
+\item{.f}{A function or \code{purrr}-style
+formula function (see
+\code{\link[purrr]{as_mapper}}) used for
+computing on the fit object}
 
 \item{\dots}{Additional arguments to \code{.f}.}
 
@@ -34,5 +37,6 @@ tibble.  Any function or \code{purrr}-style
 lambda function can be used.
 }
 \seealso{
-\code{\link{tidy_fits}}, \code{\link{glance_fits}}
+\code{\link{tidy_fits}},
+  \code{\link{glance_fits}}
 }

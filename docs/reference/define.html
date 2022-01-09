@@ -41,7 +41,7 @@
 
 <meta property="og:title" content="Define metaparameters to vary in simulation — define" />
 <meta property="og:description" content="Takes the output of specify (a
-simpr_specify object) and defines the
+simpr_spec object) and defines the
 metaparameters for simulation." />
 
 
@@ -140,8 +140,8 @@ metaparameters for simulation." />
     </div>
 
     <div class="ref-description">
-    <p>Takes the output of <code><a href='https://generics.r-lib.org/reference/specify.html'>specify</a></code> (a
-<code>simpr_specify</code> object) and defines the
+    <p>Takes the output of <code><a href='specify.formula.html'>specify</a></code> (a
+<code>simpr_spec</code> object) and defines the
 metaparameters for simulation.</p>
     </div>
 
@@ -152,8 +152,8 @@ metaparameters for simulation.</p>
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>.x</th>
-      <td><p>a <code>simpr_spec</code> object (the output
-of <code><a href='https://generics.r-lib.org/reference/specify.html'>specify</a></code>)</p></td>
+      <td><p>a <code>simpr_spec</code> object (the
+output of <code><a href='specify.formula.html'>specify</a></code>)</p></td>
     </tr>
     <tr>
       <th>...</th>
@@ -172,19 +172,19 @@ index column for list metaparameters,
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>a <code>simpr_define</code> object to pass onto
-  <code><a href='https://generics.r-lib.org/reference/generate.html'>generate</a></code> for the simulation.
-  This is also a tibble containing all
-  simulation conditions that can be examined or
-  altered directly (in case a fully crossed
-  design is not desired).</p>
+    <p>a <code>simpr_define</code> object to pass
+  onto <code>generate</code> for the
+  simulation. This is also a tibble containing
+  all simulation conditions that can be
+  examined or altered directly (in case a fully
+  crossed design is not desired).</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>This is the second step in the simulation
 process, after specifying the simulated data
-using <code><a href='https://generics.r-lib.org/reference/specify.html'>specify</a></code>.  The output of
+using <code><a href='specify.formula.html'>specify</a></code>.  The output of
 <code>define</code> is then passed to
-<code><a href='https://generics.r-lib.org/reference/generate.html'>generate</a></code> to actually generate the
+<code><a href='generate.simpr_spec.html'>generate</a></code> to actually generate the
 simulation.</p>
 <p>Metaparameters are named arguments that are
 used in the simulation.  Usually, a
@@ -193,32 +193,34 @@ representing something that is to be
 systematically varied as a part of the
 simulation design. Any metaparameter would also
 appear in the formulas of
-<code><a href='https://generics.r-lib.org/reference/specify.html'>specify</a></code>, and thus the
-simulation changes depending on the value of
-the metaparameter.</p>
+<code><a href='specify.formula.html'>specify</a></code>, and thus the simulation
+changes depending on the value of the
+metaparameter.</p>
 <p>When creating the simulation, simulations for
 all possible combinations of metaparameters are
-generated, a fully crossed simulation design.</p>
+generated, resulting in a fully crossed
+simulation design.  If only a subset of the
+fully crossed design is needed, use the
+filtering options available in
+<code><a href='generate.simpr_spec.html'>generate</a></code>.</p>
 <p>When one of <code>...</code> is a list, a new
 column is generated in the output to
-<code>generate</code> to serve as the index of the
+<code><a href='generate.simpr_spec.html'>generate</a></code> to serve as the index of the
 list.  This new column will be the name of the
 list argument,  with the <code>suffix</code> argument
 appended onto the end.  So if <code>Y = list(a
 = 1:2, b = letters[2:3])</code>, and <code>suffix =
 "_index"</code>, the default, a column named
 <code>Y_index</code> would be added to the output of
-<code>generate</code> with values <code>"a"</code> and
+<code><a href='generate.simpr_spec.html'>generate</a></code> with values <code>"a"</code> and
 <code>"b"</code>.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># Simple example of setting a metaparameter</span>
-<span class='va'>simple_meta</span> <span class='op'>=</span> <span class='fu'><a href='https://generics.r-lib.org/reference/specify.html'>specify</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='op'>~</span> <span class='fl'>1</span> <span class='op'>+</span> <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='va'>n</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+<span class='va'>simple_meta</span> <span class='op'>=</span> <span class='fu'><a href='https://generics.r-lib.org/reference/specify.html'>specify</a></span><span class='op'>(</span>a <span class='op'>=</span> <span class='op'>~</span> <span class='fl'>1</span> <span class='op'>+</span> <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='va'>n</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
   <span class='fu'>define</span><span class='op'>(</span>n <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>5</span>, <span class='fl'>10</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
   <span class='fu'><a href='https://generics.r-lib.org/reference/generate.html'>generate</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Formula specification for 'x' detected. Assuming 'x' is the first formula.</span>
-#&gt; <span class='message'></span>
-#&gt; <span class='message'>To hide this message, or to avoid moving this formula first, use a different variable name.</span></div><div class='input'>
+
 <span class='va'>simple_meta</span> <span class='co'># $sim has a 5-row tibble and a 10-row tibble</span>
 </div><div class='output co'>#&gt; full tibble
 #&gt; --------------------------
@@ -231,7 +233,7 @@ appended onto the end.  So if <code>Y = list(a
 #&gt; sim[[1]]
 #&gt; --------------------------
 #&gt; <span style='color: #949494;'># A tibble: 5 × 1</span>
-#&gt;       x
+#&gt;       a
 #&gt;   <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>
 #&gt; <span style='color: #BCBCBC;'>1</span>  1.04
 #&gt; <span style='color: #BCBCBC;'>2</span>  2.12
@@ -239,13 +241,11 @@ appended onto the end.  So if <code>Y = list(a
 #&gt; <span style='color: #BCBCBC;'>4</span>  1.75
 #&gt; <span style='color: #BCBCBC;'>5</span>  2.21
 #&gt; </div><div class='input'>
-<span class='va'>multi_meta</span> <span class='op'>=</span> <span class='fu'><a href='https://generics.r-lib.org/reference/specify.html'>specify</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='op'>~</span> <span class='va'>mu</span> <span class='op'>+</span> <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='va'>n</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+<span class='va'>multi_meta</span> <span class='op'>=</span> <span class='fu'><a href='https://generics.r-lib.org/reference/specify.html'>specify</a></span><span class='op'>(</span>a <span class='op'>=</span> <span class='op'>~</span> <span class='va'>mu</span> <span class='op'>+</span> <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='va'>n</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
   <span class='fu'>define</span><span class='op'>(</span>n <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>5</span>, <span class='fl'>10</span><span class='op'>)</span>,
        mu <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span><span class='op'>-</span><span class='fl'>1</span>, <span class='fl'>1</span>, length.out <span class='op'>=</span> <span class='fl'>3</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
   <span class='fu'><a href='https://generics.r-lib.org/reference/generate.html'>generate</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Formula specification for 'x' detected. Assuming 'x' is the first formula.</span>
-#&gt; <span class='message'></span>
-#&gt; <span class='message'>To hide this message, or to avoid moving this formula first, use a different variable name.</span></div><div class='input'>
+
 <span class='va'>multi_meta</span> <span class='co'># generates simulations for all combos of n and mu</span>
 </div><div class='output co'>#&gt; full tibble
 #&gt; --------------------------
@@ -262,7 +262,7 @@ appended onto the end.  So if <code>Y = list(a
 #&gt; sim[[1]]
 #&gt; --------------------------
 #&gt; <span style='color: #949494;'># A tibble: 5 × 1</span>
-#&gt;         x
+#&gt;         a
 #&gt;     <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>
 #&gt; <span style='color: #BCBCBC;'>1</span> -<span style='color: #BB0000;'>1.56</span>  
 #&gt; <span style='color: #BCBCBC;'>2</span>  0.071<span style='text-decoration: underline;'>6</span>
@@ -272,13 +272,11 @@ appended onto the end.  So if <code>Y = list(a
 #&gt; </div><div class='input'>
 
 <span class='co'># meta can handle lists which can contain multiple matrices, etc.</span>
-<span class='va'>meta_list_out</span> <span class='op'>=</span> <span class='fu'><a href='https://generics.r-lib.org/reference/specify.html'>specify</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='op'>~</span> <span class='fu'>MASS</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/MASS/man/mvrnorm.html'>mvrnorm</a></span><span class='op'>(</span><span class='va'>n</span>, <span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>2</span><span class='op'>)</span>, Sigma <span class='op'>=</span> <span class='va'>S</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+<span class='va'>meta_list_out</span> <span class='op'>=</span> <span class='fu'><a href='https://generics.r-lib.org/reference/specify.html'>specify</a></span><span class='op'>(</span>a <span class='op'>=</span> <span class='op'>~</span> <span class='fu'>MASS</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/MASS/man/mvrnorm.html'>mvrnorm</a></span><span class='op'>(</span><span class='va'>n</span>, <span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>2</span><span class='op'>)</span>, Sigma <span class='op'>=</span> <span class='va'>S</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
   <span class='fu'>define</span><span class='op'>(</span>n <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>10</span>, <span class='fl'>20</span>, <span class='fl'>30</span><span class='op'>)</span>,
        S <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>independent <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/diag.html'>diag</a></span><span class='op'>(</span><span class='fl'>2</span><span class='op'>)</span>, correlated <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/diag.html'>diag</a></span><span class='op'>(</span><span class='fl'>2</span><span class='op'>)</span> <span class='op'>+</span> <span class='fl'>2</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
   <span class='fu'><a href='https://generics.r-lib.org/reference/generate.html'>generate</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Formula specification for 'x' detected. Assuming 'x' is the first formula.</span>
-#&gt; <span class='message'></span>
-#&gt; <span class='message'>To hide this message, or to avoid moving this formula first, use a different variable name.</span></div><div class='input'>
+
 <span class='va'>meta_list_out</span> <span class='co'># generates S_index column</span>
 </div><div class='output co'>#&gt; full tibble
 #&gt; --------------------------
@@ -295,7 +293,7 @@ appended onto the end.  So if <code>Y = list(a
 #&gt; sim[[1]]
 #&gt; --------------------------
 #&gt; <span style='color: #949494;'># A tibble: 10 × 2</span>
-#&gt;        x_1    x_2
+#&gt;        a_1    a_2
 #&gt;      <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>  <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>
 #&gt; <span style='color: #BCBCBC;'> 1</span> -<span style='color: #BB0000;'>0.211</span>  -<span style='color: #BB0000;'>0.916</span>
 #&gt; <span style='color: #BCBCBC;'> 2</span> -<span style='color: #BB0000;'>0.467</span>   1.14 

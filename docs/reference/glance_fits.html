@@ -40,7 +40,7 @@
 
 
 <meta property="og:title" content="Tidy simpr_gen simulated model results output into tibble of model summaries — glance_fits" />
-<meta property="og:description" content="Turn fitted model of simulated data (from fit.simpr_tibble) into a tidy
+<meta property="og:description" content="Turn fitted model of simulated data (from fit) into a tidy
 tibble of model summaries (via generics::glance)." />
 
 
@@ -139,7 +139,7 @@ tibble of model summaries (via generics::glance)." />
     </div>
 
     <div class="ref-description">
-    <p>Turn fitted model of simulated data (from <code><a href='fit.simpr_tibble.html'>fit.simpr_tibble</a></code>) into a tidy
+    <p>Turn fitted model of simulated data (from <code><a href='fit.simpr_tibble.html'>fit</a></code>) into a tidy
 tibble of model summaries (via <code>generics::<a href='https://generics.r-lib.org/reference/glance.html'>glance</a></code>).</p>
     </div>
 
@@ -151,7 +151,7 @@ tibble of model summaries (via <code>generics::<a href='https://generics.r-lib.o
     <tr>
       <th>obj</th>
       <td><p>tibble with repetition number, metaparameters, simulated
-data, and fitted models, from <code><a href='fit.simpr_tibble.html'>fit.simpr_tibble</a></code></p></td>
+data, and fitted models, from <code><a href='fit.simpr_tibble.html'>fit</a></code></p></td>
     </tr>
     <tr>
       <th>...</th>
@@ -180,7 +180,7 @@ to
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>This is part of the fifth step of the simulation process: after fitting the
-model with <code><a href='fit.simpr_tibble.html'>fit.simpr_tibble</a></code>, now tidy the model output for further analysis
+model with <code><a href='fit.simpr_tibble.html'>fit</a></code>, now tidy the model output for further analysis
 such as evaluating power.  All model objects should be supported by
 <code>generics::<a href='https://generics.r-lib.org/reference/glance.html'>glance</a></code>, primarily via the <code>broom</code>
 package.</p>

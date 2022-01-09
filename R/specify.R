@@ -71,7 +71,7 @@
 #'   \code{\link{define}} for defining
 #'   metaparameters or, if there are no
 #'   metaparameters, directly to
-#'   \code{\link{generate}} for generating the
+#'   \code{\link[=generate.simpr_spec]{generate}} for generating the
 #'   simulation.
 #'
 #'   Also useful is the fact that one can refer to

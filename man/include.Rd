@@ -30,7 +30,7 @@ especially when parallel processing, to save
 only key results from each simulation rather
 than all the data, fit objects, etc.  This
 function, run immediately after
-\code{\link{specify}} or \code{\link{define}},
+\code{\link[=specify.formula]{specify}} or \code{\link{define}},
 allows additional postprocessing steps to be
 specified afterwards and thereby included in
 the simulation as it proceeds incrementally.
@@ -38,7 +38,7 @@ the simulation as it proceeds incrementally.
 Arbitrary R operations are not supported for
 these postprocessing steps; only the
 postprocessing steps included in the simpr
-package (\code{\link{fit.simpr_tibble}},
+package (\code{\link[=fit.simpr_tibble]{fit}},
 \code{\link{tidy_fits}},
 \code{\link{glance_fits}}).
 }
