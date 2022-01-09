@@ -48,8 +48,7 @@ test_that("delayed fit() with include() give same results as generate()", {
 
   set.seed(100)
   lm_include_tricky = fit(lm =  ~lm(y ~ x1, data = .),
-                          obj = spec %>%
-                            include) %>%
+                          obj = spec) %>%
     generate(2)
 
   expect_equivalent(lm_fit, lm_fit_include)
