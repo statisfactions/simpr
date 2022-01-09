@@ -2,9 +2,10 @@ pandoc: 2.14.0.3
 pkgdown: 1.6.1
 pkgdown_sha: ~
 articles:
+  articles/Showcase: Showcase.html
   optimization: optimization.html
   reproducibility: reproducibility.html
   simpr: simpr.html
   simulation-errors: simulation-errors.html
-last_built: 2022-01-08T23:06Z
+last_built: 2022-01-09T05:09Z
 

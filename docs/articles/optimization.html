@@ -57,6 +57,9 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
+      <a href="../articles/articles/Showcase.html">Showcase</a>
+    </li>
+    <li>
       <a href="../articles/optimization.html">Optimization</a>
     </li>
     <li>
@@ -68,7 +71,14 @@
   </ul>
 </li>
       </ul>
-<ul class="nav navbar-nav navbar-right"></ul>
+<ul class="nav navbar-nav navbar-right">
+<li>
+  <a href="https://github.com/statisfactions/simpr/">
+    <span class="fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
 </div>
 <!--/.nav-collapse -->
   </div>
@@ -84,7 +94,7 @@
       <h1 data-toc-skip>Optimization</h1>
             
       
-      
+      <small class="dont-index">Source: <a href="https://github.com/statisfactions/simpr/blob/master/vignettes/optimization.Rmd"><code>vignettes/optimization.Rmd</code></a></small>
       <div class="hidden name"><code>optimization.Rmd</code></div>
 
     </div>
@@ -92,7 +102,7 @@
     
     
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">simpr</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://statisfactions.github.com/simpr/">simpr</a></span><span class="op">)</span></code></pre></div>
 <p>The default <code>simpr</code> workflow is easy to understand but computationally inefficient. Although <code>simpr</code> prioritizes ease of use over computational speed, two things <em>together</em> can make simpr more efficient:</p>
 <ol style="list-style-type: decimal">
 <li>Generating, fitting, and tidying simultaneously</li>
@@ -137,18 +147,18 @@
 <span class="co">#&gt; # A tibble: 12 × 4</span>
 <span class="co">#&gt;    .sim_id     n term                estimate</span>
 <span class="co">#&gt;      &lt;int&gt; &lt;dbl&gt; &lt;chr&gt;                  &lt;dbl&gt;</span>
-<span class="co">#&gt;  1       1     6 (Intercept)           0.182 </span>
-<span class="co">#&gt;  2       1     6 groupintervention_1  -0.129 </span>
-<span class="co">#&gt;  3       1     6 groupintervention_2   1.51  </span>
-<span class="co">#&gt;  4       2    12 (Intercept)          -0.0556</span>
-<span class="co">#&gt;  5       2    12 groupintervention_1  -0.0449</span>
-<span class="co">#&gt;  6       2    12 groupintervention_2   1.79  </span>
-<span class="co">#&gt;  7       3     6 (Intercept)           0.167 </span>
-<span class="co">#&gt;  8       3     6 groupintervention_1  -0.853 </span>
-<span class="co">#&gt;  9       3     6 groupintervention_2   1.21  </span>
-<span class="co">#&gt; 10       4    12 (Intercept)          -0.582 </span>
-<span class="co">#&gt; 11       4    12 groupintervention_1   0.732 </span>
-<span class="co">#&gt; 12       4    12 groupintervention_2   2.26</span></code></pre></div>
+<span class="co">#&gt;  1       1     6 (Intercept)          -0.691 </span>
+<span class="co">#&gt;  2       1     6 groupintervention_1   0.884 </span>
+<span class="co">#&gt;  3       1     6 groupintervention_2   2.70  </span>
+<span class="co">#&gt;  4       2    12 (Intercept)          -0.422 </span>
+<span class="co">#&gt;  5       2    12 groupintervention_1   0.446 </span>
+<span class="co">#&gt;  6       2    12 groupintervention_2   2.56  </span>
+<span class="co">#&gt;  7       3     6 (Intercept)           0.0596</span>
+<span class="co">#&gt;  8       3     6 groupintervention_1   0.959 </span>
+<span class="co">#&gt;  9       3     6 groupintervention_2   1.37  </span>
+<span class="co">#&gt; 10       4    12 (Intercept)           0.0470</span>
+<span class="co">#&gt; 11       4    12 groupintervention_1   0.0655</span>
+<span class="co">#&gt; 12       4    12 groupintervention_2   1.84</span></code></pre></div>
 </div>
 <div id="parallel-processing-with-the-future-package" class="section level2">
 <h2 class="hasAnchor">
@@ -191,7 +201,7 @@
 
 
       <footer><div class="copyright">
-  <p>Developed by Ethan C. Brown.</p>
+  <p>Developed by Ethan Brown.</p>
 </div>
 
 <div class="pkgdown">

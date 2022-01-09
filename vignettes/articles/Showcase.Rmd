@@ -1,0 +1,128 @@
+---
+title: "Showcase"
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(simpr)
+```
+
+
+## A simple example
+
+What's our power to detect an interaction in a linear model?   The entire simulation and tidying happens in just a few lines of code:
+
+```{r simpr_tidy, messages = FALSE}
+set.seed(100)
+simpr_tidy = ## Specify the simulation
+  specify(x1 = ~ 2 + rnorm(n),
+                       x2 = ~ 3 + 2*x1 + rnorm(n, 0, sd = 0.5),
+                       y = ~ 5 + x1 + x2 + g1*x1*x2 + 10 * rnorm(n)) %>%
+  ## Define varying parameters: here, sample size and effect size
+  define(n = seq(100, 300, by = 50),
+       g1 = seq(-1, 1, by = 0.5)) %>% 
+  ## Generate 10 repetitions
+  generate(10) %>% 
+  ## Fit models
+  fit(lm = ~lm(y ~ x1*x2))%>% 
+  ## Tidy each simulation using broom::tidy and
+  ## bind together
+  tidy_fits
+
+```
+
+This gives a `tibble` with slope estimates and *p* values for all parameters in the model.
+
+```{r simpr_tidy_print}
+simpr_tidy
+```
+
+We can easily filter this and compute power for each condition using `dplyr`:
+
+```{r condition_power}
+library(dplyr)
+
+condition_power = simpr_tidy %>%
+  filter(term %in% "x1:x2") %>%
+  group_by(n, g1) %>%
+  summarize(power = mean(p.value < 0.05)) 
+
+condition_power
+```
+
+This can be easily plotted:
+
+```{r power_plot, message = FALSE, warning = FALSE}
+library(ggplot2)
+
+condition_power %>% 
+  ggplot(aes(n, power)) +
+  geom_line() +
+  facet_grid(~g1)
+```
+
+### Breaking down the example
+
+First, we specify how we want the data to be generated:
+
+```{r simpr_spec}
+simpr_spec = ## Specify the simulation
+  specify(x1 = ~ 2 + rnorm(n),
+                       x2 = ~ 3 + 2*x1 + rnorm(n, 0, sd = 0.5),
+                       y = ~ 5 + x1 + x2 + g1*x1*x2 + 10 * rnorm(n)) %>%
+  ## Define varying parameters: here, sample size and effect size
+  define(n = seq(100, 300, by = 50),
+       g1 = seq(-1, 1, by = 0.5)) 
+```
+
+The call to `specify()` contains the basics of what we actually want simulated.  Each argument is a named, one-sided formula that can include functions like `rnorm` or whatever else you want, specified similar to `purrr` formula functions.  Note that these arguments include both references to previously defined variables (`x1` and `x2`), and to some other variables not yet defined (`n`, the sample size;and `g1`, the interaction slope).
+
+We can define these variables, which we call *metaparameters* of the simulation, in the `define()` command.  `define()` also takes named arguments, and here we define what those metaparameters are.  We can specify them either as constants, or as lists or vectors; `simpr` will generate all possible combinations of these metaparameters.  We can view the specification before actually running the simulation:
+
+```{r simpr_spec_print}
+simpr_spec
+```
+
+Above we can see the code for the data-generating process and all the possible conditions.  Now, we can run the simulation for each combination using `generate()`:
+
+```{r simpr_gen}
+simpr_gen = simpr_spec %>% 
+  generate(2)
+
+simpr_gen
+```
+
+`generate` has one argument, the number of repetitions for each simulation.  Here we generate 10 repetitions. This produces a `tibble` with one row for each combination of metaparameters and repetition, and a list-column with the generated data.
+
+Note that `g1` is the same across the first 5 rows, but `n` varies, and each element of `sim` is a tibble with the same number of rows as `n`. Then, on the sixth row, we have the next value of `g1`, 0.5, and so on. Each element of the column `sim` contains the generated `x1`, `x2`, and `y`, and we already see the preview of `simpr_gen$sim[[1]]` in the output above.
+
+Next, we can fit a model on this data using the `fit()` function; this uses similar formula syntax to `specify()`:
+
+```{r simpr_fit}
+simpr_fit = simpr_gen %>% 
+  fit(lm = ~lm(y ~ x1*x2))
+
+simpr_fit
+```
+
+We don't need to specify the dataset, because `fit` already computes within the dataset. (We can specify it if needed using `.`.)
+
+This just adds a list-column onto `simpr_gen` with the model fit for each rep and metaparameter combination, and we see a preview of `simpr_fit$lm[[1]]` in the output above now as well.
+
+We can simplify this a lot more for power or design analysis by using `tidy_fits()`, which runs `broom::tidy()` on each of the `lm` objects and brings everything together into one data frame:
+
+```{r simpr_tidy_reprise}
+simpr_tidy = simpr_fit %>% 
+  tidy_fits
+
+simpr_tidy
+```
+
+This gives a data frame with one row for each term for each combination of metaparameters for whatever we want to do with it.
+
