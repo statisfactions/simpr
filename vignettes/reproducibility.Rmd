@@ -64,7 +64,7 @@ identical(filter_after_generating, filter_while_generating)
 
 Although only one repetition was generated above, it is the same data as was generated when we actually did the full simulation.
 
-A common use case is for regenrating the data in cases where an error was created.  Here's an example of a simulation that only generated errors in one condition. We generate some data and fit a logistic regression, but notice that we get some errors.
+A common use case is for regenerating the data in cases where an error was created.  Here's an example of a simulation that only generated errors in one condition. We generate some data and fit a logistic regression, but notice that we get some errors.
 
 ```{r fit_tidy, warning = TRUE, purl = FALSE}
 set.seed(500)

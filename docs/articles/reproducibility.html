@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">simpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.9.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
       </span>
     </div>
 
@@ -102,7 +102,7 @@
     
     
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://statisfactions.github.com/simpr/">simpr</a></span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://statisfactions.github.io/simpr/">simpr</a></span><span class="op">)</span></code></pre></div>
 <p><code>simpr</code> is designed with reproducibility in mind. If you set the same seed, you get the same results.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">500</span><span class="op">)</span>
@@ -214,7 +214,7 @@
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/identical.html">identical</a></span><span class="op">(</span><span class="va">filter_after_generating</span>, <span class="va">filter_while_generating</span><span class="op">)</span>
 <span class="co">#&gt; [1] TRUE</span></code></pre></div>
 <p>Although only one repetition was generated above, it is the same data as was generated when we actually did the full simulation.</p>
-<p>A common use case is for regenrating the data in cases where an error was created. Here’s an example of a simulation that only generated errors in one condition. We generate some data and fit a logistic regression, but notice that we get some errors.</p>
+<p>A common use case is for regenerating the data in cases where an error was created. Here’s an example of a simulation that only generated errors in one condition. We generate some data and fit a logistic regression, but notice that we get some errors.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">500</span><span class="op">)</span>
 <span class="va">fit_tidy</span> <span class="op">=</span> <span class="fu"><a href="https://generics.r-lib.org/reference/specify.html">specify</a></span><span class="op">(</span>a <span class="op">=</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span><span class="op">(</span><span class="fl">0</span><span class="op">:</span><span class="va">max</span>, size <span class="op">=</span> <span class="fl">10</span>, replace <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,
