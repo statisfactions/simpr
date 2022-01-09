@@ -1,7 +1,7 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^.*travis.*$
-^README.*
+^README\.Rmd$
 ^\..*$
 ^example.R$
 ^make.R$
@@ -17,3 +17,4 @@
 ^sem\.R$
 ^showcase\.R$
 ^example\.R$
+^cran-comments.md$
