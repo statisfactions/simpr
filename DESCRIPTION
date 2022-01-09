@@ -2,7 +2,7 @@ Package: simpr
 Type: Package
 Title: Flexible Tidyverse-Friendly Simulations
 Version: 0.1.9.9000
-Author@R: c(
+Authors@R: c(
    person("Ethan", "Brown", email = "ecbrown@umn.edu", role = c("aut", "cre"), comment = c(ORCID = "0000-0003-3419-7465")),
    person("Jeffrey", "Bye", email = "jbye@umn.edu", role = c("ctb")))
 Description: A general, 'tidyverse'-friendly framework 
