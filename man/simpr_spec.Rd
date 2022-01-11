@@ -17,6 +17,15 @@ is.simpr_spec(x)
 
 \item{\dots}{ignored}
 }
+\value{
+\code{print.simpr_spec} has no return value
+  and is called for its side-effects.
+  \code{new_simpr_spec} returns an empty
+  \code{simpr_spec} object. \code{is.simpr_spec} returns
+  a length-1 logical vector, \code{TRUE} or \code{FALSE},
+  which indicates whether an object is a
+  \code{simpr_spec}.
+}
 \description{
 Accessor & display methods for simpr_spec class
 }

@@ -1,5 +1,5 @@
-#' Run a given function or formula expression on a simpr_mod object and
-#' tidy the output.
+#' Run a given function or formula expression on a
+#' simpr_mod object and tidy the output.
 #'
 #' This function applies a given function to all
 #' fit objects and returns the result in a tidy
@@ -17,6 +17,12 @@
 #'   computing on the fit object
 #' @param \dots Additional arguments to \code{.f}.
 #' @inheritParams fit.simpr_tibble
+#' @return A \code{tibble} with columns \code{.sim_id},
+#'   \code{rep}, \code{Source} (which contains the name of the
+#'   fit column), any metaparameters from
+#'   \code{\link{define}}, and additional columns
+#'   containing the results of \code{.f} applied to each fit
+#'   object.
 #' @examples
 #' set.seed(100)
 #' logit_fit = specify(a = ~ sample(0:1, size = n, replace = TRUE),

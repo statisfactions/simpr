@@ -2,8 +2,8 @@
 % Please edit documentation in R/apply_fits.R
 \name{apply_fits}
 \alias{apply_fits}
-\title{Run a given function or formula expression on a simpr_mod object and
-tidy the output.}
+\title{Run a given function or formula expression on a
+simpr_mod object and tidy the output.}
 \usage{
 apply_fits(obj, .f, ..., .progress = FALSE, .options = furrr_options())
 }
@@ -29,6 +29,14 @@ options to use with the workers when using
 futures. This must be the result from a call
 to
 \code{\link[furrr:furrr_options]{furrr_options()}}.}
+}
+\value{
+A \code{tibble} with columns \code{.sim_id},
+  \code{rep}, \code{Source} (which contains the name of the
+  fit column), any metaparameters from
+  \code{\link{define}}, and additional columns
+  containing the results of \code{.f} applied to each fit
+  object.
 }
 \description{
 This function applies a given function to all

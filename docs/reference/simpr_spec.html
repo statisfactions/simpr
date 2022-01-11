@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">simpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1</span>
       </span>
     </div>
 
@@ -161,6 +161,15 @@
     </tr>
     </table>
 
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p><code>print.simpr_spec</code> has no return value
+  and is called for its side-effects.
+  <code>new_simpr_spec</code> returns an empty
+  <code>simpr_spec</code> object. <code>is.simpr_spec</code> returns
+  a length-1 logical vector, <code>TRUE</code> or <code>FALSE</code>,
+  which indicates whether an object is a
+  <code>simpr_spec</code>.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>Class <code>simpr_spec</code> is created by
@@ -195,7 +204,7 @@ specification, including the conditions.</p>
 #&gt; ~rbinom(n, size, prob)
 #&gt; attr(,"varnames")
 #&gt; [1] "a"
-#&gt; &lt;environment: 0x7f8ebf4f8f98&gt;
+#&gt; &lt;environment: 0x7f881484ff20&gt;
 #&gt; 
 #&gt; </div><div class='output co'>#&gt; $specify
 #&gt; NULL
@@ -222,7 +231,7 @@ specification, including the conditions.</p>
 #&gt; ~rbinom(n, size, prob)
 #&gt; attr(,"varnames")
 #&gt; [1] "a"
-#&gt; &lt;environment: 0x7f8ebf4f8f98&gt;
+#&gt; &lt;environment: 0x7f881484ff20&gt;
 #&gt; 
 #&gt; 
 #&gt; conditions
