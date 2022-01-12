@@ -33,8 +33,8 @@ The hardest part of any simulation is designing the data-generating process and 
 ## Installation and loading
 
 ```{r installation, eval = FALSE}
-## Hopefully coming soon on CRAN:
-## install.packages("simpr")
+## Install stable CRAN version
+install.packages("simpr")
 
 ## Install latest development version
 remotes::install_github("statisfactions/simpr")
