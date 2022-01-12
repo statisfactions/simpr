@@ -40,8 +40,8 @@ process and deciding what values of parameters you want to explore.
 ## Installation and loading
 
 ``` r
-## Hopefully coming soon on CRAN:
-## install.packages("simpr")
+## Install stable CRAN version
+install.packages("simpr")
 
 ## Install latest development version
 remotes::install_github("statisfactions/simpr")
