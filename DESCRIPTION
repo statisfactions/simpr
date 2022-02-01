@@ -26,8 +26,10 @@ Imports:
     magrittr,
     rlang,
     tibble,
-    tidyr,
+    tidyr (>= 1.1.4.9000),
     tidyselect
+Remotes:
+    tidyverse/tidyr
 RoxygenNote: 7.1.2
 Suggests: 
     MASS,

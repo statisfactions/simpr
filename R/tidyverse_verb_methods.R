@@ -2801,20 +2801,25 @@ tidyr::pivot_wider
 #' @rdname tidyverse_verbs
 #' @param data See original function documentation
 #' @param id_cols See original function documentation
+#' @param id_expand See original function documentation
 #' @param names_from See original function documentation
 #' @param names_prefix See original function documentation
 #' @param names_sep See original function documentation
 #' @param names_glue See original function documentation
 #' @param names_sort See original function documentation
+#' @param names_vary See original function documentation
+#' @param names_expand See original function documentation
 #' @param names_repair See original function documentation
 #' @param values_from See original function documentation
 #' @param values_fill See original function documentation
 #' @param values_fn See original function documentation
+#' @param unused_fn See original function documentation
 #' @param \dots See original function documentation
 #' @export
-pivot_wider.simpr_sims = function(data, id_cols = NULL, names_from = NULL, names_prefix = "",
-    names_sep = "_", names_glue = NULL, names_sort = FALSE, names_repair = "check_unique",
-    values_from = NULL, values_fill = NULL, values_fn = NULL,
+pivot_wider.simpr_sims = function(data, id_cols = NULL, id_expand = FALSE, names_from = NULL,
+    names_prefix = "", names_sep = "_", names_glue = NULL, names_sort = FALSE,
+    names_vary = "fastest", names_expand = FALSE, names_repair = "check_unique",
+    values_from = NULL, values_fill = NULL, values_fn = NULL, unused_fn = NULL,
     ...) {
 mc = match.call()
 mc[[1]] = quote(pivot_wider)
@@ -2827,20 +2832,25 @@ data
 #' @rdname tidyverse_verbs
 #' @param data See original function documentation
 #' @param id_cols See original function documentation
+#' @param id_expand See original function documentation
 #' @param names_from See original function documentation
 #' @param names_prefix See original function documentation
 #' @param names_sep See original function documentation
 #' @param names_glue See original function documentation
 #' @param names_sort See original function documentation
+#' @param names_vary See original function documentation
+#' @param names_expand See original function documentation
 #' @param names_repair See original function documentation
 #' @param values_from See original function documentation
 #' @param values_fill See original function documentation
 #' @param values_fn See original function documentation
+#' @param unused_fn See original function documentation
 #' @param \dots See original function documentation
 #' @export
-pivot_wider.simpr_spec = function(data, id_cols = NULL, names_from = NULL, names_prefix = "",
-    names_sep = "_", names_glue = NULL, names_sort = FALSE, names_repair = "check_unique",
-    values_from = NULL, values_fill = NULL, values_fn = NULL,
+pivot_wider.simpr_spec = function(data, id_cols = NULL, id_expand = FALSE, names_from = NULL,
+    names_prefix = "", names_sep = "_", names_glue = NULL, names_sort = FALSE,
+    names_vary = "fastest", names_expand = FALSE, names_repair = "check_unique",
+    values_from = NULL, values_fill = NULL, values_fn = NULL, unused_fn = NULL,
     ...) {
 mc = match.call()
 

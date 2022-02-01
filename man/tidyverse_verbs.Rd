@@ -755,30 +755,38 @@
 \method{pivot_wider}{simpr_sims}(
   data,
   id_cols = NULL,
+  id_expand = FALSE,
   names_from = NULL,
   names_prefix = "",
   names_sep = "_",
   names_glue = NULL,
   names_sort = FALSE,
+  names_vary = "fastest",
+  names_expand = FALSE,
   names_repair = "check_unique",
   values_from = NULL,
   values_fill = NULL,
   values_fn = NULL,
+  unused_fn = NULL,
   ...
 )
 
 \method{pivot_wider}{simpr_spec}(
   data,
   id_cols = NULL,
+  id_expand = FALSE,
   names_from = NULL,
   names_prefix = "",
   names_sep = "_",
   names_glue = NULL,
   names_sort = FALSE,
+  names_vary = "fastest",
+  names_expand = FALSE,
   names_repair = "check_unique",
   values_from = NULL,
   values_fill = NULL,
   values_fn = NULL,
+  unused_fn = NULL,
   ...
 )
 
@@ -1055,17 +1063,25 @@
 
 \item{id_cols}{See original function documentation}
 
+\item{id_expand}{See original function documentation}
+
 \item{names_from}{See original function documentation}
 
 \item{names_glue}{See original function documentation}
 
 \item{names_sort}{See original function documentation}
 
+\item{names_vary}{See original function documentation}
+
+\item{names_expand}{See original function documentation}
+
 \item{values_from}{See original function documentation}
 
 \item{values_fill}{See original function documentation}
 
 \item{values_fn}{See original function documentation}
+
+\item{unused_fn}{See original function documentation}
 
 \item{sep}{See original function documentation}
 
