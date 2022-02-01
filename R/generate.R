@@ -213,6 +213,19 @@ generate_sim = function(y, eval_environment, variable_sep, .use_names, .debug, .
   gen_df
 }
 
+map_and_bind = function(...) {
+  res = purrr::map(...)
+
+  ## Count number of rows
+  res_nrow = purrr::map_int(res, nrow)
+
+  if(all(res_nrow == max(res_nrow) | res_nrow == 1))
+    return(dplyr::bind_cols(res))
+  else
+    purrr::map_dfr(res, tidyr::pivot_longer, cols = tidyr::everything(), names_to = "group",
+                   values_to = "response")
+}
+
 generate_row = function(variables, ..., variable_sep, .use_names,
                              include_calls, meta_indices, .sim_name, .quiet,
                         .debug, .stop_on_error,
@@ -227,13 +240,13 @@ generate_row = function(variables, ..., variable_sep, .use_names,
   eval_environment = rlang::as_environment(meta_values, parent = parent.frame())
 
   if(.stop_on_error)
-    sim_list = purrr::map_dfc(variables, generate_sim,
+    sim_list = map_and_bind(variables, generate_sim,
                               eval_environment = eval_environment,
                               variable_sep = variable_sep,
                               .debug = .debug,
                               .use_names = .use_names)
   else
-    sim_list = purrr::safely(purrr::map_dfc, otherwise = NULL, quiet = .quiet)(variables, generate_sim,
+    sim_list = purrr::safely(map_and_bind, otherwise = NULL, quiet = .quiet)(variables, generate_sim,
                                                                               eval_environment = eval_environment,
                                                                               variable_sep = variable_sep,
                                                                               .debug = .debug,

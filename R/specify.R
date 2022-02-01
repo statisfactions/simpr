@@ -141,7 +141,10 @@
 #' simple_meta$sim[[2]] # n = 10
 #'
 #' @export
-specify.formula = function(x = NULL, ..., .use_names = TRUE, .sep = "_") {
+specify.formula = function(x = NULL, ..., .use_names = TRUE, .sep = "_",
+                           .pivot_longer = TRUE,
+                           .names_to = "name",
+                           .values_to = "value") {
   ## Method for creating a new simpr_spec object,
   ## which means that first argument must be a formula
 
