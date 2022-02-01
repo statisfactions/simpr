@@ -7,4 +7,4 @@ Resubmission of new package simpr, now version 0.2.1. Original submission was si
 R CMD check run again on Ubuntu, Fedora, Mac OSX, and Windows (via win-builder). There were still no ERRORs or WARNINGs.
 
 There was still 1 NOTE:
-  New submission.
+  New submission
