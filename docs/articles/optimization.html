@@ -19,6 +19,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -31,18 +33,12 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">simpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.2</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-<li>
-  <a href="../index.html">
-    <span class="fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
 <li>
   <a href="../articles/simpr.html">Get started</a>
 </li>
@@ -57,7 +53,7 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/articles/Showcase.html">Showcase</a>
+      <a href="../articles/Showcase.html">Showcase</a>
     </li>
     <li>
       <a href="../articles/optimization.html">Optimization</a>
@@ -70,10 +66,13 @@
     </li>
   </ul>
 </li>
+<li>
+  <a href="../news/index.html">Changelog</a>
+</li>
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/statisfactions/simpr/">
+  <a href="https://github.com/statisfactions/simpr/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -88,13 +87,13 @@
 
       
 
-      </header><script src="optimization_files/header-attrs-2.10/header-attrs.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Optimization</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/statisfactions/simpr/blob/master/vignettes/optimization.Rmd"><code>vignettes/optimization.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/statisfactions/simpr/blob/HEAD/vignettes/optimization.Rmd" class="external-link"><code>vignettes/optimization.Rmd</code></a></small>
       <div class="hidden name"><code>optimization.Rmd</code></div>
 
     </div>
@@ -102,69 +101,69 @@
     
     
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://statisfactions.github.io/simpr/">simpr</a></span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://statisfactions.github.io/simpr/" class="external-link">simpr</a></span><span class="op">)</span></code></pre></div>
 <p>The default <code>simpr</code> workflow is easy to understand but computationally inefficient. Although <code>simpr</code> prioritizes ease of use over computational speed, two things <em>together</em> can make simpr more efficient:</p>
 <ol style="list-style-type: decimal">
 <li>Generating, fitting, and tidying simultaneously</li>
 <li>Parallel processing with the <code>future</code> package</li>
 </ol>
-<div id="generating-fitting-and-tidying-simultaneously" class="section level2">
-<h2 class="hasAnchor">
-<a href="#generating-fitting-and-tidying-simultaneously" class="anchor"></a>Generating, fitting, and tidying simultaneously</h2>
+<div class="section level2">
+<h2 id="generating-fitting-and-tidying-simultaneously">Generating, fitting, and tidying simultaneously<a class="anchor" aria-label="anchor" href="#generating-fitting-and-tidying-simultaneously"></a>
+</h2>
 <p>Consider a standard <code>simpr</code> workflow:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
-<span class="fu"><a href="https://generics.r-lib.org/reference/specify.html">specify</a></span><span class="op">(</span>a <span class="op">=</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span>,
-        b <span class="op">=</span> <span class="op">~</span> <span class="va">a</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../reference/define.html">define</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">100</span>, <span class="fl">200</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://generics.r-lib.org/reference/generate.html">generate</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://generics.r-lib.org/reference/fit.html">fit</a></span><span class="op">(</span>lm <span class="op">=</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">b</span> <span class="op">~</span> <span class="va">a</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+<span class="fu"><a href="https://generics.r-lib.org/reference/specify.html" class="external-link">specify</a></span><span class="op">(</span>a <span class="op">=</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span>,
+        b <span class="op">=</span> <span class="op">~</span> <span class="va">a</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu"><a href="../reference/define.html">define</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">100</span>, <span class="fl">200</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu"><a href="https://generics.r-lib.org/reference/generate.html" class="external-link">generate</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu"><a href="https://generics.r-lib.org/reference/fit.html" class="external-link">fit</a></span><span class="op">(</span>lm <span class="op">=</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">b</span> <span class="op">~</span> <span class="va">a</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
   <span class="fu"><a href="../reference/tidy_fits.html">tidy_fits</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<p>An issue with this workflow is that it involves shuttling a lot of data around: the <code><a href="https://generics.r-lib.org/reference/generate.html">generate()</a></code> step adds a list-column with simulated data to a tibble, which is then sent to <code><a href="https://generics.r-lib.org/reference/fit.html">fit()</a></code>, which adds a list-column containing large model objects, and then these are all sent to <code><a href="../reference/tidy_fits.html">tidy_fits()</a></code> for extracting essential model statistics.</p>
-<p>Instead, you can simply place the call to <code><a href="https://generics.r-lib.org/reference/generate.html">generate()</a></code> later in the chain:</p>
+<p>An issue with this workflow is that it involves shuttling a lot of data around: the <code><a href="https://generics.r-lib.org/reference/generate.html" class="external-link">generate()</a></code> step adds a list-column with simulated data to a tibble, which is then sent to <code><a href="https://generics.r-lib.org/reference/fit.html" class="external-link">fit()</a></code>, which adds a list-column containing large model objects, and then these are all sent to <code><a href="../reference/tidy_fits.html">tidy_fits()</a></code> for extracting essential model statistics.</p>
+<p>Instead, you can simply place the call to <code><a href="https://generics.r-lib.org/reference/generate.html" class="external-link">generate()</a></code> later in the chain:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://generics.r-lib.org/reference/specify.html">specify</a></span><span class="op">(</span>a <span class="op">=</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span>,
-        b <span class="op">=</span> <span class="op">~</span> <span class="va">a</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../reference/define.html">define</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">100</span>, <span class="fl">200</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://generics.r-lib.org/reference/fit.html">fit</a></span><span class="op">(</span>lm <span class="op">=</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">b</span> <span class="op">~</span> <span class="va">a</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../reference/tidy_fits.html">tidy_fits</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://generics.r-lib.org/reference/generate.html">generate</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span> </code></pre></div>
-<p>This means that the data is generated, fit, and tidied all at once once you call <code><a href="https://generics.r-lib.org/reference/generate.html">generate()</a></code>. This means that these steps can occur on a single parallel worker without pushing lots of data around.</p>
-<p>Behind the scenes, before <code><a href="https://generics.r-lib.org/reference/generate.html">generate()</a></code> is called, <code>simpr</code> simply stores successive commands in the <code>simpr_spec</code> object. When <code><a href="https://generics.r-lib.org/reference/generate.html">generate()</a></code> is called, these successive commands are executed in order. Data munging, including with <code><a href="../reference/per_sim.html">per_sim()</a></code> or on the final tidied data, using <code>dplyr</code> or <code>tidyr</code> is also supported in this workflow. Below, data is specified, and the commands for reshaping, fitting, and tidying, and selecting columns from the tidied output are all written before <code><a href="https://generics.r-lib.org/reference/generate.html">generate()</a></code> and are executed together:</p>
+<code class="sourceCode R"><span class="fu"><a href="https://generics.r-lib.org/reference/specify.html" class="external-link">specify</a></span><span class="op">(</span>a <span class="op">=</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span>,
+        b <span class="op">=</span> <span class="op">~</span> <span class="va">a</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu"><a href="../reference/define.html">define</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">100</span>, <span class="fl">200</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu"><a href="https://generics.r-lib.org/reference/fit.html" class="external-link">fit</a></span><span class="op">(</span>lm <span class="op">=</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">b</span> <span class="op">~</span> <span class="va">a</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu"><a href="../reference/tidy_fits.html">tidy_fits</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu"><a href="https://generics.r-lib.org/reference/generate.html" class="external-link">generate</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span> </code></pre></div>
+<p>This means that the data is generated, fit, and tidied all at once once you call <code><a href="https://generics.r-lib.org/reference/generate.html" class="external-link">generate()</a></code>. This means that these steps can occur on a single parallel worker without pushing lots of data around.</p>
+<p>Behind the scenes, before <code><a href="https://generics.r-lib.org/reference/generate.html" class="external-link">generate()</a></code> is called, <code>simpr</code> simply stores successive commands in the <code>simpr_spec</code> object. When <code><a href="https://generics.r-lib.org/reference/generate.html" class="external-link">generate()</a></code> is called, these successive commands are executed in order. Data munging, including with <code><a href="../reference/per_sim.html">per_sim()</a></code> or on the final tidied data, using <code>dplyr</code> or <code>tidyr</code> is also supported in this workflow. Below, data is specified, and the commands for reshaping, fitting, and tidying, and selecting columns from the tidied output are all written before <code><a href="https://generics.r-lib.org/reference/generate.html" class="external-link">generate()</a></code> and are executed together:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://generics.r-lib.org/reference/specify.html">specify</a></span><span class="op">(</span>control <span class="op">=</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="va">n</span>, mean <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>,
-        intervention_1 <span class="op">=</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="va">n</span>, mean <span class="op">=</span> <span class="fl">0.2</span><span class="op">)</span>,
-        intervention_2 <span class="op">=</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="va">n</span>, mean <span class="op">=</span> <span class="fl">2</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../reference/define.html">define</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">6</span>, <span class="fl">12</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../reference/per_sim.html">per_sim</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html">pivot_longer</a></span><span class="op">(</span>cols <span class="op">=</span> <span class="fu"><a href="https://tidyselect.r-lib.org/reference/everything.html">everything</a></span><span class="op">(</span><span class="op">)</span>,
+<code class="sourceCode R"><span class="fu"><a href="https://generics.r-lib.org/reference/specify.html" class="external-link">specify</a></span><span class="op">(</span>control <span class="op">=</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="va">n</span>, mean <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>,
+        intervention_1 <span class="op">=</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="va">n</span>, mean <span class="op">=</span> <span class="fl">0.2</span><span class="op">)</span>,
+        intervention_2 <span class="op">=</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="va">n</span>, mean <span class="op">=</span> <span class="fl">2</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu"><a href="../reference/define.html">define</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">6</span>, <span class="fl">12</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu"><a href="../reference/per_sim.html">per_sim</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html" class="external-link">pivot_longer</a></span><span class="op">(</span>cols <span class="op">=</span> <span class="fu"><a href="https://tidyselect.r-lib.org/reference/everything.html" class="external-link">everything</a></span><span class="op">(</span><span class="op">)</span>,
                names_to <span class="op">=</span> <span class="st">"group"</span>, 
-               values_to <span class="op">=</span> <span class="st">"response"</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://generics.r-lib.org/reference/fit.html">fit</a></span><span class="op">(</span>lm <span class="op">=</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">response</span> <span class="op">~</span> <span class="va">group</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../reference/tidy_fits.html">tidy_fits</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">.sim_id</span>, <span class="va">n</span>, <span class="va">term</span>, <span class="va">estimate</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://generics.r-lib.org/reference/generate.html">generate</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span> 
-<span class="co">#&gt; # A tibble: 12 × 4</span>
+               values_to <span class="op">=</span> <span class="st">"response"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu"><a href="https://generics.r-lib.org/reference/fit.html" class="external-link">fit</a></span><span class="op">(</span>lm <span class="op">=</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">response</span> <span class="op">~</span> <span class="va">group</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu"><a href="../reference/tidy_fits.html">tidy_fits</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">.sim_id</span>, <span class="va">n</span>, <span class="va">term</span>, <span class="va">estimate</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu"><a href="https://generics.r-lib.org/reference/generate.html" class="external-link">generate</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span> 
+<span class="co">#&gt; <span style="color: #949494;"># A tibble: 12 × 4</span></span>
 <span class="co">#&gt;    .sim_id     n term                estimate</span>
-<span class="co">#&gt;      &lt;int&gt; &lt;dbl&gt; &lt;chr&gt;                  &lt;dbl&gt;</span>
-<span class="co">#&gt;  1       1     6 (Intercept)          -0.150 </span>
-<span class="co">#&gt;  2       1     6 groupintervention_1   0.513 </span>
-<span class="co">#&gt;  3       1     6 groupintervention_2   2.79  </span>
-<span class="co">#&gt;  4       2    12 (Intercept)           0.0794</span>
-<span class="co">#&gt;  5       2    12 groupintervention_1  -0.100 </span>
-<span class="co">#&gt;  6       2    12 groupintervention_2   1.63  </span>
-<span class="co">#&gt;  7       3     6 (Intercept)          -0.960 </span>
-<span class="co">#&gt;  8       3     6 groupintervention_1   1.44  </span>
-<span class="co">#&gt;  9       3     6 groupintervention_2   2.72  </span>
-<span class="co">#&gt; 10       4    12 (Intercept)          -0.393 </span>
-<span class="co">#&gt; 11       4    12 groupintervention_1   0.458 </span>
-<span class="co">#&gt; 12       4    12 groupintervention_2   2.80</span></code></pre></div>
+<span class="co">#&gt;      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span>       1     6 (Intercept)           0.267 </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span>       1     6 groupintervention_1  -<span style="color: #BB0000;">0.528</span> </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span>       1     6 groupintervention_2   1.96  </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span>       2    12 (Intercept)           0.348 </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span>       2    12 groupintervention_1  -<span style="color: #BB0000;">0.174</span> </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span>       2    12 groupintervention_2   1.30  </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span>       3     6 (Intercept)           0.055<span style="text-decoration: underline;">2</span></span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span>       3     6 groupintervention_1   0.701 </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span>       3     6 groupintervention_2   2.56  </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">10</span>       4    12 (Intercept)           0.028<span style="text-decoration: underline;">5</span></span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">11</span>       4    12 groupintervention_1   0.157 </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">12</span>       4    12 groupintervention_2   1.72</span></code></pre></div>
 </div>
-<div id="parallel-processing-with-the-future-package" class="section level2">
-<h2 class="hasAnchor">
-<a href="#parallel-processing-with-the-future-package" class="anchor"></a>Parallel processing with the <code>future</code> package</h2>
-<p>Changing the evaluation order makes little difference on its own, but combined with parallel processing can produce a speedup. <code>simpr</code> uses the <code>furrr</code> package, part of the <a href="https://www.futureverse.org">futureverse</a> suite of packages designed around the <code>future</code> package. These packages are designed to make parallel processing transparent as easy to use.</p>
-<p>To use parallel processing with <code>simpr</code>, simply load the <code>future</code> package and declare your “plan” for code execution with <code><a href="https://future.futureverse.org/reference/plan.html">future::plan()</a></code>. The three most relevant plans are:</p>
+<div class="section level2">
+<h2 id="parallel-processing-with-the-future-package">Parallel processing with the <code>future</code> package<a class="anchor" aria-label="anchor" href="#parallel-processing-with-the-future-package"></a>
+</h2>
+<p>Changing the evaluation order makes little difference on its own, but combined with parallel processing can produce a speedup. <code>simpr</code> uses the <code>furrr</code> package, part of the <a href="https://www.futureverse.org" class="external-link">futureverse</a> suite of packages designed around the <code>future</code> package. These packages are designed to make parallel processing transparent as easy to use.</p>
+<p>To use parallel processing with <code>simpr</code>, simply load the <code>future</code> package and declare your “plan” for code execution with <code><a href="https://future.futureverse.org/reference/plan.html" class="external-link">future::plan()</a></code>. The three most relevant plans are:</p>
 <ol style="list-style-type: decimal">
 <li>
 <code>sequential</code>, the default R behavior using just one worker.</li>
@@ -173,19 +172,19 @@
 <li>
 <code>multicore</code>, another parallel processing approach that can be faster than <code>multiprocess</code>, but which doesn’t work with R Studio and only works on Linux/Mac.</li>
 </ol>
-<p>For both <code>multiprocess</code> and <code>multicore</code> plans, you must tell R how many cores you want to use. You can check how many your computer has available with <code><a href="https://future.futureverse.org/reference/re-exports.html">future::availableCores()</a></code>.</p>
+<p>For both <code>multiprocess</code> and <code>multicore</code> plans, you must tell R how many cores you want to use. You can check how many your computer has available with <code><a href="https://future.futureverse.org/reference/re-exports.html" class="external-link">future::availableCores()</a></code>.</p>
 <p>The optimized version of the opening example, rewritten to both change execution order and use parallel processing:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://future.futureverse.org">future</a></span><span class="op">)</span>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://future.futureverse.org" class="external-link">future</a></span><span class="op">)</span>
 
-<span class="fu"><a href="https://future.futureverse.org/reference/plan.html">plan</a></span><span class="op">(</span><span class="va">multisession</span>, <span class="fu"><a href="https://future.futureverse.org/reference/re-exports.html">availableCores</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span>
+<span class="fu"><a href="https://future.futureverse.org/reference/plan.html" class="external-link">plan</a></span><span class="op">(</span><span class="va">multisession</span>, <span class="fu"><a href="https://future.futureverse.org/reference/re-exports.html" class="external-link">availableCores</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span>
 
-<span class="fu"><a href="https://generics.r-lib.org/reference/specify.html">specify</a></span><span class="op">(</span>a <span class="op">=</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span>,
-        b <span class="op">=</span> <span class="op">~</span> <span class="va">a</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../reference/define.html">define</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">100</span>, <span class="fl">200</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://generics.r-lib.org/reference/fit.html">fit</a></span><span class="op">(</span>lm <span class="op">=</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">b</span> <span class="op">~</span> <span class="va">a</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../reference/tidy_fits.html">tidy_fits</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://generics.r-lib.org/reference/generate.html">generate</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span> </code></pre></div>
+<span class="fu"><a href="https://generics.r-lib.org/reference/specify.html" class="external-link">specify</a></span><span class="op">(</span>a <span class="op">=</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span>,
+        b <span class="op">=</span> <span class="op">~</span> <span class="va">a</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu"><a href="../reference/define.html">define</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">100</span>, <span class="fl">200</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu"><a href="https://generics.r-lib.org/reference/fit.html" class="external-link">fit</a></span><span class="op">(</span>lm <span class="op">=</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">b</span> <span class="op">~</span> <span class="va">a</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu"><a href="../reference/tidy_fits.html">tidy_fits</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu"><a href="https://generics.r-lib.org/reference/generate.html" class="external-link">generate</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span> </code></pre></div>
 <p>Results will vary. The parallel version for this small simulation actually takes longer, because there fixed costs in setting up the workers. The speed advantage will become more apparent for larger simulations with slow data-generation or data-fitting steps.</p>
 </div>
   </div>
@@ -201,11 +200,13 @@
 
 
       <footer><div class="copyright">
-  <p>Developed by Ethan Brown.</p>
+  <p></p>
+<p>Developed by Ethan Brown.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
 </div>
 
       </footer>
@@ -213,6 +214,8 @@
 
   
 
+
+  
 
   </body>
 </html>
