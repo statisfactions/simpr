@@ -78,10 +78,10 @@ test_that("Errors show up in tidied output.", {
         .warn_on_error = FALSE) %>%
     tidy_fits()
 
-  expect_equal(buggy_fit$.sim_error,
-               c("Error in rnorm(size): invalid arguments\n",
-                 "Error in rnorm(size): invalid arguments\n",
-                 NA, NA))
+  expect_match(buggy_fit$.sim_error[[1]], "invalid arguments")
+  expect_match(buggy_fit$.sim_error[[2]], "invalid arguments")
+  expect_equal(buggy_fit$.sim_error[[3]], NA_character_)
+  expect_equal(buggy_fit$.sim_error[[4]], NA_character_)
 
   expect_equal(buggy_fit$.fit_error,
                c("Error in t.test(y): object 'y' not found\n",
