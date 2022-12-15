@@ -82,8 +82,8 @@ apply_fits.simpr_tibble = function(obj, .f, ..., .progress = FALSE,
 
   if(any(grepl("^\\.fit_error", names(obj)))) {
     fit_errors = obj %>%
-      dplyr::select(.data$.sim_id, tidyselect::starts_with(".fit_error_")) %>%
-      tidyr::pivot_longer(-.data$.sim_id, names_to = "Source", values_to = ".fit_error") %>%
+      dplyr::select(".sim_id", tidyselect::starts_with(".fit_error_")) %>%
+      tidyr::pivot_longer(-".sim_id", names_to = "Source", values_to = ".fit_error") %>%
       dplyr::mutate(Source = sub("^^\\.fit_error_", "", .data$Source))
 
     simpr_meta = dplyr::left_join(simpr_meta, fit_errors, by = c(".sim_id"))

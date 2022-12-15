@@ -125,7 +125,7 @@ generate.simpr_spec = function(x, .reps, ..., .sim_name = "sim",
                            x$conditions,
                            by = character()) %>%
     dplyr::mutate(.sim_id = 1:(dplyr::n())) %>%
-    dplyr::relocate(.data$.sim_id) %>%
+    dplyr::relocate(".sim_id") %>%
     dplyr::relocate(rep, .after = dplyr::everything())
 
   specs_filter = dplyr::filter(specs, ...)

@@ -14,6 +14,7 @@ err_out = generate(spec, 30, .warn_on_error = FALSE, .options = furrr_options(se
                                                                                  globals = list(errgt = errgt)))
 
 expect_true(".sim_error" %in% names(err_out))
-expect_true(all(na.omit(err_out$.sim_error) == "Error in errgt(x1): x < 3 are not all TRUE\n"))
+
+expect_true(all(grepl("x < 3 are not all TRUE", na.omit(err_out$.sim_error))))
 
 })
