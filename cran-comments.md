@@ -1,4 +1,4 @@
-Patch release of package simpr, now 0.2.2.  This fixes check S3 generic/method consistency check warnings in CRAN version simpr 0.2.1 after 2022-02-01 release of dependency tidyr 1.2.0: https://cloud.r-project.org/web/checks/check_results_simpr.html
+Patch release of package simpr, now 0.2.3.  This fixes test failures in CRAN version simpr 0.2.2 after 2022-12-20 release of dependency purrr 1.0.0: https://cloud.r-project.org/web/checks/check_results_simpr.html
 
 
 ## R CMD check results
