@@ -22,12 +22,12 @@ Imports:
     dplyr,
     furrr,
     generics,
-    purrr (>= 1.0.0),
+    purrr,
     magrittr,
     rlang,
     tibble,
     tidyr (>= 1.2.0),
-    tidyselect (>= 1.2.0)
+    tidyselect
 RoxygenNote: 7.2.3
 Suggests: 
     MASS,
