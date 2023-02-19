@@ -40,3 +40,26 @@ test_that("define can handle functions", {
   expect_equivalent(fun_refs$lognormal, out$sim[[2]]$y)
 
 })
+
+## Define can take an extra ".list" element and
+## add that to the "..." elements
+
+test_that("define with combo of ... and .list", {
+  possible_S = list(independent = diag(2), correlated = diag(2) + 2)
+  possible_n = c(10, 20)
+
+  set.seed(100, kind = "L'Ecuyer-CMRG")
+  meta_list_out_dots <- specify(x = ~ MASS::mvrnorm(n, rep(0, 2), Sigma = S)) %>%
+    define(n = possible_n,
+           S = possible_S) %>%
+    generate(1)
+
+  set.seed(100, kind = "L'Ecuyer-CMRG")
+  meta_list_out_combo = specify(x = ~ MASS::mvrnorm(n, rep(0, 2), Sigma = S)) %>%
+    define(n = possible_n,
+           .list = list(S = possible_S)) %>%
+    generate(1)
+
+  expect_equivalent(meta_list_out_dots, meta_list_out_combo)
+})
+

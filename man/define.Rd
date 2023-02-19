@@ -4,7 +4,7 @@
 \alias{define}
 \title{Define metaparameters to vary in simulation}
 \usage{
-define(.x = NULL, ..., .suffix = "_index")
+define(.x = NULL, ..., .list = NULL, .suffix = "_index")
 }
 \arguments{
 \item{.x}{a \code{simpr_spec} object (the
@@ -12,8 +12,13 @@ output of
 \code{\link[=specify.formula]{specify}})}
 
 \item{...}{metaparameters: named arguments
-containing vectors or lists of
-objects to be used in the simulation.}
+containing vectors or lists of objects to be
+used in the simulation.}
+
+\item{.list}{additional parameters passed to
+define() as a list.  Useful if you already
+have desired metaparameters already in list
+format or created by other functions.}
 
 \item{.suffix}{name of suffix to append onto
 index column for list metaparameters,
@@ -21,8 +26,7 @@ index column for list metaparameters,
 \emph{Details}.}
 }
 \value{
-a \code{simpr_spec} object to pass
-  onto
+a \code{simpr_spec} object to pass onto
   \code{\link[=generate.simpr_spec]{generate}}
   for the simulation.
 }
@@ -89,12 +93,19 @@ multi_meta = specify(a = ~ mu + rnorm(n)) \%>\%
 multi_meta # generates simulations for all combos of n and mu
 
 
-# meta can handle lists which can contain multiple matrices, etc.
+# define can handle lists which can contain multiple matrices, etc.
 meta_list_out = specify(a = ~ MASS::mvrnorm(n, rep(0, 2), Sigma = S)) \%>\%
   define(n = c(10, 20, 30),
        S = list(independent = diag(2), correlated = diag(2) + 2)) \%>\%
   generate(1)
 
 meta_list_out # generates S_index column
+
+# define can also take arguments as a list using the .list argument
+meta_list_out_2 = specify(a = ~ MASS::mvrnorm(n, rep(0, 2), Sigma = S)) \%>\%
+  define(.list = list(n = c(10, 20, 30),
+       S = list(independent = diag(2), correlated = diag(2) + 2))) \%>\%
+  generate(1)
+
 
 }

@@ -49,14 +49,17 @@
 #'   output of
 #'   \code{\link[=specify.formula]{specify}})
 #' @param ... metaparameters: named arguments
-#'   containing vectors or lists of
-#'   objects to be used in the simulation.
+#'   containing vectors or lists of objects to be
+#'   used in the simulation.
+#' @param .list additional parameters passed to
+#'   define() as a list.  Useful if you already
+#'   have desired metaparameters already in list
+#'   format or created by other functions.
 #' @param .suffix name of suffix to append onto
 #'   index column for list metaparameters,
 #'   \code{"_index"} by default.  See
 #'   \emph{Details}.
-#' @return a \code{simpr_spec} object to pass
-#'   onto
+#' @return a \code{simpr_spec} object to pass onto
 #'   \code{\link[=generate.simpr_spec]{generate}}
 #'   for the simulation.
 #'
@@ -76,7 +79,7 @@
 #' multi_meta # generates simulations for all combos of n and mu
 #'
 #'
-#' # meta can handle lists which can contain multiple matrices, etc.
+#' # define can handle lists which can contain multiple matrices, etc.
 #' meta_list_out = specify(a = ~ MASS::mvrnorm(n, rep(0, 2), Sigma = S)) %>%
 #'   define(n = c(10, 20, 30),
 #'        S = list(independent = diag(2), correlated = diag(2) + 2)) %>%
@@ -84,8 +87,15 @@
 #'
 #' meta_list_out # generates S_index column
 #'
+#' # define can also take arguments as a list using the .list argument
+#' meta_list_out_2 = specify(a = ~ MASS::mvrnorm(n, rep(0, 2), Sigma = S)) %>%
+#'   define(.list = list(n = c(10, 20, 30),
+#'        S = list(independent = diag(2), correlated = diag(2) + 2))) %>%
+#'   generate(1)
+#'
+#'
 #' @export
-define = function(.x = NULL, ..., .suffix = "_index") {
+define = function(.x = NULL, ..., .list = NULL, .suffix = "_index") {
   if(!(is.character(.suffix)) || length(.suffix) != 1 || nchar(.suffix) <= 0)
     stop(".suffix must be a string with at least 1 character")
 
@@ -93,7 +103,7 @@ define = function(.x = NULL, ..., .suffix = "_index") {
 
   out = .x
 
-  meta = list(...)
+  meta = c(list(...), .list)
 
   ## Create "index" element from names of list_elements
   list_elements = meta %>% purrr::map_lgl(is.list)
