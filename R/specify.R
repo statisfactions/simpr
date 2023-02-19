@@ -201,7 +201,7 @@ add_specification = function(spec, varlist, .sep, .use_names) {
                                 ## Double-sided formula
                                 if(length(x) == 3) {
                                   ## Get names from left-hand side of formula
-                                  attr(x, "varnames") = x[[2]][-1] %>% purrr::map_chr(deparse)
+                                  attr(x, "varnames") = x[[2]][-1] %>% as.list() %>% purrr::map_chr(deparse)
 
                                   ## delete left-hand side of formula and return right-handed formula
                                   x_out = x
