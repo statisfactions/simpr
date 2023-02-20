@@ -42,6 +42,14 @@ NULL
 #' @export
 dplyr::add_count
 
+# dummy function to satisfy lifecycle check
+# errors on CRAN, probably caused by something in
+# this file on some systems.
+.dummy_lifecycle = function(x, ...) {
+  a = lifecycle::badge
+  return(invisible(NULL))
+}
+
 #' @rdname tidyverse_verbs
 #' @param x See original function documentation
 #' @param \dots See original function documentation
