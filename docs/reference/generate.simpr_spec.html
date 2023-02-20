@@ -19,7 +19,7 @@ define to produce simulated data."><!-- mathjax --><script src="https://cdnjs.cl
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">simpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.4</span>
       </span>
     </div>
 
@@ -31,7 +31,7 @@ define to produce simulated data."><!-- mathjax --><script src="https://cdnjs.cl
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -79,19 +79,19 @@ define to produce simulated data."><!-- mathjax --><script src="https://cdnjs.cl
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="co"># S3 method for simpr_spec</span>
-<span class="fu"><a href="https://generics.r-lib.org/reference/generate.html" class="external-link">generate</a></span><span class="op">(</span>
-  <span class="va">x</span>,
-  <span class="va">.reps</span>,
-  <span class="va">...</span>,
-  .sim_name <span class="op">=</span> <span class="st">"sim"</span>,
-  .quiet <span class="op">=</span> <span class="cn">TRUE</span>,
-  .warn_on_error <span class="op">=</span> <span class="cn">TRUE</span>,
-  .stop_on_error <span class="op">=</span> <span class="cn">FALSE</span>,
-  .debug <span class="op">=</span> <span class="cn">FALSE</span>,
-  .progress <span class="op">=</span> <span class="cn">FALSE</span>,
-  .options <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/furrr/man/furrr_options.html" class="external-link">furrr_options</a></span><span class="op">(</span>seed <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># S3 method for simpr_spec</span></span>
+<span><span class="fu"><a href="https://generics.r-lib.org/reference/generate.html" class="external-link">generate</a></span><span class="op">(</span></span>
+<span>  <span class="va">x</span>,</span>
+<span>  <span class="va">.reps</span>,</span>
+<span>  <span class="va">...</span>,</span>
+<span>  .sim_name <span class="op">=</span> <span class="st">"sim"</span>,</span>
+<span>  .quiet <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  .warn_on_error <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  .stop_on_error <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  .debug <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  .progress <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  .options <span class="op">=</span> <span class="fu"><a href="https://furrr.futureverse.org/reference/furrr_options.html" class="external-link">furrr_options</a></span><span class="op">(</span>seed <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -102,9 +102,13 @@ by <code><a href="define.html">define</a></code> or
 <code><a href="specify.formula.html">specify</a></code>,
 containing the specifications of the
 simulation</p></dd>
+
+
 <dt>.reps</dt>
 <dd><p>number of replications to run (a
 whole number greater than 0)</p></dd>
+
+
 <dt>...</dt>
 <dd><p>filtering criteria for which rows
 to simulate, passed to
@@ -113,53 +117,75 @@ for reproducing just a few selected rows of a
 simulation without needing to redo the entire
 simulation, see <code>vignette("Reproducing
 simulations")</code>,</p></dd>
+
+
 <dt>.sim_name</dt>
 <dd><p>name of the list-column to be
 created, containing simulation results.
 Default is <code>"sim"</code></p></dd>
+
+
 <dt>.quiet</dt>
 <dd><p>Should simulation errors be
 broadcast to the user as they occur?</p></dd>
+
+
 <dt>.warn_on_error</dt>
 <dd><p>Should there be a warning
 when simulation errors occur? See
 <code>vignette("Managing simulation
 errors")</code>.</p></dd>
+
+
 <dt>.stop_on_error</dt>
 <dd><p>Should the simulation
 stop immediately when simulation errors
 occur?</p></dd>
+
+
 <dt>.debug</dt>
 <dd><p>Run simulation in debug mode,
 allowing objects, etc. to be explored for
 each generated variable specification.</p></dd>
+
+
 <dt>.progress</dt>
 <dd><p>A logical, for whether or not
 to print a progress bar for multiprocess,
 multisession, and multicore plans.</p></dd>
+
+
 <dt>.options</dt>
 <dd><p>The <code>future</code> specific
 options to use with the workers when using
 futures. This must be the result from a call
 to
-<code><a href="https://rdrr.io/pkg/furrr/man/furrr_options.html" class="external-link">furrr_options(seed
+<code><a href="https://furrr.futureverse.org/reference/furrr_options.html" class="external-link">furrr_options(seed
  = TRUE)</a></code>.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>a <code><a href="per_sim.html">simpr_sims</a></code> object,
+    
+
+<p>a <code><a href="per_sim.html">simpr_sims</a></code> object,
   which is a tibble with a row for each
-  repetition (a total of <code>rep</code>  repetitions) for each combination of
+  repetition (a total of <code>rep</code></p>
+
+
+<p>repetitions) for each combination of
   metaparameters and some extra metadata used
   by <code><a href="fit.simpr_tibble.html">fit</a></code>.  The
   columns are <code>rep</code> for the repetition
   number, the names of the metaparameters, and
-  a list-column (named by the argument
-<code>sim_name</code>) containing the dataset for
+  a list-column (named by the argument</p>
+<p></p>
+<p><code>sim_name</code>) containing the dataset for
   each repetition and metaparameter
   combination. <code>simpr_sims</code> objects can be
-  manipulated elementwise by <code>dplyr</code> and
-<code>tidyr</code> verbs: the command is applied to
+  manipulated elementwise by <code>dplyr</code> and</p>
+<p></p>
+<p><code>tidyr</code> verbs: the command is applied to
   each element of the simulation list-column.</p>
     </div>
     <div id="details">
@@ -192,13 +218,13 @@ to do with how you specified the simulation in
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">meta_list_out</span> <span class="op">=</span> <span class="fu"><a href="https://generics.r-lib.org/reference/specify.html" class="external-link">specify</a></span><span class="op">(</span>a <span class="op">=</span> <span class="op">~</span> <span class="fu">MASS</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/MASS/man/mvrnorm.html" class="external-link">mvrnorm</a></span><span class="op">(</span><span class="va">n</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">2</span><span class="op">)</span>, Sigma <span class="op">=</span> <span class="va">S</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span class="r-in">  <span class="fu"><a href="define.html">define</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">20</span>, <span class="fl">30</span><span class="op">)</span>,</span>
-<span class="r-in">       S <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>independent <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span>, correlated <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span> <span class="op">+</span> <span class="fl">2</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span class="r-in">  <span class="fu"><a href="https://generics.r-lib.org/reference/generate.html" class="external-link">generate</a></span><span class="op">(</span><span class="fl">3</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"> <span class="co">## View overall structure of the result and a single simulation output</span></span>
-<span class="r-in"> <span class="va">meta_list_out</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">meta_list_out</span> <span class="op">=</span> <span class="fu"><a href="https://generics.r-lib.org/reference/specify.html" class="external-link">specify</a></span><span class="op">(</span>a <span class="op">=</span> <span class="op">~</span> <span class="fu">MASS</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/MASS/man/mvrnorm.html" class="external-link">mvrnorm</a></span><span class="op">(</span><span class="va">n</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">2</span><span class="op">)</span>, Sigma <span class="op">=</span> <span class="va">S</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="define.html">define</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">20</span>, <span class="fl">30</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>       S <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>independent <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span>, correlated <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span> <span class="op">+</span> <span class="fl">2</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://generics.r-lib.org/reference/generate.html" class="external-link">generate</a></span><span class="op">(</span><span class="fl">3</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span> <span class="co">## View overall structure of the result and a single simulation output</span></span></span>
+<span class="r-in"><span> <span class="va">meta_list_out</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> full tibble</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 18 × 6</span></span>
@@ -226,28 +252,28 @@ to do with how you specified the simulation in
 <span class="r-out co"><span class="r-pr">#&gt;</span> sim[[1]]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 10 × 2</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        a_1     a_2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span>  0.015<span style="text-decoration: underline;">8</span> -<span style="color: #BB0000;">1.13</span>  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> -<span style="color: #BB0000;">1.32</span>    0.030<span style="text-decoration: underline;">0</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span>  0.253   1.14  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span>  0.240  -<span style="color: #BB0000;">1.01</span>  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span>  1.53    0.280 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span>  0.129  -<span style="color: #BB0000;">0.346</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span>  0.120  -<span style="color: #BB0000;">1.18</span>  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> -<span style="color: #BB0000;">0.755</span>   0.825 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span>  1.03   -<span style="color: #BB0000;">0.023</span><span style="color: #BB0000; text-decoration: underline;">6</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> -<span style="color: #BB0000;">0.666</span>  -<span style="color: #BB0000;">1.06</span>  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        a_1      a_2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> -<span style="color: #BB0000;">0.664</span>   0.526  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span>  0.190  -<span style="color: #BB0000;">1.07</span>   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> -<span style="color: #BB0000;">1.03</span>   -<span style="color: #BB0000;">1.29</span>   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> -<span style="color: #BB0000;">0.827</span>  -<span style="color: #BB0000;">0.653</span>  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span>  0.144  -<span style="color: #BB0000;">0.322</span>  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span>  1.02    0.076<span style="text-decoration: underline;">4</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> -<span style="color: #BB0000;">0.936</span>  -<span style="color: #BB0000;">2.38</span>   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> -<span style="color: #BB0000;">0.444</span>   0.279  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> -<span style="color: #BB0000;">1.54</span>    0.003<span style="text-decoration: underline;">21</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span>  0.070<span style="text-decoration: underline;">9</span> -<span style="color: #BB0000;">0.289</span>  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"></span>
-<span class="r-in"> <span class="co">## Changing .reps will change the number of replications and thus the number of</span></span>
-<span class="r-in"> <span class="co">## rows in the output</span></span>
-<span class="r-in"> <span class="va">meta_list_2</span> <span class="op">=</span> <span class="fu"><a href="https://generics.r-lib.org/reference/specify.html" class="external-link">specify</a></span><span class="op">(</span>a <span class="op">=</span> <span class="op">~</span> <span class="fu">MASS</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/MASS/man/mvrnorm.html" class="external-link">mvrnorm</a></span><span class="op">(</span><span class="va">n</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">2</span><span class="op">)</span>, Sigma <span class="op">=</span> <span class="va">S</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span class="r-in">  <span class="fu"><a href="define.html">define</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">20</span>, <span class="fl">30</span><span class="op">)</span>,</span>
-<span class="r-in">       S <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>independent <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span>, correlated <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span> <span class="op">+</span> <span class="fl">2</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span class="r-in">  <span class="fu"><a href="https://generics.r-lib.org/reference/generate.html" class="external-link">generate</a></span><span class="op">(</span><span class="fl">4</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"> <span class="va">meta_list_2</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span> <span class="co">## Changing .reps will change the number of replications and thus the number of</span></span></span>
+<span class="r-in"><span> <span class="co">## rows in the output</span></span></span>
+<span class="r-in"><span> <span class="va">meta_list_2</span> <span class="op">=</span> <span class="fu"><a href="https://generics.r-lib.org/reference/specify.html" class="external-link">specify</a></span><span class="op">(</span>a <span class="op">=</span> <span class="op">~</span> <span class="fu">MASS</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/MASS/man/mvrnorm.html" class="external-link">mvrnorm</a></span><span class="op">(</span><span class="va">n</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">2</span><span class="op">)</span>, Sigma <span class="op">=</span> <span class="va">S</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="define.html">define</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">20</span>, <span class="fl">30</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>       S <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>independent <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span>, correlated <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span> <span class="op">+</span> <span class="fl">2</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://generics.r-lib.org/reference/generate.html" class="external-link">generate</a></span><span class="op">(</span><span class="fl">4</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span> <span class="va">meta_list_2</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> full tibble</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 24 × 6</span></span>
@@ -268,45 +294,46 @@ to do with how you specified the simulation in
 <span class="r-out co"><span class="r-pr">#&gt;</span> sim[[1]]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 10 × 2</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        a_1      a_2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> -<span style="color: #BB0000;">0.664</span>   0.526  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span>  0.190  -<span style="color: #BB0000;">1.07</span>   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> -<span style="color: #BB0000;">1.03</span>   -<span style="color: #BB0000;">1.29</span>   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> -<span style="color: #BB0000;">0.827</span>  -<span style="color: #BB0000;">0.653</span>  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span>  0.144  -<span style="color: #BB0000;">0.322</span>  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span>  1.02    0.076<span style="text-decoration: underline;">4</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> -<span style="color: #BB0000;">0.936</span>  -<span style="color: #BB0000;">2.38</span>   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> -<span style="color: #BB0000;">0.444</span>   0.279  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> -<span style="color: #BB0000;">1.54</span>    0.003<span style="text-decoration: underline;">21</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span>  0.070<span style="text-decoration: underline;">9</span> -<span style="color: #BB0000;">0.289</span>  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        a_1     a_2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span>  0.698  -<span style="color: #BB0000;">1.78</span>  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span>  0.609   0.406 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> -<span style="color: #BB0000;">1.30</span>    1.69  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span>  0.198  -<span style="color: #BB0000;">0.712</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span>  1.05    1.48  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> -<span style="color: #BB0000;">0.073</span><span style="color: #BB0000; text-decoration: underline;">2</span>  0.909 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> -<span style="color: #BB0000;">0.665</span>  -<span style="color: #BB0000;">0.011</span><span style="color: #BB0000; text-decoration: underline;">7</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span>  1.48   -<span style="color: #BB0000;">0.632</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span>  0.157  -<span style="color: #BB0000;">0.028</span><span style="color: #BB0000; text-decoration: underline;">6</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span>  0.701   1.94  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"></span>
-<span class="r-in"> <span class="co">## Fitting, tidying functions can be included in this step by running those functions and then</span></span>
-<span class="r-in"> <span class="co">## generate.  This can save computation time when doing large</span></span>
-<span class="r-in"> <span class="co">## simulations, especially with parallel processing</span></span>
-<span class="r-in"> <span class="va">meta_list_generate_after</span> <span class="op">=</span> <span class="fu"><a href="https://generics.r-lib.org/reference/specify.html" class="external-link">specify</a></span><span class="op">(</span>a <span class="op">=</span> <span class="op">~</span> <span class="fu">MASS</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/MASS/man/mvrnorm.html" class="external-link">mvrnorm</a></span><span class="op">(</span><span class="va">n</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">2</span><span class="op">)</span>, Sigma <span class="op">=</span> <span class="va">S</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span class="r-in">  <span class="fu"><a href="define.html">define</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">20</span>, <span class="fl">30</span><span class="op">)</span>,</span>
-<span class="r-in">       S <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>independent <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span>, correlated <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span> <span class="op">+</span> <span class="fl">2</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span class="r-in">  <span class="fu"><a href="https://generics.r-lib.org/reference/fit.html" class="external-link">fit</a></span><span class="op">(</span>lm <span class="op">=</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">a_2</span> <span class="op">~</span> <span class="va">a_1</span>, data <span class="op">=</span> <span class="va">.</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span class="r-in">  <span class="va">tidy_fits</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span class="r-in">  <span class="fu"><a href="https://generics.r-lib.org/reference/generate.html" class="external-link">generate</a></span><span class="op">(</span><span class="fl">4</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in">  <span class="va">meta_list_generate_after</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span> <span class="co">## Fitting, tidying functions can be included in this step by running those functions and then</span></span></span>
+<span class="r-in"><span> <span class="co">## generate.  This can save computation time when doing large</span></span></span>
+<span class="r-in"><span> <span class="co">## simulations, especially with parallel processing</span></span></span>
+<span class="r-in"><span> <span class="va">meta_list_generate_after</span> <span class="op">=</span> <span class="fu"><a href="https://generics.r-lib.org/reference/specify.html" class="external-link">specify</a></span><span class="op">(</span>a <span class="op">=</span> <span class="op">~</span> <span class="fu">MASS</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/MASS/man/mvrnorm.html" class="external-link">mvrnorm</a></span><span class="op">(</span><span class="va">n</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">2</span><span class="op">)</span>, Sigma <span class="op">=</span> <span class="va">S</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="define.html">define</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">20</span>, <span class="fl">30</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>       S <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>independent <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span>, correlated <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span> <span class="op">+</span> <span class="fl">2</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://generics.r-lib.org/reference/fit.html" class="external-link">fit</a></span><span class="op">(</span>lm <span class="op">=</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">a_2</span> <span class="op">~</span> <span class="va">a_1</span>, data <span class="op">=</span> <span class="va">.</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span></span>
+<span class="r-in"><span>  <span class="va">tidy_fits</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://generics.r-lib.org/reference/generate.html" class="external-link">generate</a></span><span class="op">(</span><span class="fl">4</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span>  <span class="va">meta_list_generate_after</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 48 × 10</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    .sim_id     n S_index   rep Source term  estimate std.error statistic p.value</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span>       1    10 indepe…     1 lm     (Int…   0.439      0.411     1.07  3.17<span style="color: #949494;">e</span><span style="color: #BB0000;">-1</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span>       1    10 indepe…     1 lm     a_1    -<span style="color: #BB0000;">0.390</span>      0.497    -<span style="color: #BB0000;">0.784</span> 4.55<span style="color: #949494;">e</span><span style="color: #BB0000;">-1</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span>       2    20 indepe…     1 lm     (Int…  -<span style="color: #BB0000;">0.033</span><span style="color: #BB0000; text-decoration: underline;">2</span>     0.218    -<span style="color: #BB0000;">0.152</span> 8.81<span style="color: #949494;">e</span><span style="color: #BB0000;">-1</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span>       2    20 indepe…     1 lm     a_1    -<span style="color: #BB0000;">0.295</span>      0.216    -<span style="color: #BB0000;">1.36</span>  1.89<span style="color: #949494;">e</span><span style="color: #BB0000;">-1</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span>       3    30 indepe…     1 lm     (Int…   0.252      0.206     1.23  2.30<span style="color: #949494;">e</span><span style="color: #BB0000;">-1</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span>       3    30 indepe…     1 lm     a_1    -<span style="color: #BB0000;">0.056</span><span style="color: #BB0000; text-decoration: underline;">8</span>     0.186    -<span style="color: #BB0000;">0.306</span> 7.62<span style="color: #949494;">e</span><span style="color: #BB0000;">-1</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span>       4    10 correl…     1 lm     (Int…   0.138      0.422     0.327 7.52<span style="color: #949494;">e</span><span style="color: #BB0000;">-1</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span>       4    10 correl…     1 lm     a_1     1.10       0.303     3.64  6.57<span style="color: #949494;">e</span><span style="color: #BB0000;">-3</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span>       5    20 correl…     1 lm     (Int…  -<span style="color: #BB0000;">0.421</span>      0.316    -<span style="color: #BB0000;">1.33</span>  1.99<span style="color: #949494;">e</span><span style="color: #BB0000;">-1</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span>       5    20 correl…     1 lm     a_1     0.863      0.195     4.43  3.20<span style="color: #949494;">e</span><span style="color: #BB0000;">-4</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 38 more rows</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    .sim_id     n S_index       rep Source term   estim…¹ std.e…² stati…³ p.value</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span>       1    10 independent     1 lm     (Inte…  0.989    0.274   3.61  0.006<span style="text-decoration: underline;">86</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span>       1    10 independent     1 lm     a_1     0.358    0.240   1.49  0.174  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span>       2    20 independent     1 lm     (Inte…  0.173    0.163   1.06  0.304  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span>       2    20 independent     1 lm     a_1    -<span style="color: #BB0000;">0.472</span>    0.193  -<span style="color: #BB0000;">2.44</span>  0.025<span style="text-decoration: underline;">1</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span>       3    30 independent     1 lm     (Inte… -<span style="color: #BB0000;">0.138</span>    0.155  -<span style="color: #BB0000;">0.885</span> 0.384  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span>       3    30 independent     1 lm     a_1    -<span style="color: #BB0000;">0.022</span><span style="color: #BB0000; text-decoration: underline;">2</span>   0.161  -<span style="color: #BB0000;">0.138</span> 0.891  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span>       4    10 correlated      1 lm     (Inte… -<span style="color: #BB0000;">0.431</span>    0.564  -<span style="color: #BB0000;">0.765</span> 0.467  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span>       4    10 correlated      1 lm     a_1     0.489    0.410   1.19  0.267  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span>       5    20 correlated      1 lm     (Inte… -<span style="color: #BB0000;">0.129</span>    0.395  -<span style="color: #BB0000;">0.327</span> 0.748  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span>       5    20 correlated      1 lm     a_1     0.879    0.228   3.87  0.001<span style="text-decoration: underline;">13</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 38 more rows, and abbreviated variable names ¹​estimate, ²​std.error,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   ³​statistic</span></span>
 </code></pre></div>
     </div>
   </div>
@@ -321,7 +348,7 @@ to do with how you specified the simulation in
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

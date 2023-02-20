@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">simpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.4</span>
       </span>
     </div>
 
@@ -29,7 +29,7 @@
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -70,7 +70,17 @@
     </div>
 
     <div class="section level2">
-<h2 class="page-header" data-toc-text="0.2.2" id="simpr-022">simpr 0.2.2<a class="anchor" aria-label="anchor" href="#simpr-022"></a></h2>
+<h2 class="page-header" data-toc-text="0.2.4" id="simpr-024">simpr 0.2.4<a class="anchor" aria-label="anchor" href="#simpr-024"></a></h2>
+<ul><li>Added lifecycle dependency after CRAN test failures (checking dependencies in R code … WARNING ‘::’ or ‘:::’ import not declared from: ‘lifecycle’)</li>
+<li>Fix double-sided formula issue with purrr deprecating calls</li>
+<li>Add support for .list argument to pass arbitrary lists of parameters to define()</li>
+</ul></div>
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="0.2.3" id="simpr-023">simpr 0.2.3<small>2023-01-08</small><a class="anchor" aria-label="anchor" href="#simpr-023"></a></h2>
+<p>Fixes test failures in CRAN version simpr 0.2.2 after 2022-12-20 release of dependency purrr 1.0.0, and update to tidyselect 1.2.0.</p>
+</div>
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="0.2.2" id="simpr-022">simpr 0.2.2<small>2022-02-12</small><a class="anchor" aria-label="anchor" href="#simpr-022"></a></h2>
 <p>Update <code><a href="../reference/tidyverse_verbs.html">pivot_wider.simpr_sims()</a></code> and <code><a href="../reference/tidyverse_verbs.html">pivot_wider.simpr_spec()</a></code> to match new arguments in <code><a href="https://tidyr.tidyverse.org/reference/pivot_wider.html" class="external-link">pivot_wider()</a></code> generic in <code>tidyr</code> 1.2.0. (Issue <a href="https://github.com/statisfactions/simpr/issues/69" class="external-link">#69</a>; PR <a href="https://github.com/statisfactions/simpr/issues/68" class="external-link">#68</a>, <a href="https://github.com/DavisVaughan" class="external-link">@DavisVaughan</a>)</p>
 </div>
     <div class="section level2">
@@ -95,7 +105,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

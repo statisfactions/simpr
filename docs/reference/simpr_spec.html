@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">simpr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.4</span>
       </span>
     </div>
 
@@ -29,7 +29,7 @@
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -75,30 +75,38 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="co"># S3 method for simpr_spec</span>
-<span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="fu">new_simpr_spec</span><span class="op">(</span><span class="op">)</span>
-
-<span class="fu">is.simpr_spec</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># S3 method for simpr_spec</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">new_simpr_spec</span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">is.simpr_spec</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>x</dt>
 <dd><p>a <code>simpr_spec</code> object</p></dd>
+
+
 <dt>...</dt>
 <dd><p>ignored</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p><code>print.simpr_spec</code> has no return value
-  and is called for its side-effects.
-<code>new_simpr_spec</code> returns an empty
-<code>simpr_spec</code> object. <code>is.simpr_spec</code> returns
+    
+
+<p><code>print.simpr_spec</code> has no return value
+  and is called for its side-effects.</p>
+<p></p>
+<p><code>new_simpr_spec</code> returns an empty</p>
+<p></p>
+<p><code>simpr_spec</code> object. <code>is.simpr_spec</code> returns
   a length-1 logical vector, <code>TRUE</code> or <code>FALSE</code>,
-  which indicates whether an object is a
-<code>simpr_spec</code>.</p>
+  which indicates whether an object is a</p>
+<p></p>
+<p><code>simpr_spec</code>.</p>
     </div>
     <div id="details">
     <h2>Details</h2>
@@ -113,8 +121,8 @@ specification, including the conditions.</p>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">empty</span> <span class="op">=</span> <span class="fu">new_simpr_spec</span><span class="op">(</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">empty</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">empty</span> <span class="op">=</span> <span class="fu">new_simpr_spec</span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">empty</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $specify</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -127,17 +135,17 @@ specification, including the conditions.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $include_calls</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">## Easiest to create a simpr_spec with specify</span></span>
-<span class="r-in"><span class="va">simple_spec</span> <span class="op">=</span> <span class="fu"><a href="https://generics.r-lib.org/reference/specify.html" class="external-link">specify</a></span><span class="op">(</span>a <span class="op">=</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/stats/Binomial.html" class="external-link">rbinom</a></span><span class="op">(</span><span class="va">n</span>, <span class="va">size</span>, <span class="va">prob</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">simple_spec</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## Easiest to create a simpr_spec with specify</span></span></span>
+<span class="r-in"><span><span class="va">simple_spec</span> <span class="op">=</span> <span class="fu"><a href="https://generics.r-lib.org/reference/specify.html" class="external-link">specify</a></span><span class="op">(</span>a <span class="op">=</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/stats/Binomial.html" class="external-link">rbinom</a></span><span class="op">(</span><span class="va">n</span>, <span class="va">size</span>, <span class="va">prob</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">simple_spec</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> specify</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $a</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ~rbinom(n, size, prob)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"varnames")</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "a"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x7fe5bea65338&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x7fdcd0d4cb70&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $specify</span>
@@ -152,21 +160,21 @@ specification, including the conditions.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $include_calls</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">## Adding on define adds all possible combinations</span></span>
-<span class="r-in"><span class="co">## of conditions and more info in output.</span></span>
-<span class="r-in"><span class="va">defined_spec</span> <span class="op">=</span> <span class="fu"><a href="https://generics.r-lib.org/reference/specify.html" class="external-link">specify</a></span><span class="op">(</span>a <span class="op">=</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/stats/Binomial.html" class="external-link">rbinom</a></span><span class="op">(</span><span class="va">n</span>, <span class="va">size</span>, <span class="va">prob</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span class="r-in">  <span class="fu"><a href="define.html">define</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">20</span><span class="op">)</span>,</span>
-<span class="r-in">         size <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">20</span>, <span class="fl">40</span><span class="op">)</span>,</span>
-<span class="r-in">         prob <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.2</span>, <span class="fl">0.4</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">defined_spec</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## Adding on define adds all possible combinations</span></span></span>
+<span class="r-in"><span><span class="co">## of conditions and more info in output.</span></span></span>
+<span class="r-in"><span><span class="va">defined_spec</span> <span class="op">=</span> <span class="fu"><a href="https://generics.r-lib.org/reference/specify.html" class="external-link">specify</a></span><span class="op">(</span>a <span class="op">=</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/stats/Binomial.html" class="external-link">rbinom</a></span><span class="op">(</span><span class="va">n</span>, <span class="va">size</span>, <span class="va">prob</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="define.html">define</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">20</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>         size <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">20</span>, <span class="fl">40</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>         prob <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.2</span>, <span class="fl">0.4</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">defined_spec</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> specify</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $a</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ~rbinom(n, size, prob)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"varnames")</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "a"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x7fe5bea65338&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x7fdcd0d4cb70&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> conditions</span>
@@ -198,7 +206,7 @@ specification, including the conditions.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $include_calls</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -213,7 +221,7 @@ specification, including the conditions.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>
