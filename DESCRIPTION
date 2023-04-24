@@ -1,7 +1,7 @@
 Package: simpr
 Type: Package
 Title: Flexible 'Tidyverse'-Friendly Simulations
-Version: 0.2.4
+Version: 0.2.5
 Authors@R: c(
    person("Ethan", "Brown", email = "brow3821@umn.edu", role = c("aut", "cre"), comment = c(ORCID = "0000-0003-3419-7465")),
    person("Jeffrey", "Bye", email = "jbye@umn.edu", role = c("ctb")))

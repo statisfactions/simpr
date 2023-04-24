@@ -83,12 +83,10 @@ test_that("Errors show up in tidied output.", {
   expect_equal(buggy_fit$.sim_error[[3]], NA_character_)
   expect_equal(buggy_fit$.sim_error[[4]], NA_character_)
 
-  expect_equal(buggy_fit$.fit_error,
-               c("Error in t.test(y): object 'y' not found\n",
-                 "Error in is.data.frame(x): object 'y' not found\n",
-                 NA,
-                 "Error in chisq.test(y): all entries of 'x' must be nonnegative and finite\n"
-               ))
+  expect_match(buggy_fit$.fit_error[[1]], "not.found")
+  expect_match(buggy_fit$.fit_error[[2]], "not.found")
+  expect_equal(buggy_fit$.fit_error[[3]], NA_character_)
+  expect_match(buggy_fit$.fit_error[[4]], "nonnegative")
 
 })
 

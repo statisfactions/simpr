@@ -1,3 +1,6 @@
+# simpr 0.2.5
+- Loosen tests that were giving errors on some linux systems (locale-dependent newline issues)
+
 # simpr 0.2.4
 - Added lifecycle dependency after CRAN test failures (checking dependencies in R code ... WARNING '::' or ':::' import not declared from: ‘lifecycle’)
 - Fix double-sided formula issue with purrr deprecating calls
