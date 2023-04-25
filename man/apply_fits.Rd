@@ -59,10 +59,6 @@ logit_fit \%>\%
 logit_fit \%>\%
   apply_fits(broom::augment, se_fit = TRUE)
 
-## Equivalent to tidy_fits()
-logit_fit \%>\%
-  apply_fits(broom::tidy)
-
 ## Using a purrr-style lambda function
 logit_fit \%>\%
   apply_fits(~ summary(.)$cov.scaled)
