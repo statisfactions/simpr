@@ -1,3 +1,6 @@
+# simpr 0.2.6
+- Removed "dontrun" and tests relating to global environment (which ironically were testing whether the package touched the global environment by touching the global environment)
+
 # simpr 0.2.5
 - Loosen tests that were giving errors on some linux systems (locale-dependent newline issues)
 

@@ -125,16 +125,15 @@ meta_list_out = specify(a = ~ MASS::mvrnorm(n, rep(0, 2), Sigma = S)) \%>\%
  ## Fitting, tidying functions can be included in this step by running those functions and then
  ## generate.  This can save computation time when doing large
  ## simulations, especially with parallel processing
- \dontrun{
  meta_list_generate_after = specify(a = ~ MASS::mvrnorm(n, rep(0, 2), Sigma = S)) \%>\%
   define(n = c(10, 20, 30),
        S = list(independent = diag(2), correlated = diag(2) + 2)) \%>\%
   fit(lm = ~ lm(a_2 ~ a_1, data = .)) \%>\%
   tidy_fits \%>\%
-  generate(2)
+  generate(1)
 
   meta_list_generate_after
-  }
+
 }
 \seealso{
 \code{\link[=specify.formula]{specify}} and

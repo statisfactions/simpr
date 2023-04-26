@@ -34,20 +34,6 @@ test_that("Metaparameters are not blocked by objects in calling environment", {
 
 })
 
-
-test_that("generate() doesn't put objects in global environment", {
-
-  if(exists("xyz123", envir = .GlobalEnv))
-    rm("xyz123", envir = .GlobalEnv)
-
-  out = specify(xyz123 = ~ 2 + rnorm(n)) %>%
-    define(n = 10) %>%
-    generate(1)
-
-  expect_false(exists("xyz123", envir = .GlobalEnv))
-
-})
-
 test_that("Gen runs without warnings or messages", {
   expect_silent({
     out = specify(x1 = ~ 1,
