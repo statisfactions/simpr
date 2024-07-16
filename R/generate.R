@@ -122,9 +122,15 @@ generate.simpr_spec = function(x, .reps, ..., .sim_name = "sim",
   validate_reps(.reps)
 
   ## Create specs from conditions, .reps; add unique id as well.
-  specs = dplyr::left_join(data.frame(rep = 1:.reps),
-                           x$conditions,
-                           by = character()) %>%
+
+  spec_core = data.frame(rep = 1:.reps)
+
+  # If conditions exist, cross join them with the number of repetitions
+  if(!is.null(x$conditions) && nrow(x$conditions) > 0)
+    spec_core = dplyr::cross_join(data.frame(rep = 1:.reps),
+                                  x$conditions)
+  # Add sim_id and other metadata
+  specs = spec_core %>%
     dplyr::mutate(.sim_id = 1:(dplyr::n())) %>%
     dplyr::relocate(".sim_id") %>%
     dplyr::relocate(rep, .after = dplyr::everything())
